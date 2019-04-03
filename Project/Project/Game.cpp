@@ -1,4 +1,3 @@
-
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Font.hpp>
@@ -60,8 +59,9 @@ void Game::loadGraphics()
 {
 	if (!I_map.loadFromFile("map1.png") || !T_map.loadFromFile("map1.png") || !T_bar.loadFromFile("bar.png") || !T_turret1.loadFromFile("turret1.png") || !T_turret2.loadFromFile("turret2.png") ||
 		!T_turret3.loadFromFile("turret3.png") || !T_monster1.loadFromFile("monster1.png") || !T_cursor1.loadFromFile("cursor1.png") || !T_cursor2.loadFromFile("cursor2.png") || 
-		!T_cursor3.loadFromFile("cursor3.png") || !T_cursor4.loadFromFile("cursor4.png") || !T_missile1.loadFromFile("missile1.png") || !T_arrow.loadFromFile("arrow.png") || 
-		!font.loadFromFile("calibri.ttf") || !T_line.loadFromFile("line.png") || !T_gameOver.loadFromFile("end.png"))
+		!T_cursor3.loadFromFile("cursor3.png") || !T_cursor4.loadFromFile("cursor4.png") || !T_missile1.loadFromFile("missile1.png") || !T_missile2.loadFromFile("missile2.png") || 
+		!T_missile3.loadFromFile("missile3.png") || !T_arrow.loadFromFile("arrow.png") || !font.loadFromFile("calibri.ttf") || !T_line.loadFromFile("line.png") || 
+		!T_gameOver.loadFromFile("end.png"))
 	{
 		window.close();
 	}
@@ -95,12 +95,14 @@ void Game::loadGraphics()
 	T_turret1.setSmooth(true);
 	T_turret2.setSmooth(true);
 	T_turret3.setSmooth(true);
-	turret1 = new Turret(3, 120, 300, T_turret1, vectorTurret1);
-	turret2 = new Turret(1, 30, 200, T_turret2, vectorTurret2);
-	turret3 = new Turret(1, 0, 100, T_turret3, vectorTurret3);
+	turret1 = new Turret(1, 3, 120, 300, T_turret1, vectorTurret1);
+	turret2 = new Turret(2, 1, 30, 200, T_turret2, vectorTurret2);
+	turret3 = new Turret(3, 1, 0, 100, T_turret3, vectorTurret3);
 
 	T_monster1.setSmooth(true);
 	T_missile1.setSmooth(true);
+	T_missile2.setSmooth(true);
+	T_missile3.setSmooth(true);
 
 	T_cursor1.setSmooth(true);
 	T_cursor2.setSmooth(true);
@@ -138,7 +140,9 @@ void Game::events()
 	{
 		if (e.type == sf::Event::Closed)
 		{
+			cleaner();
 			window.close();
+			exit(0);
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Space))
 		{
@@ -183,7 +187,7 @@ void Game::movingTurret()
 			cursor.setTexture(T_cursor1);
 			cursor.setOrigin(0, 0);
 			ifMovingTurret = 0;
-			turrets.push_back(Turret(3, 120, 300, T_turret1, (*turret1).picture.getPosition()));
+			turrets.push_back(Turret(1, 3, 120, 300, T_turret1, (*turret1).picture.getPosition()));
 			(*turret1).picture.setPosition(vectorTurret1);
 			circle.setPosition(0, 0);
 			circle.setRadius(0);
@@ -195,7 +199,7 @@ void Game::movingTurret()
 			cursor.setTexture(T_cursor1);
 			cursor.setOrigin(0, 0);
 			ifMovingTurret = 0;
-			turrets.push_back(Turret(1, 30, 200, T_turret2, (*turret2).picture.getPosition()));			//zrobic konstruktor kopiujacy
+			turrets.push_back(Turret(2, 1, 30, 200, T_turret2, (*turret2).picture.getPosition()));			//zrobic konstruktor kopiujacy
 			(*turret2).picture.setPosition(vectorTurret2);
 			circle.setPosition(0, 0);
 			circle.setRadius(0);
@@ -207,7 +211,7 @@ void Game::movingTurret()
 			cursor.setTexture(T_cursor1);
 			cursor.setOrigin(0, 0);
 			ifMovingTurret = 0;
-			turrets.push_back(Turret(1, 0, 100, T_turret3, (*turret3).picture.getPosition()));
+			turrets.push_back(Turret(3, 1, 0, 100, T_turret3, (*turret3).picture.getPosition()));
 			(*turret3).picture.setPosition(vectorTurret3);
 			circle.setPosition(0, 0);
 			circle.setRadius(0);
@@ -265,7 +269,7 @@ void Game::display()
 	}
 	for (auto r : rockets)
 	{
-		window.draw(r.picture);
+		(*r).display(window);
 	}
 
 	switch (ifMovingTurret)
@@ -273,7 +277,7 @@ void Game::display()
 	case 1:
 		(*turret1).picture.setPosition((Vector2f)Mouse::getPosition(window));
 		circle.setPosition((Vector2f)Mouse::getPosition(window));
-		circle.setRadius((*turret1).range);															//poprawic wielkosc kola zasiegu
+		circle.setRadius((*turret1).range);
 		circle.setOrigin(circle.getGlobalBounds().width / 2, circle.getGlobalBounds().height / 2);
 		break;
 	case 2:
@@ -349,15 +353,13 @@ void Game::rotate_turrets()
 
 void Game::move_rockets()
 {
-	if (monsters.empty() == 0)
+	for (int i = 0; i < rockets.size(); i++)
 	{
-		for (int i = 0; i < rockets.size(); i++)
+		if ((*rockets[i]).specialAbilities(monsters, cash, kills))
 		{
-			if (rockets[i].move(monsters, cash, kills))
-			{
-				rockets.erase(rockets.begin() + i);
-				i--;
-			}
+			delete rockets[i];
+			rockets.erase(rockets.begin() + i);
+			i--;
 		}
 	}
 }
@@ -380,6 +382,8 @@ bool Game::checkPlace(Vector2f position, int w, int h)
 	return true;
 }
 
+
+//poprawic sprawdzanie kolizji
 void Game::shoot()
 {
 	int tmp;
@@ -388,7 +392,18 @@ void Game::shoot()
 		tmp = t.shoot(monsters);
 		if (tmp >= 0 && tmp < monsters.size())
 		{
-			rockets.push_back(Rocket(2, t.damage, t.picture.getRotation(), 3, tmp, T_missile1, t.picture.getPosition()));
+			switch (t.id)
+			{
+			case 1:
+				rockets.push_back(new Rocket1(2, t.damage, t.picture.getRotation(), 3, tmp, T_missile1, t.picture.getPosition()));
+				break;
+			case 2:
+				rockets.push_back(new Rocket2(8, t.damage, t.picture.getRotation(), tmp, T_missile2, t.picture.getPosition()));
+				break;
+			case 3:
+				rockets.push_back(new Rocket3(2, t.damage, t.picture.getRotation(), 20, tmp, T_missile3, t.picture.getPosition()));
+				break;
+			}
 		}
 	}
 }
@@ -410,6 +425,21 @@ void Game::end()
 		Sleep(3000);
 		T_screenShot.update(window);
 		screenShot.setTexture(T_screenShot);
+		cleaner();
 		exit(0);
 	}
+}
+
+void Game::cleaner()
+{
+	for (int i = 0; i < rockets.size(); i++)
+	{
+		delete rockets[i];
+		rockets.erase(rockets.begin() + i);
+		i--;
+	}
+	delete turret1;
+	delete turret2;
+	delete turret3;
+
 }

@@ -9,6 +9,9 @@
 #include "Monster.h"
 #include "Turret.h"
 #include "Rocket.h"
+#include "Rocket1.h"
+#include "Rocket2.h"
+#include "Rocket3.h"
 #include "Map.h"
 #include "Icon.h"
 
@@ -49,6 +52,8 @@ class Game
 	Texture T_turret3;
 	Texture T_monster1;
 	Texture T_missile1;
+	Texture T_missile2;
+	Texture T_missile3;
 	Texture T_cursor1;
 	Texture T_cursor2;
 	Texture T_cursor3;
@@ -69,7 +74,7 @@ class Game
 
 	vector<Monster> monsters;
 	vector<Turret> turrets;
-	vector<Rocket> rockets;
+	vector<Rocket *> rockets;
 	vector<Sprite> lines;
 
 
@@ -105,4 +110,6 @@ public:
 	void end();
 
 	void fps();
+
+	void cleaner();
 };

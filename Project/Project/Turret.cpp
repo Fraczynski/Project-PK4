@@ -6,7 +6,7 @@
 using namespace std;
 using namespace sf;
 
-Turret::Turret(int _damage, int _rate, int _range, Texture & _picture, Vector2f _position) : damage(_damage), rate(_rate), range(_range)
+Turret::Turret(int _id, int _damage, int _rate, int _range, Texture & _picture, Vector2f _position) : id(_id), damage(_damage), rate(_rate), range(_range)
 {
 	picture.setTexture(_picture);
 	picture.setOrigin(picture.getGlobalBounds().width / 2, picture.getGlobalBounds().height / 2);
