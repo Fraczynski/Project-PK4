@@ -41,6 +41,18 @@ void Game::gameLoop(int argc, char * argv[])
 		updateClock();
 		display();
 		end();
+		//fps();
+	}
+}
+
+void Game::fps()
+{
+	double tmp = clock.getElapsedTime().asSeconds();
+	clock.restart();
+	if (timeToNextRound % 60 == 0 && tmp != 0)
+	{
+		//system("cls");
+		cout << int(1 / tmp) << endl;
 	}
 }
 
@@ -83,15 +95,9 @@ void Game::loadGraphics()
 	T_turret1.setSmooth(true);
 	T_turret2.setSmooth(true);
 	T_turret3.setSmooth(true);
-	turret1.setTexture(T_turret1);
-	turret1.setOrigin(turret1.getGlobalBounds().width / 2, turret1.getGlobalBounds().height / 2);
-	turret1.setPosition(vectorTurret1);
-	turret2.setTexture(T_turret2);
-	turret2.setOrigin(turret2.getGlobalBounds().width / 2, turret2.getGlobalBounds().height / 2);
-	turret2.setPosition(vectorTurret2);
-	turret3.setTexture(T_turret3);
-	turret3.setOrigin(turret3.getGlobalBounds().width / 2, turret3.getGlobalBounds().height / 2);
-	turret3.setPosition(vectorTurret3);
+	turret1 = new Turret(3, 120, 300, T_turret1, vectorTurret1);
+	turret2 = new Turret(1, 30, 200, T_turret2, vectorTurret2);
+	turret3 = new Turret(1, 0, 100, T_turret3, vectorTurret3);
 
 	T_monster1.setSmooth(true);
 	T_missile1.setSmooth(true);
@@ -172,37 +178,37 @@ void Game::movingTurret()
 	switch (ifMovingTurret)
 	{
 	case 1:
-		if (checkPlace(turret1.getPosition(), turret1.getGlobalBounds().width, turret1.getGlobalBounds().height))
+		if (checkPlace((*turret1).picture.getPosition(), (*turret1).picture.getGlobalBounds().width, (*turret1).picture.getGlobalBounds().height))
 		{
 			cursor.setTexture(T_cursor1);
 			cursor.setOrigin(0, 0);
 			ifMovingTurret = 0;
-			turrets.push_back(Turret(3, 120, 300, T_turret1, turret1.getPosition()));
-			turret1.setPosition(vectorTurret1);
+			turrets.push_back(Turret(3, 120, 300, T_turret1, (*turret1).picture.getPosition()));
+			(*turret1).picture.setPosition(vectorTurret1);
 			circle.setPosition(0, 0);
 			circle.setRadius(0);
 		}
 		break;
 	case 2:
-		if (checkPlace(turret2.getPosition(), turret2.getGlobalBounds().width, turret3.getGlobalBounds().height))
+		if (checkPlace((*turret2).picture.getPosition(), (*turret2).picture.getGlobalBounds().width, (*turret2).picture.getGlobalBounds().height))
 		{
 			cursor.setTexture(T_cursor1);
 			cursor.setOrigin(0, 0);
 			ifMovingTurret = 0;
-			turrets.push_back(Turret(1, 30, 200, T_turret2, turret2.getPosition()));
-			turret2.setPosition(vectorTurret2);
+			turrets.push_back(Turret(1, 30, 200, T_turret2, (*turret2).picture.getPosition()));			//zrobic konstruktor kopiujacy
+			(*turret2).picture.setPosition(vectorTurret2);
 			circle.setPosition(0, 0);
 			circle.setRadius(0);
 		}
 		break;
 	case 3:
-		if (checkPlace(turret3.getPosition(), turret3.getGlobalBounds().width, turret3.getGlobalBounds().height))
+		if (checkPlace((*turret3).picture.getPosition(), (*turret3).picture.getGlobalBounds().width, (*turret3).picture.getGlobalBounds().height))
 		{
 			cursor.setTexture(T_cursor1);
 			cursor.setOrigin(0, 0);
 			ifMovingTurret = 0;
-			turrets.push_back(Turret(1, 0, 100, T_turret3, turret3.getPosition()));
-			turret3.setPosition(vectorTurret3);
+			turrets.push_back(Turret(1, 0, 100, T_turret3, (*turret3).picture.getPosition()));
+			(*turret3).picture.setPosition(vectorTurret3);
 			circle.setPosition(0, 0);
 			circle.setRadius(0);
 		}
@@ -212,19 +218,19 @@ void Game::movingTurret()
 
 void Game::notMovingTurret()
 {
-	if (turret1.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+	if ((*turret1).picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 	{
 		cursor.setTexture(T_cursor4);
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
 		ifMovingTurret = 1;
 	}
-	else if (turret2.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+	else if ((*turret2).picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 	{
 		cursor.setTexture(T_cursor4);
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
 		ifMovingTurret = 2;
 	}
-	else if (turret3.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+	else if ((*turret3).picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 	{
 		cursor.setTexture(T_cursor4);
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
@@ -265,28 +271,28 @@ void Game::display()
 	switch (ifMovingTurret)
 	{
 	case 1:
-		turret1.setPosition((Vector2f)Mouse::getPosition(window));
+		(*turret1).picture.setPosition((Vector2f)Mouse::getPosition(window));
 		circle.setPosition((Vector2f)Mouse::getPosition(window));
-		circle.setRadius(200);															//poprawic wielkosc kola zasiegu
+		circle.setRadius((*turret1).range);															//poprawic wielkosc kola zasiegu
 		circle.setOrigin(circle.getGlobalBounds().width / 2, circle.getGlobalBounds().height / 2);
 		break;
 	case 2:
-		turret2.setPosition((Vector2f)Mouse::getPosition(window));
+		(*turret2).picture.setPosition((Vector2f)Mouse::getPosition(window));
 		circle.setPosition((Vector2f)Mouse::getPosition(window));
-		circle.setRadius(200);
+		circle.setRadius((*turret2).range);
 		circle.setOrigin(circle.getGlobalBounds().width / 2, circle.getGlobalBounds().height / 2);
 		break;
 	case 3:
-		turret3.setPosition((Vector2f)Mouse::getPosition(window));
+		(*turret3).picture.setPosition((Vector2f)Mouse::getPosition(window));
 		circle.setPosition((Vector2f)Mouse::getPosition(window));
-		circle.setRadius(200);
+		circle.setRadius((*turret3).range);
 		circle.setOrigin(circle.getGlobalBounds().width / 2, circle.getGlobalBounds().height / 2);
 		break;
 	}
 	window.draw(circle);
-	window.draw(turret1);
-	window.draw(turret2);
-	window.draw(turret3);
+	window.draw((*turret1).picture);
+	window.draw((*turret2).picture);
+	window.draw((*turret3).picture);
 	cursor.setPosition(Vector2f(Mouse::getPosition(window)));
 	window.draw(cursor);
 

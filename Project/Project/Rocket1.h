@@ -8,6 +8,7 @@ class Rocket
 public:
 	int speed;
 	int damage;
+	int rotationSpeed;
 	int numberOfMonster;
 	sf::Sprite picture;
 

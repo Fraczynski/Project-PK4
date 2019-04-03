@@ -17,6 +17,9 @@ using namespace sf;
 
 class Game
 {
+	Clock clock;
+	Time time;
+
 	int width = 1000;
 	int height = 703;
 	int timeToNextRound = 30;
@@ -52,18 +55,17 @@ class Game
 	Texture T_cursor4;
 	Sprite cursor;
 	Sprite map;
-	Sprite turret1;
-	Sprite turret2;
-	Sprite turret3;
-	Vector2f vectorTurret1 = Vector2f(38, 659);
-	Vector2f vectorTurret2 = Vector2f(200, 659);
-	Vector2f vectorTurret3 = Vector2f(360, 659);
+	Turret *turret1;
+	Turret *turret2;
+	Turret *turret3;
+	Vector2f vectorTurret1 = Vector2f(38, 670);
+	Vector2f vectorTurret2 = Vector2f(200, 670);
+	Vector2f vectorTurret3 = Vector2f(360, 670);
 
 	Font font;
 	Text T_cash;
 	Text T_kills;
 	Text T_waves;
-	//Text text;
 
 	vector<Monster> monsters;
 	vector<Turret> turrets;
@@ -101,4 +103,6 @@ public:
 	void shoot();
 
 	void end();
+
+	void fps();
 };

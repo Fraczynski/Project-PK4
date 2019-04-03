@@ -129,6 +129,9 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Rocket.cpp" />
+    <ClCompile Include="Rocket1.cpp" />
+    <ClCompile Include="Rocket2.cpp" />
+    <ClCompile Include="Rocket3.cpp" />
     <ClCompile Include="Turret.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -137,6 +140,9 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Rocket.h" />
+    <ClInclude Include="Rocket1.h" />
+    <ClInclude Include="Rocket2.h" />
+    <ClInclude Include="Rocket3.h" />
     <ClInclude Include="Turret.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

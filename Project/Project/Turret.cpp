@@ -27,8 +27,10 @@ void Turret::rotate(const vector<Monster> & monsters)
 	}
 	aimAtMonster = -1;
 	/*
-	//double angle = (360 - (double)((int)(270 - ((atan2(monsters.begin()->picture.getPosition().y - i->picture.getPosition().y, monsters.begin()->picture.getPosition().x - i->picture.getPosition().x)) * (180 / (atan(1) * 4)))) % 360) - i->picture.getRotation());
-	//i->picture.rotate(360 - (270 - (atan2(monsters.begin()->picture.getPosition().y - i->picture.getPosition().y, monsters.begin()->picture.getPosition().x - i->picture.getPosition().x)) * (180 / (atan(1) * 4))) - i->picture.getRotation());
+	//double angle = (360 - (double)((int)(270 - ((atan2(monsters.begin()->picture.getPosition().y - i->picture.getPosition().y, 
+						monsters.begin()->picture.getPosition().x - i->picture.getPosition().x)) * (180 / (atan(1) * 4)))) % 360) - i->picture.getRotation());
+	//i->picture.rotate(360 - (270 - (atan2(monsters.begin()->picture.getPosition().y - i->picture.getPosition().y, 
+						monsters.begin()->picture.getPosition().x - i->picture.getPosition().x)) * (180 / (atan(1) * 4))) - i->picture.getRotation());
 
 	if (angle > 1 && angle <= 180)
 	{
