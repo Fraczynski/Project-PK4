@@ -26,4 +26,3 @@ bool Rocket2::specialAbilities(vector<Monster> & monsters, int & cash, int & kil
 	}
 	return false;
 }
-	

@@ -12,4 +12,3 @@ public:
 	Rocket3(int, int, int, int, int, sf::Texture &, sf::Vector2f);
 	bool specialAbilities(std::vector<Monster> &, int &, int &);
 };
-

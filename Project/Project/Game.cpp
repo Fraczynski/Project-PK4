@@ -40,29 +40,26 @@ void Game::gameLoop(int argc, char * argv[])
 		updateClock();
 		display();
 		end();
-		//fps();
-	}
-}
-
-void Game::fps()
-{
-	double tmp = clock.getElapsedTime().asSeconds();
-	clock.restart();
-	if (timeToNextRound % 60 == 0 && tmp != 0)
-	{
-		//system("cls");
-		cout << int(1 / tmp) << endl;
 	}
 }
 
 void Game::loadGraphics()
 {
-	if (!I_map.loadFromFile("map1.png") || !T_map.loadFromFile("map1.png") || !T_bar.loadFromFile("bar.png") || !T_turret1.loadFromFile("turret1.png") || !T_turret2.loadFromFile("turret2.png") ||
-		!T_turret3.loadFromFile("turret3.png") || !T_monster1.loadFromFile("monster1.png") || !T_cursor1.loadFromFile("cursor1.png") || !T_cursor2.loadFromFile("cursor2.png") || 
-		!T_cursor3.loadFromFile("cursor3.png") || !T_cursor4.loadFromFile("cursor4.png") || !T_missile1.loadFromFile("missile1.png") || !T_missile2.loadFromFile("missile2.png") || 
-		!T_missile3.loadFromFile("missile3.png") || !T_arrow.loadFromFile("arrow.png") || !font.loadFromFile("calibri.ttf") || !T_line.loadFromFile("line.png") || 
-		!T_gameOver.loadFromFile("end.png"))
+	try
 	{
+		if (!I_map.loadFromFile("map1.png") || !T_map.loadFromFile("map1.png") || !T_bar.loadFromFile("bar.png") || !T_turret1.loadFromFile("turret1.png") || !T_turret2.loadFromFile("turret2.png") ||
+			!T_turret3.loadFromFile("turret3.png") || !T_monster1.loadFromFile("monster1.png") || !T_cursor1.loadFromFile("cursor1.png") || !T_cursor2.loadFromFile("cursor2.png") ||
+			!T_cursor3.loadFromFile("cursor3.png") || !T_cursor4.loadFromFile("cursor4.png") || !T_missile1.loadFromFile("missile1.png") || !T_missile2.loadFromFile("missile2.png") ||
+			!T_missile3.loadFromFile("missile3.png") || !T_arrow.loadFromFile("arrow.png") || !font.loadFromFile("calibri.ttf") || !T_line.loadFromFile("line.png") ||
+			!T_gameOver.loadFromFile("end.png"))
+		{
+			throw -1;
+		}
+	}
+	catch(int)
+	{
+		cout << "Blad wczytywania plikow!";
+		Sleep(5000);
 		window.close();
 	}
 	T_map.setSmooth(true);
@@ -97,7 +94,7 @@ void Game::loadGraphics()
 	T_turret3.setSmooth(true);
 	turret1 = new Turret(1, 3, 120, 300, T_turret1, vectorTurret1);
 	turret2 = new Turret(2, 1, 30, 200, T_turret2, vectorTurret2);
-	turret3 = new Turret(3, 1, 0, 100, T_turret3, vectorTurret3);
+	turret3 = new Turret(3, 1, 30, 100, T_turret3, vectorTurret3);
 
 	T_monster1.setSmooth(true);
 	T_missile1.setSmooth(true);
@@ -156,12 +153,22 @@ void Game::events()
 		{
 			leftButtonPressed();
 		}
+		if (e.type == Event::MouseButtonPressed && e.mouseButton.button == Mouse::Right)
+		{
+			cursor.setTexture(T_cursor1);
+			cursor.setOrigin(0, 0);
+			ifMovingTurret = 0;
+			(*turret1).picture.setPosition(vectorTurret1);
+			(*turret2).picture.setPosition(vectorTurret2);
+			(*turret3).picture.setPosition(vectorTurret3);
+			circle.setPosition(0, 0);
+			circle.setRadius(0);
+		}
 	}
 }
 
 void Game::leftButtonPressed()
 {
-	//klikniecie prawym powoduje przerwanie przenoszenia wiezyczki
 	Vector2i position = Mouse::getPosition(window);
 	if (position.y >= 625 && position.x >= 921)
 	{
@@ -179,45 +186,43 @@ void Game::leftButtonPressed()
 
 void Game::movingTurret()
 {
+	bool tmp = 0;
 	switch (ifMovingTurret)
 	{
 	case 1:
 		if (checkPlace((*turret1).picture.getPosition(), (*turret1).picture.getGlobalBounds().width, (*turret1).picture.getGlobalBounds().height))
 		{
-			cursor.setTexture(T_cursor1);
-			cursor.setOrigin(0, 0);
-			ifMovingTurret = 0;
-			turrets.push_back(Turret(1, 3, 120, 300, T_turret1, (*turret1).picture.getPosition()));
+			tmp = 1;
+			turrets.push_back(*turret1);
 			(*turret1).picture.setPosition(vectorTurret1);
-			circle.setPosition(0, 0);
-			circle.setRadius(0);
 		}
 		break;
 	case 2:
 		if (checkPlace((*turret2).picture.getPosition(), (*turret2).picture.getGlobalBounds().width, (*turret2).picture.getGlobalBounds().height))
 		{
-			cursor.setTexture(T_cursor1);
-			cursor.setOrigin(0, 0);
-			ifMovingTurret = 0;
-			turrets.push_back(Turret(2, 1, 30, 200, T_turret2, (*turret2).picture.getPosition()));			//zrobic konstruktor kopiujacy
+			tmp = 1;
+			turrets.push_back(*turret2);
 			(*turret2).picture.setPosition(vectorTurret2);
-			circle.setPosition(0, 0);
-			circle.setRadius(0);
 		}
 		break;
 	case 3:
 		if (checkPlace((*turret3).picture.getPosition(), (*turret3).picture.getGlobalBounds().width, (*turret3).picture.getGlobalBounds().height))
 		{
-			cursor.setTexture(T_cursor1);
-			cursor.setOrigin(0, 0);
-			ifMovingTurret = 0;
-			turrets.push_back(Turret(3, 1, 0, 100, T_turret3, (*turret3).picture.getPosition()));
+			tmp = 1;
+			turrets.push_back(*turret3);
 			(*turret3).picture.setPosition(vectorTurret3);
-			circle.setPosition(0, 0);
-			circle.setRadius(0);
 		}
 		break;
 	}
+	if (!tmp)
+	{
+		return;
+	}
+	cursor.setTexture(T_cursor1);
+	cursor.setOrigin(0, 0);
+	ifMovingTurret = 0;
+	circle.setPosition(0, 0);
+	circle.setRadius(0);
 }
 
 void Game::notMovingTurret()
@@ -255,17 +260,18 @@ void Game::display()
 	T_waves.setString(to_string(level));
 	window.draw(T_waves);
 
-	for (auto r : lines)
+
+	for (unsigned i = 0; i < lines.size(); i++)
 	{
-		window.draw(r);
+		window.draw(lines[i]);
 	}
-	for (auto m : monsters)
+	for (unsigned i = 0; i < monsters.size(); i++)
 	{
-		m.display(window);
+		monsters[i].display(window);
 	}
-	for (auto t : turrets)
+	for (unsigned i = 0; i < turrets.size(); i++)
 	{
-		window.draw(t.picture);
+		window.draw(turrets[i].picture);
 	}
 	for (auto r : rockets)
 	{
@@ -364,26 +370,52 @@ void Game::move_rockets()
 	}
 }
 
+bool Game::checkPixel(int x, int y)
+{
+	if (((int)I_map.getPixel(x, y).r >= 143 && (int)I_map.getPixel(x, y).r <= 149 && (int)I_map.getPixel(x, y).g >= 205 &&
+		(int)I_map.getPixel(x, y).g <= 211 && (int)I_map.getPixel(x, y).b >= 77 && (int)I_map.getPixel(x, y).b <= 83) ||
+		((int)I_map.getPixel(x, y).r > 252 && (int)I_map.getPixel(x, y).g < 5 && (int)I_map.getPixel(x, y).b < 5))
+	{
+		return false;
+	}
+	return true;
+}
+
 bool Game::checkPlace(Vector2f position, int w, int h)
 {
-	//poprawic zeby sprawdzal tylko krawedzie i polozenie innych wiezyczek
-	int i, j;
-	for ((position.y - h / 2 - 3 >= 0) ? (j = position.y - h / 2 - 3) : j = 0; j < position.y + h / 2 + 3 && j < height; j++)
+	int i;
+	if (position.y + h / 2 + 3 <= 624)
 	{
-		for ( (position.x - w / 2 - 3 >= 0) ? (i = position.x - w / 2 - 3) : (i = 0); i < position.x + w / 2 + 3 && j < width; i++)
+		for ((position.y - h / 2 - 3 >= 0) ? (i = position.y - h / 2 - 3) : i = 0; i < position.y + h / 2 + 3 && i < height; i++)
 		{
-			if (position.y + h / 2 + 3 >= 625 || ((int)I_map.getPixel(i, j).r == 146 && (int)I_map.getPixel(i, j).g == 209 && (int)I_map.getPixel(i, j).b == 79) ||
-				((int)I_map.getPixel(i, j).r == 254 && (int)I_map.getPixel(i, j).g < 5 && (int)I_map.getPixel(i, j).b < 5))
+			if (!checkPixel(position.x, i) || !checkPixel(position.x + w/2 - 1, i))
+			{
+				return false;
+			}
+		}
+		for ((position.x - w / 2 - 3 >= 0) ? (i = position.x - w / 2 - 3) : (i = 0); i < position.x + w / 2 + 3 && i < width; i++)
+		{
+			if (!checkPixel(i, position.y) || !checkPixel(i, position.y + h/2 - 1))
 			{
 				return false;
 			}
 		}
 	}
+	else
+	{
+		return false;
+	}
+
+	for (auto t : turrets)
+	{
+		if (sqrt(pow(t.picture.getPosition().x - position.x, 2) + pow(t.picture.getPosition().y - position.y, 2)) <= 53)
+		{
+			return false;
+		}
+	}
 	return true;
 }
 
-
-//poprawic sprawdzanie kolizji
 void Game::shoot()
 {
 	int tmp;
@@ -398,10 +430,10 @@ void Game::shoot()
 				rockets.push_back(new Rocket1(2, t.damage, t.picture.getRotation(), 3, tmp, T_missile1, t.picture.getPosition()));
 				break;
 			case 2:
-				rockets.push_back(new Rocket2(8, t.damage, t.picture.getRotation(), tmp, T_missile2, t.picture.getPosition()));
+				rockets.push_back(new Rocket2(20, t.damage, t.picture.getRotation(), tmp, T_missile2, t.picture.getPosition()));
 				break;
 			case 3:
-				rockets.push_back(new Rocket3(2, t.damage, t.picture.getRotation(), 20, tmp, T_missile3, t.picture.getPosition()));
+				rockets.push_back(new Rocket3(1, t.damage, t.picture.getRotation(), 10, tmp, T_missile3, t.picture.getPosition()));
 				break;
 			}
 		}

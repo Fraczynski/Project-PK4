@@ -16,6 +16,7 @@ public:
 	sf::Sprite picture;
 
 	Turret(int, int, int, int, sf::Texture &, sf::Vector2f);
+	Turret(const Turret & _turret);
 	void rotate(const std::vector<Monster> &);
 	int shoot(std::vector<Monster> &);
 	bool isInRange(const Monster &);

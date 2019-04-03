@@ -105,6 +105,8 @@ public:
 
 	bool checkPlace(Vector2f, int, int);
 
+	bool checkPixel(int x, int y);
+
 	void shoot();
 
 	void end();

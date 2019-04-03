@@ -9,8 +9,19 @@ using namespace sf;
 Turret::Turret(int _id, int _damage, int _rate, int _range, Texture & _picture, Vector2f _position) : id(_id), damage(_damage), rate(_rate), range(_range)
 {
 	picture.setTexture(_picture);
-	picture.setOrigin(picture.getGlobalBounds().width / 2, picture.getGlobalBounds().height / 2);
 	picture.setPosition(_position);
+	if (id == 2)
+		picture.setOrigin(picture.getGlobalBounds().width / 2, picture.getGlobalBounds().height / 1.8);
+	else
+		picture.setOrigin(picture.getGlobalBounds().width / 2, picture.getGlobalBounds().height / 2);
+
+}
+
+Turret::Turret(const Turret & _turret) : id(_turret.id),  damage(_turret.damage), rate(_turret.rate), range(_turret.range)
+{
+	picture.setTexture(*(_turret.picture.getTexture()));
+	picture.setPosition(_turret.picture.getPosition());
+	picture.setOrigin(_turret.picture.getOrigin());
 }
 
 void Turret::rotate(const vector<Monster> & monsters)

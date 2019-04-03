@@ -15,8 +15,7 @@ Rocket3::Rocket3(int _speed, int _damage, int _rotation, int _timeOfLife, int _n
 
 bool Rocket3::specialAbilities(vector<Monster> & monsters, int & cash, int & kills)
 {
-	timeOfLife--;
-	if (timeOfLife <= 0)
+	if (--timeOfLife <= 0)
 	{
 		return true;
 	}
@@ -27,6 +26,7 @@ bool Rocket3::specialAbilities(vector<Monster> & monsters, int & cash, int & kil
 	else if (numberOfMonster < monsters.size() && numberOfMonster >= 0)
 	{
 		checkCollision(monsters, cash, kills);
+		return false;
 	}
 	return false;
 }
