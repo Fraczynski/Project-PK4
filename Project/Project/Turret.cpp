@@ -6,7 +6,7 @@
 using namespace std;
 using namespace sf;
 
-Turret::Turret(int _id, int _damage, int _rate, int _range, Texture & _picture, Vector2f _position) : id(_id), damage(_damage), rate(_rate), range(_range)
+Turret::Turret(int _id, int _price, int _damage, int _rate, int _range, Texture & _picture, Vector2f _position) : id(_id), price(_price), damage(_damage), rate(_rate), range(_range)
 {
 	picture.setTexture(_picture);
 	picture.setPosition(_position);
@@ -22,6 +22,11 @@ Turret::Turret(const Turret & _turret) : id(_turret.id),  damage(_turret.damage)
 	picture.setTexture(*(_turret.picture.getTexture()));
 	picture.setPosition(_turret.picture.getPosition());
 	picture.setOrigin(_turret.picture.getOrigin());
+}
+
+int Turret::getPrice()
+{
+	return price;
 }
 
 void Turret::rotate(const vector<Monster> & monsters)

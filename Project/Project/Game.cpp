@@ -92,9 +92,9 @@ void Game::loadGraphics()
 	T_turret1.setSmooth(true);
 	T_turret2.setSmooth(true);
 	T_turret3.setSmooth(true);
-	turret1 = new Turret(1, 3, 120, 300, T_turret1, vectorTurret1);
-	turret2 = new Turret(2, 1, 30, 200, T_turret2, vectorTurret2);
-	turret3 = new Turret(3, 1, 30, 100, T_turret3, vectorTurret3);
+	turret1 = new Turret(1, 20, 3, 120, 300, T_turret1, vectorTurret1);
+	turret2 = new Turret(2, 10, 1, 30, 200, T_turret2, vectorTurret2);
+	turret3 = new Turret(3, 50, 1, 30, 100, T_turret3, vectorTurret3);
 
 	T_monster1.setSmooth(true);
 	T_missile1.setSmooth(true);
@@ -108,21 +108,25 @@ void Game::loadGraphics()
 	cursor.setTexture(T_cursor4);
 	cursor.setTexture(T_cursor1);
 
-	T_cash.setFont(font);
-	T_cash.setCharacterSize(20);
-	T_cash.setFillColor(Color(255, 255, 255));
-	T_cash.setPosition(804, 628);
-	T_cash.setOrigin(0, T_cash.getGlobalBounds().height / 2);
-	T_kills.setFont(font);
-	T_kills.setCharacterSize(20);
-	T_kills.setFillColor(Color(255, 255, 255));
-	T_kills.setPosition(804, 650);
-	T_kills.setOrigin(0, T_kills.getGlobalBounds().height / 2);
-	T_waves.setFont(font);
-	T_waves.setCharacterSize(20);
-	T_waves.setFillColor(Color(255, 255, 255));
-	T_waves.setPosition(804, 672);
-	T_waves.setOrigin(0, T_waves.getGlobalBounds().height / 2);
+	texts[0].setPosition(552, 627);
+	texts[1].setPosition(567, 649);
+	texts[2].setPosition(580, 671);
+	texts[3].setPosition(vectorTurret1.x - 33, vectorTurret1.y - 40);
+	texts[4].setPosition(vectorTurret2.x - 33, vectorTurret2.y - 40);
+	texts[5].setPosition(vectorTurret3.x - 33, vectorTurret3.y - 40);
+	texts[3].setString(to_string((*turret1).price) + "$");
+	texts[4].setString(to_string((*turret2).price) + "$");
+	texts[5].setString(to_string((*turret3).price) + "$");
+	texts[6].setPosition(756, 628);
+	texts[7].setPosition(764, 650);
+	texts[8].setPosition(752, 672);
+	for (int i = 0; i < 9; i++)
+	{
+		texts[i].setFont(font);
+		texts[i].setCharacterSize(18);
+		texts[i].setOrigin(0, texts[i].getGlobalBounds().height / 2);
+	}
+	updateInfo();
 
 	/*text.setFont(font);
 	text.setCharacterSize(24);
@@ -163,6 +167,7 @@ void Game::events()
 			(*turret3).picture.setPosition(vectorTurret3);
 			circle.setPosition(0, 0);
 			circle.setRadius(0);
+			updateInfo();
 		}
 	}
 }
@@ -174,13 +179,21 @@ void Game::leftButtonPressed()
 	{
 		timeToNextRound = 0;
 	}
+	else if (ifMovingTurret)
+	{
+		movingTurret();
+	}
+	else if (turretClicked())
+	{
+		highlightClicked();
+	}
 	else if (!ifMovingTurret)
 	{
 		notMovingTurret();
 	}
-	else if (ifMovingTurret)
+	else if (clicked >= 0)
 	{
-		movingTurret();
+
 	}
 }
 
@@ -190,27 +203,33 @@ void Game::movingTurret()
 	switch (ifMovingTurret)
 	{
 	case 1:
-		if (checkPlace((*turret1).picture.getPosition(), (*turret1).picture.getGlobalBounds().width, (*turret1).picture.getGlobalBounds().height))
+		if (cash >= (*turret1).getPrice() && checkPlace((*turret1).picture.getPosition(), (*turret1).picture.getGlobalBounds().width, (*turret1).picture.getGlobalBounds().height))
 		{
 			tmp = 1;
+			cash -= (*turret1).getPrice();
 			turrets.push_back(*turret1);
 			(*turret1).picture.setPosition(vectorTurret1);
+			updateInfo();
 		}
 		break;
 	case 2:
-		if (checkPlace((*turret2).picture.getPosition(), (*turret2).picture.getGlobalBounds().width, (*turret2).picture.getGlobalBounds().height))
+		if (cash >= (*turret2).getPrice() && checkPlace((*turret2).picture.getPosition(), (*turret2).picture.getGlobalBounds().width, (*turret2).picture.getGlobalBounds().height))
 		{
 			tmp = 1;
+			cash -= (*turret2).getPrice();
 			turrets.push_back(*turret2);
 			(*turret2).picture.setPosition(vectorTurret2);
+			updateInfo();
 		}
 		break;
 	case 3:
-		if (checkPlace((*turret3).picture.getPosition(), (*turret3).picture.getGlobalBounds().width, (*turret3).picture.getGlobalBounds().height))
+		if (cash >= (*turret3).getPrice() && checkPlace((*turret3).picture.getPosition(), (*turret3).picture.getGlobalBounds().width, (*turret3).picture.getGlobalBounds().height))
 		{
 			tmp = 1;
+			cash -= (*turret3).getPrice();
 			turrets.push_back(*turret3);
 			(*turret3).picture.setPosition(vectorTurret3);
+			updateInfo();
 		}
 		break;
 	}
@@ -223,6 +242,7 @@ void Game::movingTurret()
 	ifMovingTurret = 0;
 	circle.setPosition(0, 0);
 	circle.setRadius(0);
+	clicked = -1;
 }
 
 void Game::notMovingTurret()
@@ -232,19 +252,71 @@ void Game::notMovingTurret()
 		cursor.setTexture(T_cursor4);
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
 		ifMovingTurret = 1;
+		updateInfo((*turret1));
 	}
 	else if ((*turret2).picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 	{
 		cursor.setTexture(T_cursor4);
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
 		ifMovingTurret = 2;
+		updateInfo((*turret2));
 	}
 	else if ((*turret3).picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 	{
 		cursor.setTexture(T_cursor4);
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
 		ifMovingTurret = 3;
+		updateInfo((*turret3));
 	}
+}
+
+bool Game::turretClicked()
+{
+	for (unsigned i = 0; i < turrets.size(); i++)
+	{
+		if (turrets[i].picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+		{
+			clicked = i;
+			return true;
+		}
+	}
+	clicked = -1;
+	updateCircle(Vector2f(0, 0), 0);
+	updateInfo();
+	return false;
+}
+
+void Game::highlightClicked()
+{
+	updateCircle((turrets.begin() + clicked)->picture.getPosition(), (turrets.begin() + clicked)->range);
+	updateInfo(*(turrets.begin() + clicked));
+}
+
+void Game::updateCircle(const Vector2f & position, const int & range)
+{
+	circle.setPosition(position);
+	circle.setRadius(range);
+	circle.setOrigin(circle.getGlobalBounds().width / 2, circle.getGlobalBounds().height / 2);
+}
+
+void Game::updateInfo()
+{
+	texts[0].setString("Damage");
+	texts[1].setString("Range");
+	texts[2].setString("Rate");
+	texts[0].setFillColor(Color(130, 130, 130));
+	texts[1].setFillColor(Color(130, 130, 130));
+	texts[2].setFillColor(Color(130, 130, 130));
+}
+
+void Game::updateInfo(const Turret & turret)
+{
+	texts[0].setString("Damage  " + to_string(turret.damage));
+	texts[1].setString("Range  " + to_string(turret.range));
+	texts[2].setString("Rate  " + to_string(turret.rate));
+	texts[0].setFillColor(Color::White);
+	texts[1].setFillColor(Color::White);
+	texts[2].setFillColor(Color::White);
 }
 
 void Game::display()
@@ -253,12 +325,14 @@ void Game::display()
 	window.draw(map);
 	window.draw(bar);
 	window.draw(arrow);
-	T_cash.setString(to_string(cash));
-	window.draw(T_cash);
-	T_kills.setString(to_string(kills));
-	window.draw(T_kills);
-	T_waves.setString(to_string(level));
-	window.draw(T_waves);
+	texts[6].setString("Cash  " + to_string(cash) + "$");
+	texts[7].setString("Kills  " + to_string(kills));
+	texts[8].setString("Wave  " + to_string(level));
+	for (int i = 0; i < 9; i++)
+	{
+		window.draw(texts[i]);
+	}
+	window.draw(circle);
 
 
 	for (unsigned i = 0; i < lines.size(); i++)
@@ -282,9 +356,7 @@ void Game::display()
 	{
 	case 1:
 		(*turret1).picture.setPosition((Vector2f)Mouse::getPosition(window));
-		circle.setPosition((Vector2f)Mouse::getPosition(window));
-		circle.setRadius((*turret1).range);
-		circle.setOrigin(circle.getGlobalBounds().width / 2, circle.getGlobalBounds().height / 2);
+		updateCircle((Vector2f)Mouse::getPosition(window), (*turret1).range);
 		break;
 	case 2:
 		(*turret2).picture.setPosition((Vector2f)Mouse::getPosition(window));
@@ -299,7 +371,6 @@ void Game::display()
 		circle.setOrigin(circle.getGlobalBounds().width / 2, circle.getGlobalBounds().height / 2);
 		break;
 	}
-	window.draw(circle);
 	window.draw((*turret1).picture);
 	window.draw((*turret2).picture);
 	window.draw((*turret3).picture);
@@ -319,16 +390,11 @@ void Game::move_monsters()
 {
 	for (unsigned i = 0; i < monsters.size(); i++)
 	{
-		switch (monsters[i].move(map1))
+		if (monsters[i].move(map1))
 		{
-		case 2:
 			lines.push_back(Sprite(T_line));
 			lines.back().setOrigin(lines.back().getGlobalBounds().width / 2, lines.back().getGlobalBounds().height / 2);
 			lines.back().setPosition(343 + 20 * lines.size(), 272);
-		case 1:
-			monsters.erase(monsters.begin() + i);
-			i--;
-			break;
 		}
 	}
 }

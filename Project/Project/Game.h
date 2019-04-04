@@ -28,8 +28,9 @@ class Game
 	int timeToNextRound = 30;
 	int roundTime = 1200;
 	int ifMovingTurret = 0;
+	int clicked = -1;
 	int level = 0;
-	int cash = 10;
+	int cash = 100;						//zmienic po testach
 	int kills = 0;
 	RenderWindow window;
 	Vector2f mousePosition;
@@ -68,9 +69,7 @@ class Game
 	Vector2f vectorTurret3 = Vector2f(360, 670);
 
 	Font font;
-	Text T_cash;
-	Text T_kills;
-	Text T_waves;
+	Text texts[9];				//0 - damage, 1 - range, 2 - rate, 3 - price1, 4 - price2, 5 - price3, 6 - cash, 7 - kills, 8 - waves
 
 	vector<Monster> monsters;
 	vector<Turret> turrets;
@@ -91,6 +90,16 @@ public:
 
 	void notMovingTurret();
 
+	bool turretClicked();
+
+	void highlightClicked();
+
+	void updateCircle(const Vector2f & position, const int & range);
+
+	void updateInfo();
+
+	void updateInfo(const Turret &);
+
 	void display();
 
 	void updateClock();
@@ -110,8 +119,6 @@ public:
 	void shoot();
 
 	void end();
-
-	void fps();
 
 	void cleaner();
 };

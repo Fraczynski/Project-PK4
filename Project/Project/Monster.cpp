@@ -22,39 +22,32 @@ Monster::Monster(int _level, Font & font, Texture & _picture, Vector2f _position
 
 int Monster::move(const Map map[])
 {
-	if (HP <= 0)
+	switch (direction)
+	{
+	case 0:
+		picture.move(0, speed);
+		break;
+	case 1:
+		picture.move(-speed, 0);
+		break;
+	case 2:
+		picture.move(0, -speed);
+		break;
+	case 3:
+		picture.move(speed, 0);
+		break;
+	}
+	for (int j = 0; j <= 10; j++)
+	{
+		if (picture.getPosition() == map[j].position)
+		{
+			direction = map[j].changeDirectionTo;
+			break;
+		}
+	}
+	if (direction == map[10].changeDirectionTo)
 	{
 		return 1;
-	}
-	else
-	{
-		switch (direction)
-		{
-		case 0:
-			picture.move(0, speed);
-			break;
-		case 1:
-			picture.move(-speed, 0);
-			break;
-		case 2:
-			picture.move(0, -speed);
-			break;
-		case 3:
-			picture.move(speed, 0);
-			break;
-		}
-		for (int j = 0; j <= 10; j++)
-		{
-			if (picture.getPosition() == map[j].position)
-			{
-				direction = map[j].changeDirectionTo;
-				break;
-			}
-		}
-		if (direction == map[10].changeDirectionTo)
-		{
-			return 2;
-		}
 	}
 	hp.setPosition(picture.getPosition().x, picture.getPosition().y - 27);
 	return 0;
@@ -64,7 +57,7 @@ bool Monster::hurt(int damage)
 {
 	HP -= damage;
 	hp.setString(to_string(HP));
-	if (HP < 0)
+	if (HP <= 0)
 		return true;
 	return false;
 }
