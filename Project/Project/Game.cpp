@@ -26,8 +26,7 @@ void Game::gameLoop(int argc, char * argv[])
 
 	/*for (int i = 0; i < 10; i++)
 	{
-		monsters.push_back(Monster(1, font, T_monster1, Vector2f(709, 200 + i * 10)));				//usunac po testach
-
+		monsters.push_back(Monster(1, font, T_monster1, Vector2f(709, 300 - i * 30)));				//usunac po testach
 	}*/
 	while (window.isOpen())				//petla wykonujaca sie dopoki nie zostanie zakonczona gra
 	{
@@ -395,6 +394,8 @@ void Game::move_monsters()
 			lines.push_back(Sprite(T_line));
 			lines.back().setOrigin(lines.back().getGlobalBounds().width / 2, lines.back().getGlobalBounds().height / 2);
 			lines.back().setPosition(343 + 20 * lines.size(), 272);
+			monsters.erase(monsters.begin() + i);
+			i--;
 		}
 	}
 }

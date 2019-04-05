@@ -25,7 +25,8 @@ bool Rocket3::specialAbilities(vector<Monster> & monsters, int & cash, int & kil
 	}
 	else if (numberOfMonster < monsters.size() && numberOfMonster >= 0)
 	{
-		checkCollision(monsters, cash, kills);
+		if (checkCollision(monsters, cash, kills))
+			damage = 0;
 		return false;
 	}
 	return false;
