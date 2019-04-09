@@ -87,3 +87,31 @@ bool Turret::isInRange(const Monster & m)
 	}
 	return false;
 }
+
+void Turret::upgrade(int upgrading, int & cash)			//poprawic ceny
+{
+	switch (upgrading)
+	{
+	case 0:
+		if (cash - damage * price >= 0)
+		{
+			cash -= damage * price;
+			damage *= 2;
+		}
+		break;
+	case 1:
+		if (cash - range * price / 200 >= 0)
+		{
+			cash -= range * price / 200;
+			range *= 1.5;
+		}
+		break;
+	case 2:
+		if (cash - rate * price / 30 >= 0)
+		{
+			cash -= rate * price / 30;
+			range *= 1.5;
+		}
+		break;
+	}
+}

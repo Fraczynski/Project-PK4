@@ -22,5 +22,6 @@ public:
 	void rotate(const std::vector<Monster> &);
 	int shoot(std::vector<Monster> &);
 	bool isInRange(const Monster &);
+	void upgrade(int upgrading, int & cash);
 };
 

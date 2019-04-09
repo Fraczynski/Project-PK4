@@ -20,9 +20,6 @@ using namespace sf;
 
 class Game
 {
-	Clock clock;
-	Time time;
-
 	int width = 1000;
 	int height = 703;
 	int timeToNextRound = 30;
@@ -52,6 +49,7 @@ class Game
 	Texture T_turret2;
 	Texture T_turret3;
 	Texture T_monster1;
+	Texture T_monster2;
 	Texture T_missile1;
 	Texture T_missile2;
 	Texture T_missile3;
@@ -88,11 +86,11 @@ public:
 
 	void movingTurret();
 
-	void notMovingTurret();
+	bool notMovingTurret();
 
 	bool turretClicked();
 
-	void highlightClicked();
+	void upgradeTurrets();
 
 	void updateCircle(const Vector2f & position, const int & range);
 

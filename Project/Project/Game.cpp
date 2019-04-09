@@ -47,7 +47,8 @@ void Game::loadGraphics()
 	try
 	{
 		if (!I_map.loadFromFile("map1.png") || !T_map.loadFromFile("map1.png") || !T_bar.loadFromFile("bar.png") || !T_turret1.loadFromFile("turret1.png") || !T_turret2.loadFromFile("turret2.png") ||
-			!T_turret3.loadFromFile("turret3.png") || !T_monster1.loadFromFile("monster1.png") || !T_cursor1.loadFromFile("cursor1.png") || !T_cursor2.loadFromFile("cursor2.png") ||
+			!T_turret3.loadFromFile("turret3.png") || !T_monster1.loadFromFile("monster1.png") || !T_monster2.loadFromFile("monster2.png") || 
+			!T_cursor1.loadFromFile("cursor1.png") || !T_cursor2.loadFromFile("cursor2.png") ||
 			!T_cursor3.loadFromFile("cursor3.png") || !T_cursor4.loadFromFile("cursor4.png") || !T_missile1.loadFromFile("missile1.png") || !T_missile2.loadFromFile("missile2.png") ||
 			!T_missile3.loadFromFile("missile3.png") || !T_arrow.loadFromFile("arrow.png") || !font.loadFromFile("calibri.ttf") || !T_line.loadFromFile("line.png") ||
 			!T_gameOver.loadFromFile("end.png"))
@@ -96,6 +97,7 @@ void Game::loadGraphics()
 	turret3 = new Turret(3, 50, 1, 30, 100, T_turret3, vectorTurret3);
 
 	T_monster1.setSmooth(true);
+	T_monster2.setSmooth(true);
 	T_missile1.setSmooth(true);
 	T_missile2.setSmooth(true);
 	T_missile3.setSmooth(true);
@@ -144,11 +146,11 @@ void Game::events()
 			window.close();
 			exit(0);
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Space))
+		if (Keyboard::isKeyPressed(Keyboard::Space))					//usunac
 		{
 			Sleep(1000);
 		}
-		if (e.type == Event::KeyPressed && e.key.code == Keyboard::W)
+		if (e.type == Event::KeyPressed && e.key.code == Keyboard::W)		//usunac
 		{
 			Sleep(100);
 		}
@@ -174,26 +176,26 @@ void Game::events()
 void Game::leftButtonPressed()
 {
 	Vector2i position = Mouse::getPosition(window);
-	if (position.y >= 625 && position.x >= 921)
+	if (position.y >= 625 && position.x >= 921)			//tu wstawic ulepszanie wiezyczek
 	{
 		timeToNextRound = 0;
+		return;
 	}
 	else if (ifMovingTurret)
 	{
 		movingTurret();
+		return;
 	}
-	else if (turretClicked())
+	else if (!ifMovingTurret && notMovingTurret())
 	{
-		highlightClicked();
+		return;
 	}
-	else if (!ifMovingTurret)
+	else if (clicked >= 0 && clicked < turrets.size())
 	{
-		notMovingTurret();
+		upgradeTurrets();
 	}
-	else if (clicked >= 0)
-	{
-
-	}
+	
+	turretClicked();
 }
 
 void Game::movingTurret()
@@ -244,7 +246,7 @@ void Game::movingTurret()
 	clicked = -1;
 }
 
-void Game::notMovingTurret()
+bool Game::notMovingTurret()
 {
 	if ((*turret1).picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 	{
@@ -252,6 +254,7 @@ void Game::notMovingTurret()
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
 		ifMovingTurret = 1;
 		updateInfo((*turret1));
+		return true;
 	}
 	else if ((*turret2).picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 	{
@@ -259,6 +262,7 @@ void Game::notMovingTurret()
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
 		ifMovingTurret = 2;
 		updateInfo((*turret2));
+		return true;
 	}
 	else if ((*turret3).picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 	{
@@ -266,29 +270,46 @@ void Game::notMovingTurret()
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
 		ifMovingTurret = 3;
 		updateInfo((*turret3));
+		return true;
 	}
+	return false;
 }
 
 bool Game::turretClicked()
 {
-	for (unsigned i = 0; i < turrets.size(); i++)
+	if (Mouse::getPosition(window).y <= 624)
 	{
-		if (turrets[i].picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+		for (unsigned i = 0; i < turrets.size(); i++)
 		{
-			clicked = i;
-			return true;
+			if (turrets[i].picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+			{
+				clicked = i;
+				updateCircle((turrets.begin() + clicked)->picture.getPosition(), (turrets.begin() + clicked)->range);
+				updateInfo(*(turrets.begin() + clicked));
+				return true;
+			}
 		}
+		clicked = -1;
+		updateCircle(Vector2f(0, 0), 0);
+		updateInfo();
+		return false;
 	}
-	clicked = -1;
-	updateCircle(Vector2f(0, 0), 0);
-	updateInfo();
-	return false;
 }
 
-void Game::highlightClicked()
+void Game::upgradeTurrets()
 {
-	updateCircle((turrets.begin() + clicked)->picture.getPosition(), (turrets.begin() + clicked)->range);
-	updateInfo(*(turrets.begin() + clicked));
+	if (texts[0].getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+	{
+		turrets[clicked].upgrade(0, cash);
+	}
+	else if (texts[1].getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+	{
+		turrets[clicked].upgrade(1, cash);
+	}
+	else if (texts[2].getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+	{
+		turrets[clicked].upgrade(2, cash);
+	}
 }
 
 void Game::updateCircle(const Vector2f & position, const int & range)
@@ -408,7 +429,10 @@ void Game::add_monsters(int)
 		level++;
 		for (int i = 0; i < 10; i++)
 		{
-			monsters.push_back(Monster(level, font, T_monster1, Vector2f(920, - 60 * i)));
+			if(level % 2 == 0)
+				monsters.push_back(Monster(level, font, T_monster2, Vector2f(920, -60 * i)));
+			else
+				monsters.push_back(Monster(level, font, T_monster1, Vector2f(920, -60 * i)));
 		}
 	}
 }
