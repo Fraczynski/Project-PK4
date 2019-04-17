@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include "Monster.h"
 #include <vector>
+#include <queue>
+#include "Rest.h"
 
 class Turret
 {
@@ -15,8 +17,11 @@ public:
 	int range;
 	int aimAtMonster = -1;
 	sf::Sprite picture;
+	std::queue<Upgrading> qDamage;
+	std::queue<Upgrading> qRange;
+	std::queue<Upgrading> qRate;
 
-	Turret(int, int, int, int, int, sf::Texture &, sf::Vector2f);
+	Turret(int _id, int _price, int _damage, int _rate, int _range, sf::Texture & _picture, sf::Vector2f _position);
 	Turret(const Turret & _turret);
 	int getPrice();
 	void rotate(const std::vector<Monster> &);

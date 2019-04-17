@@ -39,7 +39,10 @@
     <ClCompile Include="Rocket3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GUI.cpp">
+    <ClCompile Include="Rest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,7 +74,10 @@
     <ClInclude Include="Rocket3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GUI.h">
+    <ClInclude Include="Rest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

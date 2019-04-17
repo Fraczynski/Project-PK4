@@ -13,8 +13,8 @@ Monster::Monster(int _level, Font & font, Texture & _picture, Vector2f _position
 	picture.setPosition(_position);
 
 	hp.setFont(font);
-	hp.setCharacterSize(14);
-	hp.setFillColor(Color(255, 105, 180));
+	hp.setCharacterSize(16);
+	hp.setFillColor(Color::White);//(255, 105, 180));
 	//hp.setStyle(Text::Bold);
 	hp.setString(to_string(HP));
 	hp.setOrigin(hp.getGlobalBounds().width / 2, hp.getGlobalBounds().height / 2);

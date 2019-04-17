@@ -2,6 +2,7 @@
 #include <string.h>
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "Rest.h"
 
 using namespace std;
 using namespace sf;
@@ -14,7 +15,21 @@ Turret::Turret(int _id, int _price, int _damage, int _rate, int _range, Texture 
 		picture.setOrigin(picture.getGlobalBounds().width / 2, picture.getGlobalBounds().height / 1.8);
 	else
 		picture.setOrigin(picture.getGlobalBounds().width / 2, picture.getGlobalBounds().height / 2);
-
+	/*qDamage.push(Upgrading(0, 0));
+	qRange.push(Upgrading(0, 0));
+	qRate.push(Upgrading(0, 0));*/
+	switch (_id)
+	{
+	case 0:
+		upgradingTurret(id, qDamage, qRange, qRate);
+		break;
+	case 1:
+		upgradingTurret(id, qDamage, qRange, qRate);
+		break;
+	case 2:
+		upgradingTurret(id, qDamage, qRange, qRate);
+		break;
+	}
 }
 
 Turret::Turret(const Turret & _turret) : id(_turret.id),  damage(_turret.damage), rate(_turret.rate), range(_turret.range)
@@ -22,6 +37,18 @@ Turret::Turret(const Turret & _turret) : id(_turret.id),  damage(_turret.damage)
 	picture.setTexture(*(_turret.picture.getTexture()));
 	picture.setPosition(_turret.picture.getPosition());
 	picture.setOrigin(_turret.picture.getOrigin());
+	switch (id)
+	{
+	case 0:
+		upgradingTurret(id, qDamage, qRange, qRate);
+		break;
+	case 1:
+		upgradingTurret(id, qDamage, qRange, qRate);
+		break;
+	case 2:
+		upgradingTurret(id, qDamage, qRange, qRate);
+		break;
+	}
 }
 
 int Turret::getPrice()
@@ -93,24 +120,27 @@ void Turret::upgrade(int upgrading, int & cash)			//poprawic ceny
 	switch (upgrading)
 	{
 	case 0:
-		if (cash - damage * price >= 0)
+		if (cash - qDamage.front().getPrice() >= 0 && qDamage.size() > 1)
 		{
-			cash -= damage * price;
-			damage *= 2;
+			cash -= qDamage.front().getPrice();
+			damage = qDamage.front().getValue();
+			qDamage.pop();
 		}
 		break;
 	case 1:
-		if (cash - range * price / 200 >= 0)
+		if (cash - qRange.front().getPrice() >= 0 && qRange.size() > 1)
 		{
-			cash -= range * price / 200;
-			range *= 1.5;
+			cash -= qRange.front().getPrice();
+			range = qRange.front().getValue();
+			qRange.pop();
 		}
 		break;
 	case 2:
-		if (cash - rate * price / 30 >= 0)
+		if (cash - qRate.front().getPrice() >= 0 && qRate.size() > 1)
 		{
-			cash -= rate * price / 30;
-			range *= 1.5;
+			cash -= qRate.front().getPrice();
+			rate = qRate.front().getValue();
+			qRate.pop();
 		}
 		break;
 	}

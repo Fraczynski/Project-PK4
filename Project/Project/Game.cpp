@@ -13,14 +13,6 @@ using namespace sf;
 
 void Game::gameLoop(int argc, char * argv[])
 {
-	window.create(VideoMode(width, height, 32), "Onslaught");
-	window.clear(Color(255, 0, 0));
-	window.setActive(true);
-	window.setFramerateLimit(60);
-	window.setIcon(icon.width, icon.height, icon.pixel_data);
-	window.setMouseCursorVisible(false);
-	//window.setMouseCursorGrabbed(true);
-
 	loadGraphics();
 	display();
 
@@ -35,7 +27,8 @@ void Game::gameLoop(int argc, char * argv[])
 		add_monsters(timeToNextRound);
 		rotate_turrets();
 		shoot();
-		move_rockets();
+		move_missiles();
+		moveTurret();
 		updateClock();
 		display();
 		end();
@@ -44,26 +37,35 @@ void Game::gameLoop(int argc, char * argv[])
 
 void Game::loadGraphics()
 {
+	window.create(VideoMode(width, height, 32), "Onslaught");
+	window.clear(Color(255, 0, 0));
+	window.setActive(true);
+	window.setFramerateLimit(60);
+	window.setIcon(icon.width, icon.height, icon.pixel_data);
+	window.setMouseCursorVisible(false);
+	//window.setMouseCursorGrabbed(true);
+
 	try
 	{
-		if (!I_map.loadFromFile("map1.png") || !T_map.loadFromFile("map1.png") || !T_bar.loadFromFile("bar.png") || !T_turret1.loadFromFile("turret1.png") || !T_turret2.loadFromFile("turret2.png") ||
-			!T_turret3.loadFromFile("turret3.png") || !T_monster1.loadFromFile("monster1.png") || !T_monster2.loadFromFile("monster2.png") || 
-			!T_cursor1.loadFromFile("cursor1.png") || !T_cursor2.loadFromFile("cursor2.png") ||
-			!T_cursor3.loadFromFile("cursor3.png") || !T_cursor4.loadFromFile("cursor4.png") || !T_missile1.loadFromFile("missile1.png") || !T_missile2.loadFromFile("missile2.png") ||
-			!T_missile3.loadFromFile("missile3.png") || !T_arrow.loadFromFile("arrow.png") || !font.loadFromFile("calibri.ttf") || !T_line.loadFromFile("line.png") ||
-			!T_gameOver.loadFromFile("end.png"))
+		if (!T_background.loadFromFile("background.png") || !I_map1.loadFromFile("map1.png") || !T_map1.loadFromFile("map1.png") || !T_bar.loadFromFile("bar.png") || 
+			!T_turret1.loadFromFile("turret1.png") || !T_turret2.loadFromFile("turret2.png") ||	!T_turret3.loadFromFile("turret3.png") || !T_monster1.loadFromFile("monster1.png") || 
+			!T_monster2.loadFromFile("monster2.png") ||	!T_cursor1.loadFromFile("cursor1.png") || !T_cursor2.loadFromFile("cursor4.png") || !T_missile1.loadFromFile("missile1.png") || 
+			!T_missile2.loadFromFile("missile2.png") || !T_missile3.loadFromFile("missile3.png") || !T_arrow.loadFromFile("arrow.png") || !font.loadFromFile("calibri.ttf") || 
+			!T_line.loadFromFile("line.png") || !T_gameOver.loadFromFile("end.png"))
 		{
-			throw -1;
+			throw - 1;
 		}
 	}
-	catch(int)
+	catch (int)
 	{
 		cout << "Blad wczytywania plikow!";
 		Sleep(5000);
 		window.close();
 	}
-	T_map.setSmooth(true);
-	map.setTexture(T_map);
+	T_background.setSmooth(true);
+	background.setTexture(T_background);
+	T_map1.setSmooth(true);
+	map1.setTexture(T_map1);
 
 	T_bar.setSmooth(true);
 	bar.setTexture(T_bar);
@@ -80,20 +82,19 @@ void Game::loadGraphics()
 	T_gameOver.setSmooth(true);
 	gameOver.setTexture(T_gameOver);
 	gameOver.setOrigin(gameOver.getGlobalBounds().width / 2, gameOver.getGlobalBounds().height / 2);
-	gameOver.setPosition(width / 2, map.getGlobalBounds().height / 2);
+	gameOver.setPosition(width / 2, map1.getGlobalBounds().height / 2);
 	gameOver.setScale(5, 5);
 
 	//circle.setFillColor(Color(255, 127, 39, 150));		//pomaranczowy
 	circle.setFillColor(Color(0, 0, 0, 130));
 	circle.setPointCount(50);
-	circle.setRadius(0);				//skasowac po dodaniu sprawdzania zasiegu wiezyczki
 	circle.setPosition(0, 0);
 
 	T_turret1.setSmooth(true);
 	T_turret2.setSmooth(true);
 	T_turret3.setSmooth(true);
-	turret1 = new Turret(1, 20, 3, 120, 300, T_turret1, vectorTurret1);
-	turret2 = new Turret(2, 10, 1, 30, 200, T_turret2, vectorTurret2);
+	turret1 = new Turret(1, 20, 3, 140, 200, T_turret1, vectorTurret1);
+	turret2 = new Turret(2, 10, 1, 30, 150, T_turret2, vectorTurret2);
 	turret3 = new Turret(3, 50, 1, 30, 100, T_turret3, vectorTurret3);
 
 	T_monster1.setSmooth(true);
@@ -104,35 +105,64 @@ void Game::loadGraphics()
 
 	T_cursor1.setSmooth(true);
 	T_cursor2.setSmooth(true);
-	T_cursor3.setSmooth(true);
-	T_cursor4.setSmooth(true);
-	cursor.setTexture(T_cursor4);
+	cursor.setTexture(T_cursor2);
 	cursor.setTexture(T_cursor1);
 
-	texts[0].setPosition(552, 627);
-	texts[1].setPosition(567, 649);
-	texts[2].setPosition(580, 671);
-	texts[3].setPosition(vectorTurret1.x - 33, vectorTurret1.y - 40);
-	texts[4].setPosition(vectorTurret2.x - 33, vectorTurret2.y - 40);
-	texts[5].setPosition(vectorTurret3.x - 33, vectorTurret3.y - 40);
-	texts[3].setString(to_string((*turret1).price) + "$");
-	texts[4].setString(to_string((*turret2).price) + "$");
-	texts[5].setString(to_string((*turret3).price) + "$");
-	texts[6].setPosition(756, 628);
-	texts[7].setPosition(764, 650);
-	texts[8].setPosition(752, 672);
-	for (int i = 0; i < 9; i++)
-	{
-		texts[i].setFont(font);
-		texts[i].setCharacterSize(18);
-		texts[i].setOrigin(0, texts[i].getGlobalBounds().height / 2);
-	}
-	updateInfo();
+	texts = new Texts(font, Vector2f(vectorTurret1.x, vectorTurret1.y - 5), Vector2f(vectorTurret2.x, vectorTurret2.y - 5), Vector2f(vectorTurret3.x, vectorTurret3.y - 5), turret1, turret2, turret3);
+	texts->updateInfo();
+}
 
-	/*text.setFont(font);
-	text.setCharacterSize(24);
-	text.setFillColor(Color(255, 255, 255));
-	text.setPosition(20, 20);*/
+void Game::resetTurrets()
+{
+	cursor.setTexture(T_cursor1);
+	cursor.setOrigin(0, 0);
+	ifMovingTurret = 0;
+	(*turret1).picture.setPosition(vectorTurret1);
+	(*turret2).picture.setPosition(vectorTurret2);
+	(*turret3).picture.setPosition(vectorTurret3);
+	circle.setPosition(0, 0);
+	circle.setRadius(0);
+	texts->updateInfo();
+}
+
+void Game::display()
+{
+	window.clear(Color(255, 0, 0));
+	window.draw(background);
+	window.draw(map1);
+	window.draw(circle);
+	window.draw(bar);
+	window.draw(arrow);
+	texts->updateStats(cash, kills, level);
+	for (int i = 0; i < 12; i++)
+	{
+		window.draw((*texts).getText(i));
+	}
+	for (unsigned i = 0; i < lines.size(); i++)
+	{
+		window.draw(lines[i]);
+	}
+	for (unsigned i = 0; i < monsters.size(); i++)
+	{
+		monsters[i].display(window);
+	}
+	for (unsigned i = 0; i < turrets.size(); i++)
+	{
+		window.draw(turrets[i].picture);
+	}
+	for (auto r : rockets)
+	{
+		(*r).display(window);
+	}
+	
+	window.draw((*turret1).picture);
+	window.draw((*turret2).picture);
+	window.draw((*turret3).picture);
+	cursor.setPosition(Vector2f(Mouse::getPosition(window)));
+	window.draw(cursor);
+
+	window.display();
+	timeToNextRound--;
 }
 
 void Game::events()
@@ -140,40 +170,32 @@ void Game::events()
 	sf::Event e;
 	while (window.pollEvent(e))
 	{
-		if (e.type == sf::Event::Closed)
+		if (e.type == sf::Event::Closed || Keyboard::isKeyPressed(Keyboard::Escape))
 		{
 			cleaner();
 			window.close();
 			exit(0);
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Space))					//usunac
+		/*if (Keyboard::isKeyPressed(Keyboard::Space))					//usunac
 		{
 			Sleep(1000);
 		}
 		if (e.type == Event::KeyPressed && e.key.code == Keyboard::W)		//usunac
 		{
 			Sleep(100);
-		}
-		if (e.type == Event::MouseButtonPressed && e.mouseButton.button == Mouse::Left)
+		}*/
+		if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Left)
 		{
-			leftButtonPressed();
+			leftButtonReleased();
 		}
-		if (e.type == Event::MouseButtonPressed && e.mouseButton.button == Mouse::Right)
+		if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Right)
 		{
-			cursor.setTexture(T_cursor1);
-			cursor.setOrigin(0, 0);
-			ifMovingTurret = 0;
-			(*turret1).picture.setPosition(vectorTurret1);
-			(*turret2).picture.setPosition(vectorTurret2);
-			(*turret3).picture.setPosition(vectorTurret3);
-			circle.setPosition(0, 0);
-			circle.setRadius(0);
-			updateInfo();
+			resetTurrets();
 		}
 	}
 }
 
-void Game::leftButtonPressed()
+void Game::leftButtonReleased()
 {
 	Vector2i position = Mouse::getPosition(window);
 	if (position.y >= 625 && position.x >= 921)			//tu wstawic ulepszanie wiezyczek
@@ -190,7 +212,7 @@ void Game::leftButtonPressed()
 	{
 		return;
 	}
-	else if (clicked >= 0 && clicked < turrets.size())
+	if (clicked >= 0 && clicked < turrets.size())
 	{
 		upgradeTurrets();
 	}
@@ -209,8 +231,6 @@ void Game::movingTurret()
 			tmp = 1;
 			cash -= (*turret1).getPrice();
 			turrets.push_back(*turret1);
-			(*turret1).picture.setPosition(vectorTurret1);
-			updateInfo();
 		}
 		break;
 	case 2:
@@ -219,8 +239,6 @@ void Game::movingTurret()
 			tmp = 1;
 			cash -= (*turret2).getPrice();
 			turrets.push_back(*turret2);
-			(*turret2).picture.setPosition(vectorTurret2);
-			updateInfo();
 		}
 		break;
 	case 3:
@@ -229,8 +247,6 @@ void Game::movingTurret()
 			tmp = 1;
 			cash -= (*turret3).getPrice();
 			turrets.push_back(*turret3);
-			(*turret3).picture.setPosition(vectorTurret3);
-			updateInfo();
 		}
 		break;
 	}
@@ -238,38 +254,52 @@ void Game::movingTurret()
 	{
 		return;
 	}
-	cursor.setTexture(T_cursor1);
-	cursor.setOrigin(0, 0);
-	ifMovingTurret = 0;
-	circle.setPosition(0, 0);
-	circle.setRadius(0);
-	clicked = -1;
+	resetTurrets();
+}
+
+void Game::moveTurret()
+{
+	switch (ifMovingTurret)
+	{
+	case 1:
+		(*turret1).picture.setPosition((Vector2f)Mouse::getPosition(window));
+		updateCircle((Vector2f)Mouse::getPosition(window), (*turret1).range);
+		break;
+	case 2:
+		(*turret2).picture.setPosition((Vector2f)Mouse::getPosition(window));
+		updateCircle((Vector2f)Mouse::getPosition(window), (*turret2).range);
+		break;
+	case 3:
+		(*turret3).picture.setPosition((Vector2f)Mouse::getPosition(window));
+		updateCircle((Vector2f)Mouse::getPosition(window), (*turret3).range);
+		break;
+	}
 }
 
 bool Game::notMovingTurret()
 {
 	if ((*turret1).picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 	{
-		cursor.setTexture(T_cursor4);
+		cursor.setTexture(T_cursor2);
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
 		ifMovingTurret = 1;
-		updateInfo((*turret1));
+		texts->updateInfo(*turret1);
 		return true;
 	}
 	else if ((*turret2).picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 	{
-		cursor.setTexture(T_cursor4);
+		cursor.setTexture(T_cursor2);
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
 		ifMovingTurret = 2;
-		updateInfo((*turret2));
+		texts->updateInfo(*turret2);
 		return true;
 	}
 	else if ((*turret3).picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 	{
-		cursor.setTexture(T_cursor4);
+		cursor.setTexture(T_cursor2);
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
 		ifMovingTurret = 3;
-		updateInfo((*turret3));
+		texts->updateInfo(*turret3);
 		return true;
 	}
 	return false;
@@ -285,31 +315,33 @@ bool Game::turretClicked()
 			{
 				clicked = i;
 				updateCircle((turrets.begin() + clicked)->picture.getPosition(), (turrets.begin() + clicked)->range);
-				updateInfo(*(turrets.begin() + clicked));
+				texts->updateInfo(*(turrets.begin() + clicked));
 				return true;
 			}
 		}
 		clicked = -1;
 		updateCircle(Vector2f(0, 0), 0);
-		updateInfo();
+		texts->updateInfo();
 		return false;
 	}
 }
 
 void Game::upgradeTurrets()
 {
-	if (texts[0].getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+	if ((*texts).upgradingTextClicked(window, 3))
 	{
 		turrets[clicked].upgrade(0, cash);
 	}
-	else if (texts[1].getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+	else if ((*texts).upgradingTextClicked(window, 4))
 	{
 		turrets[clicked].upgrade(1, cash);
 	}
-	else if (texts[2].getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+	else if ((*texts).upgradingTextClicked(window, 5))
 	{
 		turrets[clicked].upgrade(2, cash);
 	}
+	updateCircle((turrets.begin() + clicked)->picture.getPosition(), (turrets.begin() + clicked)->range);
+	texts->updateInfo(*(turrets.begin() + clicked));
 }
 
 void Game::updateCircle(const Vector2f & position, const int & range)
@@ -317,88 +349,6 @@ void Game::updateCircle(const Vector2f & position, const int & range)
 	circle.setPosition(position);
 	circle.setRadius(range);
 	circle.setOrigin(circle.getGlobalBounds().width / 2, circle.getGlobalBounds().height / 2);
-}
-
-void Game::updateInfo()
-{
-	texts[0].setString("Damage");
-	texts[1].setString("Range");
-	texts[2].setString("Rate");
-	texts[0].setFillColor(Color(130, 130, 130));
-	texts[1].setFillColor(Color(130, 130, 130));
-	texts[2].setFillColor(Color(130, 130, 130));
-}
-
-void Game::updateInfo(const Turret & turret)
-{
-	texts[0].setString("Damage  " + to_string(turret.damage));
-	texts[1].setString("Range  " + to_string(turret.range));
-	texts[2].setString("Rate  " + to_string(turret.rate));
-	texts[0].setFillColor(Color::White);
-	texts[1].setFillColor(Color::White);
-	texts[2].setFillColor(Color::White);
-}
-
-void Game::display()
-{
-	window.clear(Color(255, 0, 0));
-	window.draw(map);
-	window.draw(bar);
-	window.draw(arrow);
-	texts[6].setString("Cash  " + to_string(cash) + "$");
-	texts[7].setString("Kills  " + to_string(kills));
-	texts[8].setString("Wave  " + to_string(level));
-	for (int i = 0; i < 9; i++)
-	{
-		window.draw(texts[i]);
-	}
-	window.draw(circle);
-
-
-	for (unsigned i = 0; i < lines.size(); i++)
-	{
-		window.draw(lines[i]);
-	}
-	for (unsigned i = 0; i < monsters.size(); i++)
-	{
-		monsters[i].display(window);
-	}
-	for (unsigned i = 0; i < turrets.size(); i++)
-	{
-		window.draw(turrets[i].picture);
-	}
-	for (auto r : rockets)
-	{
-		(*r).display(window);
-	}
-
-	switch (ifMovingTurret)
-	{
-	case 1:
-		(*turret1).picture.setPosition((Vector2f)Mouse::getPosition(window));
-		updateCircle((Vector2f)Mouse::getPosition(window), (*turret1).range);
-		break;
-	case 2:
-		(*turret2).picture.setPosition((Vector2f)Mouse::getPosition(window));
-		circle.setPosition((Vector2f)Mouse::getPosition(window));
-		circle.setRadius((*turret2).range);
-		circle.setOrigin(circle.getGlobalBounds().width / 2, circle.getGlobalBounds().height / 2);
-		break;
-	case 3:
-		(*turret3).picture.setPosition((Vector2f)Mouse::getPosition(window));
-		circle.setPosition((Vector2f)Mouse::getPosition(window));
-		circle.setRadius((*turret3).range);
-		circle.setOrigin(circle.getGlobalBounds().width / 2, circle.getGlobalBounds().height / 2);
-		break;
-	}
-	window.draw((*turret1).picture);
-	window.draw((*turret2).picture);
-	window.draw((*turret3).picture);
-	cursor.setPosition(Vector2f(Mouse::getPosition(window)));
-	window.draw(cursor);
-
-	window.display();
-	timeToNextRound--;
 }
 
 void Game::updateClock()
@@ -410,7 +360,7 @@ void Game::move_monsters()
 {
 	for (unsigned i = 0; i < monsters.size(); i++)
 	{
-		if (monsters[i].move(map1))
+		if (monsters[i].move(cornersMap1))
 		{
 			lines.push_back(Sprite(T_line));
 			lines.back().setOrigin(lines.back().getGlobalBounds().width / 2, lines.back().getGlobalBounds().height / 2);
@@ -448,7 +398,7 @@ void Game::rotate_turrets()
 	}
 }
 
-void Game::move_rockets()
+void Game::move_missiles()
 {
 	for (int i = 0; i < rockets.size(); i++)
 	{
@@ -463,9 +413,9 @@ void Game::move_rockets()
 
 bool Game::checkPixel(int x, int y)
 {
-	if (((int)I_map.getPixel(x, y).r >= 143 && (int)I_map.getPixel(x, y).r <= 149 && (int)I_map.getPixel(x, y).g >= 205 &&
-		(int)I_map.getPixel(x, y).g <= 211 && (int)I_map.getPixel(x, y).b >= 77 && (int)I_map.getPixel(x, y).b <= 83) ||
-		((int)I_map.getPixel(x, y).r > 252 && (int)I_map.getPixel(x, y).g < 5 && (int)I_map.getPixel(x, y).b < 5))
+	if (((int)I_map1.getPixel(x, y).r >= 143 && (int)I_map1.getPixel(x, y).r <= 149 && (int)I_map1.getPixel(x, y).g >= 205 &&
+		(int)I_map1.getPixel(x, y).g <= 211 && (int)I_map1.getPixel(x, y).b >= 77 && (int)I_map1.getPixel(x, y).b <= 83) ||
+		((int)I_map1.getPixel(x, y).r > 252 && (int)I_map1.getPixel(x, y).g < 5 && (int)I_map1.getPixel(x, y).b < 5))
 	{
 		return false;
 	}

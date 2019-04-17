@@ -1,0 +1,11 @@
+GUI.h
+mapy bez t³a
+poprawic kod obs³uguj¹cy klikniêcie
+ulepszanie wie¿yczek
+teksty w osobnej klasie
+
+szablony	//jeœli nic lepszego nie bêdzie ju¿ w tym sem na pk
+pokomentowaæ
+sprawdziæ czy wszystkie biblioteki s¹ potrzebne
+includy do plikow cpp
+poprawiæ animacje pocisków

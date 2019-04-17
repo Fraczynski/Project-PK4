@@ -125,26 +125,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Rest.cpp" />
     <ClCompile Include="Rocket.cpp" />
     <ClCompile Include="Rocket1.cpp" />
     <ClCompile Include="Rocket2.cpp" />
     <ClCompile Include="Rocket3.cpp" />
+    <ClCompile Include="Texts.cpp" />
     <ClCompile Include="Turret.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
     <ClInclude Include="Icon.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="GUI.h" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="Rest.h" />
     <ClInclude Include="Rocket.h" />
     <ClInclude Include="Rocket1.h" />
     <ClInclude Include="Rocket2.h" />
     <ClInclude Include="Rocket3.h" />
+    <ClInclude Include="Texts.h" />
     <ClInclude Include="Turret.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

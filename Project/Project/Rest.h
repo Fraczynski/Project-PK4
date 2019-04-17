@@ -1,13 +1,16 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <queue>
 
-class Stats
+class Upgrading
 {
-	int number = 0;
+	int price;
+	int value;
+
 public:
-	sf::Text text;
-	Stats(sf::Vector2f, sf::Font );
-	void display(sf::RenderWindow &);
-	void editNumber(const int & _number);
+	Upgrading(int _price, int _value);
+	int getPrice();
+	int getValue();
 };
 
+void upgradingTurret(const int & id, std::queue<Upgrading> & qDamage, std::queue<Upgrading> & qRange, std::queue<Upgrading> & qRate);
