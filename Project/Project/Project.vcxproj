@@ -128,7 +128,6 @@
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Rest.cpp" />
     <ClCompile Include="Rocket.cpp" />
     <ClCompile Include="Rocket1.cpp" />
     <ClCompile Include="Rocket2.cpp" />
@@ -141,7 +140,6 @@
     <ClInclude Include="Icon.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Monster.h" />
-    <ClInclude Include="Rest.h" />
     <ClInclude Include="Rocket.h" />
     <ClInclude Include="Rocket1.h" />
     <ClInclude Include="Rocket2.h" />

@@ -1,20 +1,17 @@
-#include <string.h>
-#include <iostream>
-#include <SFML/Graphics.hpp>
 #include "Texts.h"
 
 using namespace std;
 using namespace sf;
 
-Texts::Texts(const Font & font, Vector2f vectorTurret1, Vector2f vectorTurret2, Vector2f vectorTurret3, Turret *turret1, Turret *turret2, Turret *turret3)
+Texts::Texts(const Font & font, Vector2f vectorTurret1, Vector2f vectorTurret2, Vector2f vectorTurret3, Turret *turret1, Turret *turret2, Turret *turret3)	//konstruktor tworzacy teksty
 {
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 12; i++)			//ustawienia graficzne wszystkich tekstow
 	{
 		text[i].setFont(font);
 		text[i].setCharacterSize(18);
 		text[i].setOrigin(0, text[i].getGlobalBounds().height / 2);
 	}
-	text[0].setPosition(487, 627);
+	text[0].setPosition(487, 627);		//ustawianie pozycji i zawartosci tekstow
 	text[1].setPosition(502, 649);
 	text[2].setPosition(515, 671);
 	text[3].setPosition(615, 627);
@@ -31,47 +28,47 @@ Texts::Texts(const Font & font, Vector2f vectorTurret1, Vector2f vectorTurret2, 
 	text[11].setPosition(752, 672);
 }
 
-void Texts::updateInfo(Turret & turret)
+void Texts::updateInfo(Turret & turret)					//wyswietlanie informacji o wiezyczce (przenoszonej lub klikniêtej)
 {
-	text[0].setString("Damage  " + to_string(turret.damage));
+	text[0].setString("Damage  " + to_string(turret.damage));			//informacje o danej wiezyczce
 	text[1].setString("Range  " + to_string(turret.range));
 	text[2].setString("Rate  " + to_string(turret.rate));
-	text[0].setFillColor(bright);
+	text[0].setFillColor(bright);			//podswietlenie informacji
 	text[1].setFillColor(bright);
 	text[2].setFillColor(bright);
-	if (turret.qDamage.size() > 1)
+	if (turret.qDamage.size() > 1)			//koszt ulepszenia zadawanych obrazen
 	{
 		text[3].setString("Upgrading  " + to_string(turret.qDamage.front().getPrice()) + "$");
 		text[3].setFillColor(bright);
 	}
-	else
+	else				//brak mozliwosci dalszego ulepszania zadawanych obrazen
 	{
 		text[3].setString("Upgrading  ---");
 		text[3].setFillColor(dark);
 	}
-	if (turret.qRange.size() > 1)
+	if (turret.qRange.size() > 1)			//koszt ulepszenia zasiegu
 	{
 		text[4].setString("Upgrading  " + to_string(turret.qRange.front().getPrice()) + "$");
 		text[4].setFillColor(bright);
 	}
-	else
+	else				//brak mozliwosci dalszego ulepszania zasiegu
 	{
 		text[4].setString("Upgrading  ---");
 		text[4].setFillColor(dark);
 	}
-	if (turret.qRate.size() > 1)
+	if (turret.qRate.size() > 1)			//koszt ulepszenia czestotliwosci strzalow
 	{
 		text[5].setString("Upgrading  " + to_string(turret.qRate.front().getPrice()) + "$");
 		text[5].setFillColor(bright);
 	}
-	else
+	else				//brak mozliwosci dalszego ulepszania czestotliwosci strzalow
 	{
 		text[5].setString("Upgrading  ---");
 		text[5].setFillColor(dark);
 	}
 }
 
-void Texts::updateInfo()
+void Texts::updateInfo()			//przyciemnianie informacji o wiezyczce (zadna nie jest klikniêta)
 {
 	text[0].setString("Damage");
 	text[1].setString("Range");
@@ -87,19 +84,28 @@ void Texts::updateInfo()
 	text[5].setFillColor(dark);
 }
 
-void Texts::updateStats(int & cash, int & kills, int & level)
+void Texts::updateStats(int & cash, int & kills, int & level)			//aktualizowanie tekstu zawierajacego statystyki gry
 {
 	text[9].setString("Cash  " + to_string(cash) + "$");
 	text[10].setString("Kills  " + to_string(kills));
 	text[11].setString("Wave  " + to_string(level));
 }
 
-sf::Text & Texts::getText(int & i)
+void Texts::display(int & cash, int & kills, int & level, RenderWindow & window)			//wyswietlanie tekstów
 {
-	return text[i];
+	updateStats(cash, kills, level);			//aktualizacja statystyk
+	for (int i = 0; i < 12; i++)		//rysowanie wszystkich tekstow
+	{
+		window.draw(text[i]);
+	}
 }
 
-bool Texts::upgradingTextClicked(RenderWindow & window, const int & i)
+int Texts::upgradingTextClicked(RenderWindow & window)			//sprawdzanie, czy kliknieto przycisk ulepszania
 {
-	return text[i].getGlobalBounds().contains((Vector2f)Mouse::getPosition(window));
+	if (text[3].getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))			//zwracanie numeru kliknietego przycisku
+		return 1;
+	if (text[4].getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+		return 2;
+	if (text[5].getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+		return 3;
 }

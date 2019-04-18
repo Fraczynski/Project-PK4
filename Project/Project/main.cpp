@@ -1,14 +1,11 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "Game.h"
-#include <iostream>
-#include <string>
-#include <Windows.h>
 
 using namespace std;
 
-int main(int argc, char * argv[])
+int main()
 {
-	Game game;
-	game.gameLoop(argc, argv);
+	Game game;			//utworzenie obiektu gry
+	game.gameLoop();		//wywolanie glownej funkcji gry
 	return 0;
 }

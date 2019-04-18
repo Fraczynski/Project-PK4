@@ -1,17 +1,15 @@
 #include <SFML/Graphics.hpp>
-#include <SFML/System/Vector2.hpp>
-#include <SFML/Graphics/Font.hpp>
+#include <Windows.h>
+#include <iostream>
+#include <vector>
 #include "Game.h"
 #include "Monster.h"
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
+//#include <fstream>
 
 using namespace std;
 using namespace sf;
 
-void Game::gameLoop(int argc, char * argv[])
+void Game::gameLoop()
 {
 	loadGraphics();
 	display();
@@ -93,9 +91,9 @@ void Game::loadGraphics()
 	T_turret1.setSmooth(true);
 	T_turret2.setSmooth(true);
 	T_turret3.setSmooth(true);
-	turret1 = new Turret(1, 20, 3, 140, 200, T_turret1, vectorTurret1);
-	turret2 = new Turret(2, 10, 1, 30, 150, T_turret2, vectorTurret2);
-	turret3 = new Turret(3, 50, 1, 30, 100, T_turret3, vectorTurret3);
+	turret1 = new Turret(1, T_turret1, vectorTurret1);
+	turret2 = new Turret(2, T_turret2, vectorTurret2);
+	turret3 = new Turret(3, T_turret3, vectorTurret3);
 
 	T_monster1.setSmooth(true);
 	T_monster2.setSmooth(true);
@@ -133,11 +131,8 @@ void Game::display()
 	window.draw(circle);
 	window.draw(bar);
 	window.draw(arrow);
-	texts->updateStats(cash, kills, level);
-	for (int i = 0; i < 12; i++)
-	{
-		window.draw((*texts).getText(i));
-	}
+	texts->display(cash, kills, level, window);
+		
 	for (unsigned i = 0; i < lines.size(); i++)
 	{
 		window.draw(lines[i]);
@@ -152,12 +147,12 @@ void Game::display()
 	}
 	for (auto r : rockets)
 	{
-		(*r).display(window);
+		r->display(window);
 	}
 	
-	window.draw((*turret1).picture);
-	window.draw((*turret2).picture);
-	window.draw((*turret3).picture);
+	window.draw(turret1->picture);
+	window.draw(turret2->picture);
+	window.draw(turret3->picture);
 	cursor.setPosition(Vector2f(Mouse::getPosition(window)));
 	window.draw(cursor);
 
@@ -328,17 +323,17 @@ bool Game::turretClicked()
 
 void Game::upgradeTurrets()
 {
-	if ((*texts).upgradingTextClicked(window, 3))
+	switch (texts->upgradingTextClicked(window))
 	{
-		turrets[clicked].upgrade(0, cash);
-	}
-	else if ((*texts).upgradingTextClicked(window, 4))
-	{
+	case 1:
 		turrets[clicked].upgrade(1, cash);
-	}
-	else if ((*texts).upgradingTextClicked(window, 5))
-	{
+		break;
+	case 2:
 		turrets[clicked].upgrade(2, cash);
+		break;
+	case 3:
+		turrets[clicked].upgrade(3, cash);
+		break;
 	}
 	updateCircle((turrets.begin() + clicked)->picture.getPosition(), (turrets.begin() + clicked)->range);
 	texts->updateInfo(*(turrets.begin() + clicked));

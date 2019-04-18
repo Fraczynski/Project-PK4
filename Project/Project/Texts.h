@@ -1,28 +1,26 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Monster.h"
-#include <vector>
-#include <queue>
 #include "Turret.h"
+#include "Monster.h"
 
 class Texts
 {
 	sf::Text text[12];						//tabela tekstow: 0 - damage, 1 - range, 2 - rate, 3 - upgrading damage, 4 - upgrading  range, 5 - upgrading rate, 
 											//6 - price1, 7 - price2, 8 - price3, 9 - cash, 10 - kills, 11 - waves
-	sf::Color bright = sf::Color(255, 255, 255);
-	sf::Color dark = sf::Color(90, 90, 90);
+	sf::Color bright = sf::Color(255, 255, 255);		//kolor podswietlonych informacji
+	sf::Color dark = sf::Color(90, 90, 90);				//kolor przygaszonych informacji
 
 public:
-	Texts(const sf::Font & font, sf::Vector2f vectorTurret1, sf::Vector2f vectorTurret2, sf::Vector2f vectorTurret3, Turret *turret1, Turret *turret2, Turret *turret3);
+	Texts(const sf::Font & font, sf::Vector2f vectorTurret1, sf::Vector2f vectorTurret2, sf::Vector2f vectorTurret3, Turret *turret1, Turret *turret2, Turret *turret3);	//konstruktor tworzacy teksty
 	
 	void updateInfo(Turret & turret);		//wyswietlanie informacji o wiezyczce (przenoszonej lub klikniêtej)
 
 	void updateInfo();		//przyciemnianie informacji o wiezyczce (zadna nie jest klikniêta)
 
-	void updateStats(int & cash, int & kills, int & level);		//aktualizuje statystyki gry
+	void updateStats(int & cash, int & kills, int & level);		//aktualizowanie tekstu zawierajacego statystyki gry
 
-	sf::Text & getText(int & i);
+	void display(int & cash, int & kills, int & level, sf::RenderWindow & window);			//wyswietlanie tekstów
 
-	bool upgradingTextClicked(sf::RenderWindow & window, const int & i);
+	int upgradingTextClicked(sf::RenderWindow & window);			//sprawdzanie, czy kliknieto przycisk ulepszania o podanym numerze
 };
 

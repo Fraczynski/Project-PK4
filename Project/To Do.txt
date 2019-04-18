@@ -1,11 +1,14 @@
-GUI.h
+//GUI.h
 mapy bez t³a
 poprawic kod obs³uguj¹cy klikniêcie
 ulepszanie wie¿yczek
 teksty w osobnej klasie
-
-szablony	//jeœli nic lepszego nie bêdzie ju¿ w tym sem na pk
-pokomentowaæ
-sprawdziæ czy wszystkie biblioteki s¹ potrzebne
 includy do plikow cpp
+komentarze
+
+szablony	//jeœli nic lepszego nie bêdzie ju¿ na pk
 poprawiæ animacje pocisków
+dodaæ mapy
+dodaæ obrazki potworków
+zapis stanu gry do pliku
+pola zmiennych jako prywatne

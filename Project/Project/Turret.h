@@ -1,32 +1,41 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-#include "Monster.h"
 #include <vector>
 #include <queue>
-#include "Rest.h"
+#include "Monster.h"
 
-class Turret
+class Upgrading			//klasa przechowujaca pare liczb - cene i wartosc ulepszenia
 {
-public:
-	int id;
-	int price;
-	int timeToShoot = 0;
-	int rotationSpeed = 2;
-	int damage;
-	int rate;
-	int range;
-	int aimAtMonster = -1;
-	sf::Sprite picture;
-	std::queue<Upgrading> qDamage;
-	std::queue<Upgrading> qRange;
-	std::queue<Upgrading> qRate;
+	int price;			//cena ulepszenia
+	int value;			//wartosc ulepszenia
 
-	Turret(int _id, int _price, int _damage, int _rate, int _range, sf::Texture & _picture, sf::Vector2f _position);
-	Turret(const Turret & _turret);
-	int getPrice();
-	void rotate(const std::vector<Monster> &);
-	int shoot(std::vector<Monster> &);
-	bool isInRange(const Monster &);
-	void upgrade(int upgrading, int & cash);
+public:
+	Upgrading(int _price, int _value);		//konstruktor przypisujacy wartosci zmiennym
+	int getPrice();			//pobieranie ceny ulepszenia
+	int getValue();			//pobieranie wartosci ulepszenia
 };
 
+class Turret			//klasa reprezentujaca wiezyczke
+{
+public:
+	int id;				//unikalny numer
+	int price;			//cena zakupu
+	int timeToShoot = 0;		//pozostaly czas do kolejnego wystrzalu
+	int rotationSpeed = 2;		//max predkosc obracania podczas celowania
+	int damage;			//zadawane obrazenia
+	int range;			//zasieg
+	int rate;			//czestotliwosc strzelania
+	int aimAtMonster = -1;			//numer potwora, na ktory wycelowala wiezyczka
+	sf::Sprite picture;			//obrazek wiezyczki
+	std::queue<Upgrading> qDamage;		//kolejka z zawartoscia kolejnych ulepszen zadawanych obrazen
+	std::queue<Upgrading> qRange;		//kolejka z zawartoscia kolejnych ulepszen zasiegu
+	std::queue<Upgrading> qRate;		//kolejka z zawartoscia kolejnych ulepszen czestotliwosci strzelania
+
+	Turret(int _id, sf::Texture & _picture, sf::Vector2f _position);			//konstruktor tworzacy wiezyczke (uzywany dla wiezyczek w menu)
+	Turret(const Turret & _turret);					//konstruktor tworzacy kopie wiezyczki (uzywany przy budowaniu wiezyczki na mapie - kopia danej wiezyczki z menu)
+	void upgradingTurret();				//wypelnianie kolejek wartosciami kolejnych ulepszen wraz z ich cenami
+	int getPrice();						//pobieranie ceny wiezyczki
+	void rotate(const std::vector<Monster> &);			//obracanie wiezyczki w strone odpowiedniego potwora
+	int shoot(std::vector<Monster> &);				//strzelanie do odpowiedniego potwora
+	bool isInRange(const Monster &);				//sprawdzanie czy dany potwor jest w zasiegu wiezyczki
+	void upgrade(int upgrading, int & cash);		//ulepszanie danej cechy wiezyczki
+};

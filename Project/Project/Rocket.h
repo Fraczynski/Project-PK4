@@ -1,21 +1,20 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Monster.h"
 #include <vector>
+#include "Monster.h"
 
-class Rocket
+class Rocket		//klasa abstrakcyjna reprezentuj¹ca pocisk
 {
 public:
-	int speed;
-	int damage;
-	int numberOfMonster;
-	sf::Sprite picture;
+	int speed;		//predkosc pocisku
+	int damage;		//ilosc zadawanych obrazen
+	int numberOfMonster;	//numer potwora, na ktory zostal wycelowany pocisk
+	sf::Sprite picture;		//obrazek pocisku
 
 public:
-	Rocket(int, int, int, int, sf::Texture &, sf::Vector2f);
-	virtual bool specialAbilities(std::vector<Monster> &, int &, int &) = 0;
-	bool checkCollision(std::vector<Monster> &, int &, int &);
-	int getDamage();
-	void display(sf::RenderWindow &);
+	Rocket(int _speed, int _damage, int _rotation, int _numberOfMonster, sf::Texture & _picture, sf::Vector2f _position);		//konstruktor tworzacy pocisk
+	virtual bool specialAbilities(std::vector<Monster> & monsters, int & cash, int & kills) = 0;		//specjalne zdolnosci danego typu pocisku
+	bool checkCollision(std::vector<Monster> & monsters, int & cash, int & kills);			//sprawdzanie wyst¹pienia kolizji z potworem
+	int getDamage();					//pobieranie ilosci zadawanych obrazen
+	void display(sf::RenderWindow & window);		//wyswietlanie pocisku
 };
-

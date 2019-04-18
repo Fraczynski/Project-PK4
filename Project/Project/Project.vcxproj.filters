@@ -39,9 +39,6 @@
     <ClCompile Include="Rocket3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Texts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -72,9 +69,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rocket3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Texts.h">

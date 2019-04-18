@@ -1,5 +1,5 @@
-/* GIMP RGBA C-Source image dump (sfml.c) */
-static const struct Icon{
+static const struct Icon			//ikona na pasku tytulu
+{
 	unsigned int 	 width;
 	unsigned int 	 height;
 	unsigned int 	 bytes_per_pixel; /* 3:RGB, 4:RGBA */

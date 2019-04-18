@@ -1,5 +1,4 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include <queue>
 
 class Upgrading
@@ -12,5 +11,3 @@ public:
 	int getPrice();
 	int getValue();
 };
-
-void upgradingTurret(const int & id, std::queue<Upgrading> & qDamage, std::queue<Upgrading> & qRange, std::queue<Upgrading> & qRate);

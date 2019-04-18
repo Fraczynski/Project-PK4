@@ -1,14 +1,11 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-#include "Monster.h"
 #include "Rocket.h"
-#include <vector>
 
 class Rocket3 : public Rocket
 {
 	int timeOfLife;
 
 public:
-	Rocket3(int, int, int, int, int, sf::Texture &, sf::Vector2f);
-	bool specialAbilities(std::vector<Monster> &, int &, int &);
+	Rocket3(int _speed, int _damage, int _rotation, int _timeOfLife, int _numberOfMonster, sf::Texture & _picture, sf::Vector2f _position);		//konstruktor tworzacy pocisk (laser)
+	bool specialAbilities(std::vector<Monster> & monsters, int & cash, int & kills);			//specjalne zdolnosci tego typu pocisku (laser)
 };

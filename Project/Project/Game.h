@@ -1,11 +1,5 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <SFML/System/Vector2.hpp>
-#include <SFML/Graphics/Font.hpp>
-#include <SFML/Graphics/Text.hpp>
-#include <iostream>
-#include <Windows.h>
-#include <string.h>
 #include "Monster.h"
 #include "Turret.h"
 #include "Rocket.h"
@@ -16,13 +10,13 @@
 #include "Texts.h"
 #include "Icon.h"
 
-using namespace std;
 using namespace sf;
+using namespace std;
 
 class Game
 {
-	int width = 1000;		//szerokosc okna
-	int height = 703;		//wysokosc okna
+	int width = 1000;			//szerokosc okna
+	int height = 703;			//wysokosc okna
 	int timeToNextRound = 30;		//pozostaly czas do kolejnej rundy
 	int roundTime = 1200;			//czas pojedynczej rundy
 	int ifMovingTurret = 0;			//czy przenoszona aktualnie jest wiezyczka: 0 - nie; 1 - tak
@@ -77,7 +71,7 @@ class Game
 
 
 public:
-	void gameLoop(int argc, char * argv[]);		//glowna petla gry
+	void gameLoop();		//glowna petla gry
 
 	void loadGraphics();		//wczytywanie grafik i ich odpowiednie ustawienia
 
