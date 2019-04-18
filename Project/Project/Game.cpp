@@ -12,9 +12,10 @@ using namespace sf;
 void Game::gameLoop()
 {
 	loadGraphics();
+	resetGame();
 	display();
 
-	/*for (int i = 0; i < 10; i++)
+	/*for (int i = 0; i < 5; i++)
 	{
 		monsters.push_back(Monster(1, font, T_monster1, Vector2f(709, 300 - i * 30)));				//usunac po testach
 	}*/
@@ -49,7 +50,8 @@ void Game::loadGraphics()
 			!T_turret1.loadFromFile("turret1.png") || !T_turret2.loadFromFile("turret2.png") ||	!T_turret3.loadFromFile("turret3.png") || !T_monster1.loadFromFile("monster1.png") || 
 			!T_monster2.loadFromFile("monster2.png") ||	!T_cursor1.loadFromFile("cursor1.png") || !T_cursor2.loadFromFile("cursor4.png") || !T_missile1.loadFromFile("missile1.png") || 
 			!T_missile2.loadFromFile("missile2.png") || !T_missile3.loadFromFile("missile3.png") || !T_arrow.loadFromFile("arrow.png") || !font.loadFromFile("calibri.ttf") || 
-			!T_line.loadFromFile("line.png") || !T_gameOver.loadFromFile("end.png"))
+			!T_line.loadFromFile("line.png") || !T_gameOver.loadFromFile("end.png") || !T_buttonResume.loadFromFile("resume.png") || !T_buttonRestart.loadFromFile("restart.png") || 
+			!T_buttonExit.loadFromFile("exit.png"))
 		{
 			throw - 1;
 		}
@@ -83,10 +85,22 @@ void Game::loadGraphics()
 	gameOver.setPosition(width / 2, map1.getGlobalBounds().height / 2);
 	gameOver.setScale(5, 5);
 
-	//circle.setFillColor(Color(255, 127, 39, 150));		//pomaranczowy
 	circle.setFillColor(Color(0, 0, 0, 130));
 	circle.setPointCount(50);
 	circle.setPosition(0, 0);
+
+	T_buttonResume.setSmooth(true);
+	T_buttonRestart.setSmooth(true);
+	T_buttonExit.setSmooth(true);
+	buttonResume.setTexture(T_buttonResume);
+	buttonRestart.setTexture(T_buttonRestart);
+	buttonExit.setTexture(T_buttonExit);
+	buttonResume.setOrigin(buttonResume.getGlobalBounds().width / 2, buttonResume.getGlobalBounds().height / 2);
+	buttonRestart.setOrigin(buttonRestart.getGlobalBounds().width / 2, buttonRestart.getGlobalBounds().height / 2);
+	buttonExit.setOrigin(buttonExit.getGlobalBounds().width / 2, buttonExit.getGlobalBounds().height / 2);
+	buttonResume.setPosition(width / 2, height / 3);
+	buttonRestart.setPosition(width / 2, height / 2);
+	buttonExit.setPosition(width / 2, 2 * height / 3);
 
 	T_turret1.setSmooth(true);
 	T_turret2.setSmooth(true);
@@ -108,6 +122,29 @@ void Game::loadGraphics()
 
 	texts = new Texts(font, Vector2f(vectorTurret1.x, vectorTurret1.y - 5), Vector2f(vectorTurret2.x, vectorTurret2.y - 5), Vector2f(vectorTurret3.x, vectorTurret3.y - 5), turret1, turret2, turret3);
 	texts->updateInfo();
+}
+
+void Game::resetGame()
+{
+	timeToNextRound = 30;		//pozostaly czas do kolejnej rundy
+	roundTime = 1200;			//czas pojedynczej rundy
+	ifMovingTurret = 0;			//czy przenoszona aktualnie jest wiezyczka: 0 - nie; 1 - tak
+	clicked = -1;				//numer zaznaczonej wiezyczki: -1 - brak zaznaczonej
+	level = 5;					//numer aktualnego poziomu
+	cash = 50000;					//poczatkowa ilosc pieniedzy											//zmienic po testach
+	kills = 0;
+	texts->updateInfo();
+
+	monsters.clear();
+	turrets.clear();
+	for (int i = 0; i < rockets.size(); i++)
+	{
+		delete rockets[i];
+		rockets.erase(rockets.begin() + i);
+		i--;
+	}
+	lines.clear();
+	resetTurrets();
 }
 
 void Game::resetTurrets()
@@ -162,23 +199,19 @@ void Game::display()
 
 void Game::events()
 {
-	sf::Event e;
+	Event e;
 	while (window.pollEvent(e))
 	{
-		if (e.type == sf::Event::Closed || Keyboard::isKeyPressed(Keyboard::Escape))
+		if (e.type == Event::Closed)
 		{
 			cleaner();
 			window.close();
 			exit(0);
 		}
-		/*if (Keyboard::isKeyPressed(Keyboard::Space))					//usunac
+		if (e.type == Event::KeyReleased && e.key.code == Keyboard::Escape)
 		{
-			Sleep(1000);
+			pause();
 		}
-		if (e.type == Event::KeyPressed && e.key.code == Keyboard::W)		//usunac
-		{
-			Sleep(100);
-		}*/
 		if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Left)
 		{
 			leftButtonReleased();
@@ -186,6 +219,66 @@ void Game::events()
 		if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Right)
 		{
 			resetTurrets();
+		}
+	}
+}
+
+void Game::pause()
+{
+	mousePosition = Mouse::getPosition(window);
+	Mouse::setPosition(Vector2i(0, -32), window);
+	display(); display(); display();
+	T_screenShot.update(window);
+	screenShot.setTexture(T_screenShot);
+	screenShot.setColor(Color(110, 110, 110));
+	Mouse::setPosition(mousePosition, window);
+
+	while (1)
+	{
+		window.draw(screenShot);
+		window.draw(buttonResume);
+		window.draw(buttonRestart);
+		window.draw(buttonExit);
+		cursor.setPosition(Vector2f(Mouse::getPosition(window)));
+		window.draw(cursor);
+		window.display();
+		if (buttonEvent())
+		{
+			return;
+		}
+	}
+
+	Mouse::setPosition(mousePosition, window);
+}
+
+bool Game::buttonEvent()
+{
+	Event e;
+	while (window.pollEvent(e))
+	{
+		if (e.type == Event::Closed)
+		{
+			cleaner();
+			window.close();
+			exit(0);
+		}
+		if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Left || e.type == Event::KeyReleased)
+		{
+			if (buttonResume.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)) || e.type == Event::KeyReleased && e.key.code == Keyboard::Escape)
+			{
+				return true;
+			}
+			else if (buttonRestart.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+			{
+				resetGame();
+				return true;
+			}
+			else if (buttonExit.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+			{
+				cleaner();
+				window.close();
+				exit(0);
+			}
 		}
 	}
 }
@@ -273,7 +366,7 @@ void Game::moveTurret()
 
 bool Game::notMovingTurret()
 {
-	if ((*turret1).picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+	if (turret1->picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 	{
 		cursor.setTexture(T_cursor2);
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
@@ -281,7 +374,7 @@ bool Game::notMovingTurret()
 		texts->updateInfo(*turret1);
 		return true;
 	}
-	else if ((*turret2).picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+	else if (turret2->picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 	{
 		cursor.setTexture(T_cursor2);
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
@@ -289,7 +382,7 @@ bool Game::notMovingTurret()
 		texts->updateInfo(*turret2);
 		return true;
 	}
-	else if ((*turret3).picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+	else if (turret3->picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 	{
 		cursor.setTexture(T_cursor2);
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
@@ -491,8 +584,6 @@ void Game::end()
 			Sleep(15);
 		}
 		Sleep(3000);
-		T_screenShot.update(window);
-		screenShot.setTexture(T_screenShot);
 		cleaner();
 		exit(0);
 	}
@@ -509,5 +600,5 @@ void Game::cleaner()
 	delete turret1;
 	delete turret2;
 	delete turret3;
-
+	window.close();
 }

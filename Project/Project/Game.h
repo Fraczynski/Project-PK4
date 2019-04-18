@@ -17,17 +17,17 @@ class Game
 {
 	int width = 1000;			//szerokosc okna
 	int height = 703;			//wysokosc okna
-	int timeToNextRound = 30;		//pozostaly czas do kolejnej rundy
-	int roundTime = 1200;			//czas pojedynczej rundy
-	int ifMovingTurret = 0;			//czy przenoszona aktualnie jest wiezyczka: 0 - nie; 1 - tak
-	int clicked = -1;				//numer zaznaczonej wiezyczki: -1 - brak zaznaczonej
-	int level = 5;					//numer aktualnego poziomu
-	int cash = 50000;					//poczatkowa ilosc pieniedzy											//zmienic po testach
-	int kills = 0;					//licznik zabitych potworow
-	RenderWindow window;
-	Vector2f mousePosition;			//zmienna do przechowywania wspolrzednych pozycji myszy
+	int timeToNextRound;		//pozostaly czas do kolejnej rundy
+	int roundTime;			//czas pojedynczej rundy
+	int ifMovingTurret;			//czy przenoszona aktualnie jest wiezyczka: 0 - nie; 1 - tak
+	int clicked;				//numer zaznaczonej wiezyczki: -1 - brak zaznaczonej
+	int level;					//numer aktualnego poziomu
+	int cash;				//poczatkowa ilosc pieniedzy											//zmienic po testach
+	int kills;					//licznik zabitych potworow
+	RenderWindow window;			//okno aplikacji
+	Vector2i mousePosition;			//zmienna do przechowywania wspolrzednych pozycji myszy
 	Image I_map1;					//obraz do sprawdzania kolorow pikseli mapy
-	Texture T_background;			//tekstura tla
+	Texture T_background;			//tlo
 	Texture T_map1;					//mapa
 	Texture T_bar;					//dolny pasek menu
 	Texture T_arrow;				//wskazówka zegara
@@ -40,6 +40,12 @@ class Game
 	Sprite arrow;					//wskazówka zegara
 	Sprite gameOver;				//grafika konca gry
 	CircleShape circle;				//kolo pokazujace zasieg wiezyczki po jej zaznaczeniu
+	Texture T_buttonResume;			//przycisk resume
+	Texture T_buttonRestart;		//przycisk restart
+	Texture T_buttonExit;			//przycisk exit
+	Sprite buttonResume;			//przycisk resume
+	Sprite buttonRestart;			//przycisk restart
+	Sprite buttonExit;				//przycisk exit
 	const Map cornersMap1[11] = { {Vector2f(920, 539), 1}, {Vector2f(83, 539), 2}, {Vector2f(83, 83), 3}, {Vector2f(815, 83), 0}, {Vector2f(815, 431), 1}, {Vector2f(190, 431), 2 }, 
 					 {Vector2f(190, 188), 3}, {Vector2f(709, 188), 0}, {Vector2f(709, 323), 1}, {Vector2f(450, 323), 2}, { Vector2f(450, 295), 5 } };		//wspolrzedne (w ktorych potwory musza zmienic kierunek) i kierunki
 	Texture T_turret1;				//tekstury wie¿yczek
@@ -75,9 +81,15 @@ public:
 
 	void loadGraphics();		//wczytywanie grafik i ich odpowiednie ustawienia
 
+	void resetGame();			//restartowanie gry
+
 	void resetTurrets();		//przywracanie wzorcowych wiezyczek do sklepu
 
 	void events();			//obsluga zdarzen
+
+	void pause();			//wstrzymanie gry
+
+	bool buttonEvent();
 
 	void leftButtonReleased();		//sprawdzanie polozenia wskaznika myszy podczas puszczenia lewego przycisku
 

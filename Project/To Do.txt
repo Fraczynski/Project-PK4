@@ -7,8 +7,9 @@ includy do plikow cpp
 komentarze
 
 szablony	//jeœli nic lepszego nie bêdzie ju¿ na pk
+menu
+pola zmiennych jako prywatne
+zapis stanu gry do pliku
 poprawiæ animacje pocisków
 dodaæ mapy
 dodaæ obrazki potworków
-zapis stanu gry do pliku
-pola zmiennych jako prywatne
