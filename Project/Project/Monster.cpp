@@ -6,9 +6,10 @@
 using namespace std;
 using namespace sf;
 
-Monster::Monster(int _level, Font & font, Texture & _picture, Vector2f _position) : HP(_level), level(_level)		//konstruktor tworzacy potwora
+Monster::Monster(int _level, Font & font, Texture & _picture, Vector2f _position, int & _monsterPictureX, int & _monsterPictureY, int & _monsterSize) : HP(_level), level(_level)		//konstruktor tworzacy potwora
 {
 	picture.setTexture(_picture);
+	picture.setTextureRect(IntRect(_monsterPictureX, _monsterPictureY, _monsterSize, _monsterSize));
 	picture.setOrigin(picture.getGlobalBounds().width / 2, picture.getGlobalBounds().height / 2);
 	picture.setPosition(_position);
 
@@ -49,7 +50,7 @@ int Monster::move(const Map map[])			//przemieszczanie potwora
 	{
 		return 1;
 	}
-	hp.setPosition(picture.getPosition().x, picture.getPosition().y - 27);		//aktualizacja pozycji tekstu z iloscia pozostalego zycia
+	hp.setPosition(picture.getPosition().x, picture.getPosition().y - picture.getGlobalBounds().height / 2 - 12);		//aktualizacja pozycji tekstu z iloscia pozostalego zycia
 	return 0;
 }
 

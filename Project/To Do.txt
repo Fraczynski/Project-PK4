@@ -1,15 +1,21 @@
 //GUI.h
+//kolory przezroczystych pikseli
 mapy bez t³a
 poprawic kod obs³uguj¹cy klikniêcie
 ulepszanie wie¿yczek
 teksty w osobnej klasie
 includy do plikow cpp
 komentarze
-
-szablony	//jeœli nic lepszego nie bêdzie ju¿ na pk
 menu
+zmieniac kursor na nr1 w menu i ponownie po wyjsciu
+wiezyczka nr2 - problem z budowaniem
+statystyki wiezyczek w menu
+dodaæ obrazki potworków
+--------------------------------------------
+
 pola zmiennych jako prywatne
 zapis stanu gry do pliku
 poprawiæ animacje pocisków
 dodaæ mapy
-dodaæ obrazki potworków
+sprzedawanie wiezyczek
+argumenty const i &

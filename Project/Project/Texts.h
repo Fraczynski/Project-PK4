@@ -5,8 +5,9 @@
 
 class Texts
 {
-	sf::Text text[12];						//tabela tekstow: 0 - damage, 1 - range, 2 - rate, 3 - upgrading damage, 4 - upgrading  range, 5 - upgrading rate, 
-											//6 - price1, 7 - price2, 8 - price3, 9 - cash, 10 - kills, 11 - waves
+	sf::Text text[21];						//tabela tekstow: 0 - damage, 1 - range, 2 - rate, 3 - upgrading damage, 4 - upgrading  range, 5 - upgrading rate, 
+											//6 - price1, 7 - price2, 8 - price3, 9 - cash, 10 - kills, 11 - waves, 12 - damage turret1, 13 - range turret1, 14 - rate turret1,
+											//15 - damage turret2, 16 - range turret2, 17 - rate turret2, 18 - damage turret3, 19 - range turret3, 20 - rate turret3
 	sf::Color bright = sf::Color(255, 255, 255);		//kolor podswietlonych informacji
 	sf::Color dark = sf::Color(90, 90, 90);				//kolor przygaszonych informacji
 

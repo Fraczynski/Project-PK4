@@ -8,7 +8,7 @@ Turret::Turret(int _id,  Texture & _picture, Vector2f _position) : id(_id)				//
 {
 	picture.setTexture(_picture);
 	picture.setPosition(_position);
-	if (id == 3)
+	if (id == 2)
 		picture.setOrigin(picture.getGlobalBounds().width / 2, picture.getGlobalBounds().height / 1.8);
 	else
 		picture.setOrigin(picture.getGlobalBounds().width / 2, picture.getGlobalBounds().height / 2);

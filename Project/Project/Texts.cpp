@@ -5,7 +5,7 @@ using namespace sf;
 
 Texts::Texts(const Font & font, Vector2f vectorTurret1, Vector2f vectorTurret2, Vector2f vectorTurret3, Turret *turret1, Turret *turret2, Turret *turret3)	//konstruktor tworzacy teksty
 {
-	for (int i = 0; i < 12; i++)			//ustawienia graficzne wszystkich tekstow
+	for (int i = 0; i < 21; i++)			//ustawienia graficzne wszystkich tekstow
 	{
 		text[i].setFont(font);
 		text[i].setCharacterSize(18);
@@ -26,6 +26,24 @@ Texts::Texts(const Font & font, Vector2f vectorTurret1, Vector2f vectorTurret2, 
 	text[9].setPosition(756, 628);
 	text[10].setPosition(764, 650);
 	text[11].setPosition(752, 672);
+	text[12].setPosition(55, 627);
+	text[12].setString("Damage  " + to_string(turret1->damage));
+	text[13].setPosition(70, 649);
+	text[13].setString("Range  " + to_string(turret1->range));
+	text[14].setPosition(83, 671);
+	text[14].setString("Rate  " + to_string(turret1->rate));
+	text[15].setPosition(216, 627);
+	text[15].setString("Damage  " + to_string(turret2->damage));
+	text[16].setPosition(231, 649);
+	text[16].setString("Range  " + to_string(turret2->range));
+	text[17].setPosition(244, 671);
+	text[17].setString("Rate  " + to_string(turret2->rate));
+	text[18].setPosition(376, 627);
+	text[18].setString("Damage  " + to_string(turret3->damage));
+	text[19].setPosition(391, 649);
+	text[19].setString("Range  " + to_string(turret3->range));
+	text[20].setPosition(404, 671);
+	text[20].setString("Rate  " + to_string(turret3->rate));
 }
 
 void Texts::updateInfo(Turret & turret)					//wyswietlanie informacji o wiezyczce (przenoszonej lub klikniêtej)
@@ -94,7 +112,7 @@ void Texts::updateStats(int & cash, int & kills, int & level)			//aktualizowanie
 void Texts::display(int & cash, int & kills, int & level, RenderWindow & window)			//wyswietlanie tekstów
 {
 	updateStats(cash, kills, level);			//aktualizacja statystyk
-	for (int i = 0; i < 12; i++)		//rysowanie wszystkich tekstow
+	for (int i = 0; i < 21; i++)		//rysowanie wszystkich tekstow
 	{
 		window.draw(text[i]);
 	}

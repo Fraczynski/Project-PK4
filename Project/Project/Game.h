@@ -18,12 +18,15 @@ class Game
 	int width = 1000;			//szerokosc okna
 	int height = 703;			//wysokosc okna
 	int timeToNextRound;		//pozostaly czas do kolejnej rundy
-	int roundTime;			//czas pojedynczej rundy
+	int roundTime;				//czas pojedynczej rundy
 	int ifMovingTurret;			//czy przenoszona aktualnie jest wiezyczka: 0 - nie; 1 - tak
 	int clicked;				//numer zaznaczonej wiezyczki: -1 - brak zaznaczonej
 	int level;					//numer aktualnego poziomu
-	int cash;				//poczatkowa ilosc pieniedzy											//zmienic po testach
+	int cash;					//poczatkowa ilosc pieniedzy											//zmienic po testach
 	int kills;					//licznik zabitych potworow
+	int monsterSize;			//rozmiar obrazka potwora
+	int monsterPictureX;		//wspolrzedna x aktualnego sprite'a potwora
+	int monsterPictureY;		//wspolrzedna y aktualnego sprite'a potwora
 	RenderWindow window;			//okno aplikacji
 	Vector2i mousePosition;			//zmienna do przechowywania wspolrzednych pozycji myszy
 	Image I_map1;					//obraz do sprawdzania kolorow pikseli mapy
@@ -42,17 +45,22 @@ class Game
 	CircleShape circle;				//kolo pokazujace zasieg wiezyczki po jej zaznaczeniu
 	Texture T_buttonResume;			//przycisk resume
 	Texture T_buttonRestart;		//przycisk restart
+	Texture T_buttonSave;			//przycisk save
+	Texture T_buttonLoad;			//przycisk save
 	Texture T_buttonExit;			//przycisk exit
 	Sprite buttonResume;			//przycisk resume
 	Sprite buttonRestart;			//przycisk restart
+	Sprite buttonSave;				//przycisk save
+	Sprite buttonLoad;				//przycisk save
 	Sprite buttonExit;				//przycisk exit
 	const Map cornersMap1[11] = { {Vector2f(920, 539), 1}, {Vector2f(83, 539), 2}, {Vector2f(83, 83), 3}, {Vector2f(815, 83), 0}, {Vector2f(815, 431), 1}, {Vector2f(190, 431), 2 }, 
 					 {Vector2f(190, 188), 3}, {Vector2f(709, 188), 0}, {Vector2f(709, 323), 1}, {Vector2f(450, 323), 2}, { Vector2f(450, 295), 5 } };		//wspolrzedne (w ktorych potwory musza zmienic kierunek) i kierunki
 	Texture T_turret1;				//tekstury wie¿yczek
 	Texture T_turret2;
 	Texture T_turret3;
-	Texture T_monster1;				//tekstury potworkow
-	Texture T_monster2;
+	Image I_monster1;				//obrazek potworkow
+	Texture T_monster1;				//tekstura potwora
+	Texture T_monster2;				//tekstura potwora
 	Texture T_missile1;				//tekstury pociskow
 	Texture T_missile2;
 	Texture T_missile3;
@@ -89,7 +97,7 @@ public:
 
 	void pause();			//wstrzymanie gry
 
-	bool buttonEvent();
+	bool buttonEvents();
 
 	void leftButtonReleased();		//sprawdzanie polozenia wskaznika myszy podczas puszczenia lewego przycisku
 
