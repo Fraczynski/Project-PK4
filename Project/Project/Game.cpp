@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <iostream>
 #include <vector>
+#include <fstream>
 #include "Game.h"
 #include "Monster.h"
 //#include <fstream>
@@ -15,9 +16,9 @@ void Game::gameLoop()
 	resetGame();
 	display();
 
-	/*for (int i = 0; i < 5; i++)
+	/*for (int i = 0; i < 10; i++)
 	{
-		monsters.push_back(Monster(1, font, T_monster1, Vector2f(709, 300 - i * 30)));				//usunac po testach
+		monsters.push_back(Monster(level, font, T_monster1, Vector2f(709, 300 - i * 30), monsterPictureX, monsterPictureY, monsterSize));
 	}*/
 	while (window.isOpen())				//petla wykonujaca sie dopoki nie zostanie zakonczona gra
 	{
@@ -134,15 +135,13 @@ void Game::loadGraphics()
 void Game::resetGame()
 {
 	timeToNextRound = 30;		//pozostaly czas do kolejnej rundy
-	roundTime = 1200;			//czas pojedynczej rundy
 	ifMovingTurret = 0;			//czy przenoszona aktualnie jest wiezyczka: 0 - nie; 1 - tak
 	clicked = -1;				//numer zaznaczonej wiezyczki: -1 - brak zaznaczonej
-	level = 0;					//numer aktualnego poziomu
-	cash = 20;					//poczatkowa ilosc pieniedzy
+	level = 10;					//numer aktualnego poziomu
+	cash = 100000;					//poczatkowa ilosc pieniedzy
 	kills = 0;					//licznik zabitych potworow
-	monsterSize = 40;		//rozmiar obrazka potwora
-	monsterPictureX = 0;	//wspolrzedna x aktualnego sprite'a potwora
-	monsterPictureY = 0;	//wspolrzedna y aktualnego sprite'a potwora
+	monsterPictureX = 0;		//wspolrzedna x aktualnego sprite'a potwora
+	monsterPictureY = 0;		//wspolrzedna y aktualnego sprite'a potwora
 	texts->updateInfo();
 
 	monsters.clear();
@@ -162,9 +161,9 @@ void Game::resetTurrets()
 	cursor.setTexture(T_cursor1);
 	cursor.setOrigin(0, 0);
 	ifMovingTurret = 0;
-	(*turret1).picture.setPosition(vectorTurret1);
-	(*turret2).picture.setPosition(vectorTurret2);
-	(*turret3).picture.setPosition(vectorTurret3);
+	turret1->setPosition(vectorTurret1);
+	turret2->setPosition(vectorTurret2);
+	turret3->setPosition(vectorTurret3);
 	circle.setPosition(0, 0);
 	circle.setRadius(0);
 	texts->updateInfo();
@@ -176,32 +175,34 @@ void Game::display()
 	window.draw(background);
 	window.draw(map1);
 		
-	for (unsigned i = 0; i < lines.size(); i++)
+	for (vector<Sprite>::iterator it = lines.begin(); it < lines.end(); it++)
 	{
-		window.draw(lines[i]);
+		window.draw(*it);
 	}
-	for (unsigned i = 0; i < monsters.size(); i++)
+	for (vector<Monster>::iterator it = monsters.begin(); it < monsters.end(); it++)
 	{
-		monsters[i].display(window);
+		it->display(window);
 	}
-	for (unsigned i = 0; i < turrets.size(); i++)
+	for (vector<Turret>::iterator it = turrets.begin(); it < turrets.end(); it++)
 	{
-		window.draw(turrets[i].picture);
+		it->display(window);
 	}
-	for (auto r : rockets)
+	if (clicked >= 0)
 	{
-		r->display(window);
+		turrets[clicked].display(window);
 	}
-	if(clicked >= 0)
-		window.draw(turrets[clicked].picture);
 	window.draw(circle);
+	for (vector<Rocket *>::iterator it = rockets.begin(); it < rockets.end(); it++)
+	{
+		(*it)->display(window);
+	}
 	window.draw(bar);
 	window.draw(arrow);
 	texts->display(cash, kills, level, window);
-	
-	window.draw(turret1->picture);
-	window.draw(turret2->picture);
-	window.draw(turret3->picture);
+
+	turret1->display(window);
+	turret2->display(window);
+	turret3->display(window);
 	cursor.setPosition(Vector2f(Mouse::getPosition(window)));
 	window.draw(cursor);
 
@@ -216,9 +217,7 @@ void Game::events()
 	{
 		if (e.type == Event::Closed)
 		{
-			cleaner();
-			window.close();
-			exit(0);
+			exit();
 		}
 		if (e.type == Event::KeyReleased && e.key.code == Keyboard::Escape)
 		{
@@ -272,9 +271,7 @@ bool Game::buttonEvents()
 	{
 		if (e.type == Event::Closed)
 		{
-			cleaner();
-			window.close();
-			exit(0);
+			exit();
 		}
 		if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Left || e.type == Event::KeyReleased)
 		{
@@ -289,17 +286,17 @@ bool Game::buttonEvents()
 			}
 			else if (buttonSave.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 			{
-				
+				save();
+				return true;
 			}
 			else if (buttonLoad.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 			{
-				
+				load();
+				return true;
 			}
 			else if (buttonExit.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
 			{
-				cleaner();
-				window.close();
-				exit(0);
+				exit();
 			}
 		}
 	}
@@ -342,26 +339,26 @@ void Game::movingTurret()
 	switch (ifMovingTurret)
 	{
 	case 1:
-		if (cash >= (*turret1).getPrice() && checkPlace((*turret1).picture.getPosition(), (*turret1).picture.getGlobalBounds().width, (*turret1).picture.getGlobalBounds().height))
+		if (cash >= turret1->getPrice() && checkPlace(turret1->getPosition(), turret1->getWidth(), turret1->getHeight()))
 		{
 			tmp = 1;
-			cash -= (*turret1).getPrice();
+			cash -= turret1->getPrice();
 			turrets.push_back(*turret1);
 		}
 		break;
 	case 2:
-		if (cash >= (*turret2).getPrice() && checkPlace((*turret2).picture.getPosition(), (*turret2).picture.getGlobalBounds().width, (*turret2).picture.getGlobalBounds().height))
+		if (cash >= turret2->getPrice() && checkPlace(turret2->getPosition(), turret2->getWidth(), turret2->getHeight()))
 		{
 			tmp = 1;
-			cash -= (*turret2).getPrice();
+			cash -= turret2->getPrice();
 			turrets.push_back(*turret2);
 		}
 		break;
 	case 3:
-		if (cash >= (*turret3).getPrice() && checkPlace((*turret3).picture.getPosition(), (*turret3).picture.getGlobalBounds().width, (*turret3).picture.getGlobalBounds().height))
+		if (cash >= turret3->getPrice() && checkPlace(turret3->getPosition(), turret3->getWidth(), turret3->getHeight()))
 		{
 			tmp = 1;
-			cash -= (*turret3).getPrice();
+			cash -= turret3->getPrice();
 			turrets.push_back(*turret3);
 		}
 		break;
@@ -378,23 +375,23 @@ void Game::moveTurret()
 	switch (ifMovingTurret)
 	{
 	case 1:
-		(*turret1).picture.setPosition((Vector2f)Mouse::getPosition(window));
-		updateCircle((Vector2f)Mouse::getPosition(window), (*turret1).range);
+		turret1->setPosition((Vector2f)Mouse::getPosition(window));
+		updateCircle((Vector2f)Mouse::getPosition(window), turret1->getRange());
 		break;
 	case 2:
-		(*turret2).picture.setPosition((Vector2f)Mouse::getPosition(window));
-		updateCircle((Vector2f)Mouse::getPosition(window), (*turret2).range);
+		turret2->setPosition((Vector2f)Mouse::getPosition(window));
+		updateCircle((Vector2f)Mouse::getPosition(window), turret2->getRange());
 		break;
 	case 3:
-		(*turret3).picture.setPosition((Vector2f)Mouse::getPosition(window));
-		updateCircle((Vector2f)Mouse::getPosition(window), (*turret3).range);
+		turret3->setPosition((Vector2f)Mouse::getPosition(window));
+		updateCircle((Vector2f)Mouse::getPosition(window), turret3->getRange());
 		break;
 	}
 }
 
 bool Game::notMovingTurret()
 {
-	if (turret1->picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+	if (turret1->contains((Vector2f)Mouse::getPosition(window)))
 	{
 		cursor.setTexture(T_cursor2);
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
@@ -402,7 +399,7 @@ bool Game::notMovingTurret()
 		texts->updateInfo(*turret1);
 		return true;
 	}
-	else if (turret2->picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+	else if (turret2->contains((Vector2f)Mouse::getPosition(window)))
 	{
 		cursor.setTexture(T_cursor2);
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
@@ -410,7 +407,7 @@ bool Game::notMovingTurret()
 		texts->updateInfo(*turret2);
 		return true;
 	}
-	else if (turret3->picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+	else if (turret3->contains((Vector2f)Mouse::getPosition(window)))
 	{
 		cursor.setTexture(T_cursor2);
 		cursor.setOrigin(cursor.getGlobalBounds().width / 2, cursor.getGlobalBounds().height / 2);
@@ -425,10 +422,10 @@ bool Game::turretClicked()
 {
 	for (unsigned i = 0; i < turrets.size(); i++)
 	{
-		if (turrets[i].picture.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+		if (turrets[i].contains((Vector2f)Mouse::getPosition(window)))
 		{
 			clicked = i;
-			updateCircle((turrets.begin() + clicked)->picture.getPosition(), (turrets.begin() + clicked)->range);
+			updateCircle((turrets.begin() + clicked)->getPosition(), (turrets.begin() + clicked)->getRange());
 			texts->updateInfo(*(turrets.begin() + clicked));
 			return true;
 		}
@@ -453,7 +450,7 @@ void Game::upgradeTurrets()
 		turrets[clicked].upgrade(3, cash);
 		break;
 	}
-	updateCircle((turrets.begin() + clicked)->picture.getPosition(), (turrets.begin() + clicked)->range);
+	updateCircle((turrets.begin() + clicked)->getPosition(), (turrets.begin() + clicked)->getRange());
 	texts->updateInfo(*(turrets.begin() + clicked));
 }
 
@@ -475,9 +472,7 @@ void Game::move_monsters()
 	{
 		if (monsters[i].move(cornersMap1))
 		{
-			lines.push_back(Sprite(T_line));
-			lines.back().setOrigin(lines.back().getGlobalBounds().width / 2, lines.back().getGlobalBounds().height / 2);
-			lines.back().setPosition(343 + 20 * lines.size(), 272);
+			addLines();
 			monsters.erase(monsters.begin() + i);
 			i--;
 		}
@@ -523,7 +518,7 @@ void Game::move_missiles()
 {
 	for (int i = 0; i < rockets.size(); i++)
 	{
-		if ((*rockets[i]).specialAbilities(monsters, cash, kills))
+		if (rockets[i]->specialAbilities(monsters, cash, kills))
 		{
 			delete rockets[i];
 			rockets.erase(rockets.begin() + i);
@@ -532,7 +527,7 @@ void Game::move_missiles()
 	}
 }
 
-bool Game::checkPixel(int x, int y)
+bool Game::checkPixel(const int & x, const int & y)
 {
 	if (((int)I_map1.getPixel(x, y).r >= 143 && (int)I_map1.getPixel(x, y).r <= 149 && (int)I_map1.getPixel(x, y).g >= 205 &&
 		(int)I_map1.getPixel(x, y).g <= 211 && (int)I_map1.getPixel(x, y).b >= 77 && (int)I_map1.getPixel(x, y).b <= 83) ||
@@ -543,7 +538,46 @@ bool Game::checkPixel(int x, int y)
 	return true;
 }
 
-bool Game::checkPlace(Vector2f position, int w, int h)
+void Game::addLines()
+{
+	lines.push_back(Sprite(T_line));
+	lines.back().setOrigin(lines.back().getGlobalBounds().width / 2, lines.back().getGlobalBounds().height / 2);
+	lines.back().setPosition(343 + 20 * lines.size(), 272);
+}
+
+void Game::save()
+{
+	fstream file;
+	file.open("save.txt", ios::out);
+	if (file.good())
+	{
+		file.clear();
+		file << timeToNextRound << " " << ifMovingTurret << " " << clicked << " " << level << " " << cash << " " << kills << " " << monsterPictureX << " ";
+		file << monsterPictureY << " " << lines.size() << endl;
+		file << monsters.size() << endl;
+
+		for (vector<Monster>::iterator it = monsters.begin(); it < monsters.end(); it++)
+		{
+			it->save(file);
+		}
+		file << endl << turrets.size() << endl;
+		for (vector<Turret>::iterator it = turrets.begin(); it < turrets.end(); it++)
+		{
+			it->save(file);
+		}
+		file << endl << rockets.size() << endl;
+		for (vector<Rocket *>::iterator it = rockets.begin(); it < rockets.end(); it++)
+		{
+			(*it)->save(file);
+		}
+	}
+	else
+	{
+		Sleep(3000);
+	}
+}
+
+bool Game::checkPlace(const Vector2f & position, const int & w, const int & h)
 {
 	int i;
 	if (position.y + w / 2 + 3 <= 624)
@@ -570,7 +604,7 @@ bool Game::checkPlace(Vector2f position, int w, int h)
 
 	for (auto t : turrets)
 	{
-		if (sqrt(pow(t.picture.getPosition().x - position.x, 2) + pow(t.picture.getPosition().y - position.y, 2)) <= 53)
+		if (sqrt(pow(t.getPosition().x - position.x, 2) + pow(t.getPosition().y - position.y, 2)) <= 53)
 		{
 			return false;
 		}
@@ -578,24 +612,106 @@ bool Game::checkPlace(Vector2f position, int w, int h)
 	return true;
 }
 
-void Game::shoot()
+void Game::load()
 {
-	int tmp;
-	for (auto & t : turrets)
+	fstream file;
+	file.open("save.txt", ios::in);
+	if (file.good())
 	{
-		tmp = t.shoot(monsters);
-		if (tmp >= 0 && tmp < monsters.size())
+		resetGame();
+		int vectorSize;
+		int tmp;
+		file >> timeToNextRound >> ifMovingTurret >> clicked >> level >> cash >> kills >> monsterPictureX >> monsterPictureY;
+		file >> vectorSize;				//rozmiar wektora linii
+		for (int i = 0; i < vectorSize; i++)
 		{
-			switch (t.id)
+			addLines();
+		}
+		file >> vectorSize;				//rozmiar wektora potworow
+		for (int i = 0; i < vectorSize; i++)
+		{
+			int level;
+			float positionX, positionY;
+			int rectLeft, rectTop, rectSize;
+			float rotation;
+			int direction, HP;
+
+			T_monster1.loadFromImage(I_monster1);
+			file >> level >> positionX >> positionY >> rectLeft >> rectTop;
+			file >> rectSize >> direction >> HP;
+			monsters.push_back(Monster(level, font, T_monster1, Vector2f(positionX, positionY), rectLeft, rectTop, rectSize));
+			monsters.back().loadParameters(direction, HP);
+		}
+		file >> vectorSize;					//rozmiar wektora wiezyczek
+		for (int i = 0; i < vectorSize; i++)
+		{
+			int id, price, timeToShoot, damage, range, rate, aimAtMonster;
+			float positionX, positionY;
+			float rotation;
+
+			T_monster1.loadFromImage(I_monster1);
+			file >> id >> positionX >> positionY >> timeToShoot >> damage >> range >> rate >> aimAtMonster >> rotation;
+			switch (id)
 			{
 			case 1:
-				rockets.push_back(new Rocket1(2, t.damage, t.picture.getRotation(), 3, tmp, T_missile1, t.picture.getPosition()));
+				turrets.push_back(Turret(*turret1));
+				turrets.back().loadParameters(positionX, positionY, timeToShoot, damage, range, rate, aimAtMonster, rotation);
 				break;
 			case 2:
-				rockets.push_back(new Rocket2(20, t.damage, t.picture.getRotation(), tmp, T_missile2, t.picture.getPosition()));
+				turrets.push_back(Turret(*turret2));
+				turrets.back().loadParameters(positionX, positionY, timeToShoot, damage, range, rate, aimAtMonster, rotation);
 				break;
 			case 3:
-				rockets.push_back(new Rocket3(1, t.damage, t.picture.getRotation(), 10, tmp, T_missile3, t.picture.getPosition()));
+				turrets.push_back(Turret(*turret3));
+				turrets.back().loadParameters(positionX, positionY, timeToShoot, damage, range, rate, aimAtMonster, rotation);
+				break;
+			}
+		}
+		file >> vectorSize;			//rozmiar wektora pociskow
+		for (int i = 0; i < vectorSize; i++)
+		{
+			int id, speed, damage, numberOfMonster;
+			float positionX, positionY;
+			float rotation;
+			file >> id >> speed >> damage >> rotation >> numberOfMonster >> positionX >> positionY;
+			switch (id)
+			{
+			case 1:
+				rockets.push_back(new Rocket1(1, 2, damage, rotation, tmp, T_missile1, Vector2f(positionX, positionY)));
+				break;
+			case 2:
+				rockets.push_back(new Rocket2(2, 20, damage, rotation, tmp, T_missile1, Vector2f(positionX, positionY)));
+				break;
+			case 3:
+				rockets.push_back(new Rocket3(3, 1, damage, rotation, tmp, T_missile1, Vector2f(positionX, positionY)));
+				break;
+			}
+		}
+	}
+	else
+	{
+		Sleep(3000);
+	}
+}
+
+void Game::shoot()
+{
+	int numberOfMonster;
+	for (auto & t : turrets)
+	{
+		numberOfMonster = t.shoot(monsters);
+		if (numberOfMonster >= 0 && numberOfMonster < monsters.size())
+		{
+			switch (t.getID())
+			{
+			case 1:
+				rockets.push_back(new Rocket1(1, 2, t.getDamage(), t.getRotation(), numberOfMonster, T_missile1, t.getPosition()));
+				break;
+			case 2:
+				rockets.push_back(new Rocket2(2, 20, t.getDamage(), t.getRotation(), numberOfMonster, T_missile2, t.getPosition()));
+				break;
+			case 3:
+				rockets.push_back(new Rocket3(3, 1, t.getDamage(), t.getRotation(), numberOfMonster, T_missile3, t.getPosition()));
 				break;
 			}
 		}
@@ -617,12 +733,11 @@ void Game::end()
 			Sleep(15);
 		}
 		Sleep(3000);
-		cleaner();
-		exit(0);
+		exit();
 	}
 }
 
-void Game::cleaner()
+void Game::exit()
 {
 	for (int i = 0; i < rockets.size(); i++)
 	{
@@ -634,4 +749,5 @@ void Game::cleaner()
 	delete turret2;
 	delete turret3;
 	window.close();
+	std::exit(0);
 }

@@ -3,8 +3,8 @@
 using namespace std;
 using namespace sf;
 
-Rocket3::Rocket3(int _speed, int _damage, int _rotation, int _timeOfLife, int _numberOfMonster, Texture & _picture, Vector2f _position) :
-				Rocket(_speed, _damage, _rotation, _numberOfMonster, _picture, _position), timeOfLife(_timeOfLife)				//konstruktor tworzacy pocisk (laser)
+Rocket3::Rocket3(const int & _id, const int & _speed, const int & _damage, const int & _rotation, const int & _numberOfMonster, sf::Texture & _picture, sf::Vector2f _position) :
+				Rocket(_id, _speed, _damage, _rotation, _numberOfMonster, _picture, _position)				//konstruktor tworzacy pocisk (laser)
 {
 	picture.setOrigin(_picture.getSize().x / 2 , _picture.getSize().y);				//os obrotu lasera na srodku krotszego boku
 }

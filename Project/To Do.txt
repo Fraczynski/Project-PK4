@@ -1,5 +1,6 @@
 //GUI.h
 //kolory przezroczystych pikseli
+//osobne klasy w wiezyczek w menu i grze
 mapy bez t³a
 poprawic kod obs³uguj¹cy klikniêcie
 ulepszanie wie¿yczek
@@ -11,11 +12,19 @@ zmieniac kursor na nr1 w menu i ponownie po wyjsciu
 wiezyczka nr2 - problem z budowaniem
 statystyki wiezyczek w menu
 dodaæ obrazki potworków
+pola zmiennych jako prywatne
+argumenty const i &
 --------------------------------------------
 
-pola zmiennych jako prywatne
 zapis stanu gry do pliku
 poprawiæ animacje pocisków
+poprawiæ animacje wiezyczek
 dodaæ mapy
 sprzedawanie wiezyczek
-argumenty const i &
+zmienna tmp w shoot()
+wyjatek przy wczytywaniu plikow - zmienic cout
+zmienic image monster na texture
+#include <iostream> w Turret.h
+kolejki w Turret.h jako prywatne
+ulepszanie gdy nie przenosi sie wiezyczki
+przyciski jako 1 obrazek i pisac po nim tekst

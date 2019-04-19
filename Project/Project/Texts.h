@@ -12,15 +12,15 @@ class Texts
 	sf::Color dark = sf::Color(90, 90, 90);				//kolor przygaszonych informacji
 
 public:
-	Texts(const sf::Font & font, sf::Vector2f vectorTurret1, sf::Vector2f vectorTurret2, sf::Vector2f vectorTurret3, Turret *turret1, Turret *turret2, Turret *turret3);	//konstruktor tworzacy teksty
+	Texts(const sf::Font & font, const sf::Vector2f & vectorTurret1, const sf::Vector2f & vectorTurret2, const sf::Vector2f & vectorTurret3, Turret *turret1, Turret *turret2, Turret *turret3);	//konstruktor tworzacy teksty
 	
 	void updateInfo(Turret & turret);		//wyswietlanie informacji o wiezyczce (przenoszonej lub klikniêtej)
 
 	void updateInfo();		//przyciemnianie informacji o wiezyczce (zadna nie jest klikniêta)
 
-	void updateStats(int & cash, int & kills, int & level);		//aktualizowanie tekstu zawierajacego statystyki gry
+	void updateStats(const int & cash, const int & kills, const int & level);		//aktualizowanie tekstu zawierajacego statystyki gry
 
-	void display(int & cash, int & kills, int & level, sf::RenderWindow & window);			//wyswietlanie tekstów
+	void display(const int & cash, const int & kills, const int & level, sf::RenderWindow & window);			//wyswietlanie tekstów
 
 	int upgradingTextClicked(sf::RenderWindow & window);			//sprawdzanie, czy kliknieto przycisk ulepszania o podanym numerze
 };

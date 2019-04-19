@@ -17,14 +17,14 @@ class Game
 {
 	int width = 1000;			//szerokosc okna
 	int height = 703;			//wysokosc okna
+	int roundTime = 1200;		//czas pojedynczej rundy
 	int timeToNextRound;		//pozostaly czas do kolejnej rundy
-	int roundTime;				//czas pojedynczej rundy
 	int ifMovingTurret;			//czy przenoszona aktualnie jest wiezyczka: 0 - nie; 1 - tak
 	int clicked;				//numer zaznaczonej wiezyczki: -1 - brak zaznaczonej
 	int level;					//numer aktualnego poziomu
-	int cash;					//poczatkowa ilosc pieniedzy											//zmienic po testach
+	int cash;					//poczatkowa ilosc pieniedzy
 	int kills;					//licznik zabitych potworow
-	int monsterSize;			//rozmiar obrazka potwora
+	int monsterSize = 40;		//rozmiar obrazka potwora
 	int monsterPictureX;		//wspolrzedna x aktualnego sprite'a potwora
 	int monsterPictureY;		//wspolrzedna y aktualnego sprite'a potwora
 	RenderWindow window;			//okno aplikacji
@@ -74,7 +74,6 @@ class Game
 	Vector2f vectorTurret1 = Vector2f(38, 670);			//pozycja wiezyczek w sklepie
 	Vector2f vectorTurret2 = Vector2f(200, 670);
 	Vector2f vectorTurret3 = Vector2f(360, 670);
-
 	Font font;					//czcionka
 	Texts *texts;
 	
@@ -83,55 +82,35 @@ class Game
 	vector<Rocket *> rockets;		//wektor wskaznikow na rakiety
 	vector<Sprite> lines;			//wektor lini skreslajacych stickman'ow
 
-
 public:
 	void gameLoop();		//glowna petla gry
 
+private:
 	void loadGraphics();		//wczytywanie grafik i ich odpowiednie ustawienia
-
 	void resetGame();			//restartowanie gry
-
 	void resetTurrets();		//przywracanie wzorcowych wiezyczek do sklepu
-
 	void events();			//obsluga zdarzen
-
 	void pause();			//wstrzymanie gry
-
 	bool buttonEvents();
-
 	void leftButtonReleased();		//sprawdzanie polozenia wskaznika myszy podczas puszczenia lewego przycisku
-
 	void movingTurret();		//upuszczanie wiezyczki w celu jej wybudowania
-
 	void moveTurret();
-
 	bool notMovingTurret();		//sprawdzanie, czy rozpoczeto przenoszenie wiezyczki w celu jej wybudowania
-
 	bool turretClicked();		//wyswietlanie informacji o zaznaczonej wiezyczce
-
 	void upgradeTurrets();		//ulepszanie wiezyczek
-
 	void updateCircle(const Vector2f & position, const int & range);		//aktualizacja kola okreslajacego zasieg danej wiezyczki
-
 	void display();			//wyswietlanie wszystkich grafik
-
 	void updateClock();		//aktualizacja zegara informujacego o czasie rundy
-
 	void move_monsters();		//przemieszczanie wszystkich potworow
-
 	void add_monsters(int);		//dodawanie potworow
-
 	void rotate_turrets();		//obracanie wiezyczek
-
 	void move_missiles();		//przemieszczanie pociskow
-
-	bool checkPlace(Vector2f, int, int);		//sprawdzanie miejsca podczas proby wybudowania wiezyczki
-
-	bool checkPixel(int x, int y);		//sprawdzanie czy piksel o danych wspolrzednych jest koloru sciezki potworow
-
-	void shoot();			//wystrzeliwanie pociskow
-
+	bool checkPlace(const Vector2f & position, const int & w, const int & h);		//sprawdzanie miejsca podczas proby wybudowania wiezyczki
+	bool checkPixel(const int & x, const int & y);		//sprawdzanie czy piksel o danych wspolrzednych jest koloru sciezki potworow
+	void addLines();	//przekreslanie stickman'ow
+	void save();		//zapis do pliku
+	void load();		//odczyt z pliku
+	void shoot();		//wystrzeliwanie pociskow
 	void end();			//animacja konca gry
-
-	void cleaner();		//zwalnianie zasobow
+	void exit();		//zwalnianie zasobow
 };

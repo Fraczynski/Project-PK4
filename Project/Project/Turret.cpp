@@ -1,10 +1,11 @@
 #include "Turret.h"
+#include <iostream>
 
 using namespace std;
 using namespace sf;
 
 
-Turret::Turret(int _id,  Texture & _picture, Vector2f _position) : id(_id)				//konstruktor tworzacy wiezyczke (uzywany dla wiezyczek w menu)
+Turret::Turret(const int _id,  const Texture & _picture, const Vector2f _position) : id(_id)				//konstruktor tworzacy wiezyczke (uzywany dla wiezyczek w menu)
 {
 	picture.setTexture(_picture);
 	picture.setPosition(_position);
@@ -54,6 +55,30 @@ Turret::Turret(const Turret & _turret) : id(_turret.id),  damage(_turret.damage)
 	case 3:
 		upgradingTurret();
 		break;
+	}
+}
+
+void Turret::loadParameters(const float & positionX, const float & positionY, const int & _timeToShoot, const int & _damage, const int & _range, const int & _rate,
+	const int & _aimAtMonster, const float & rotation)
+{
+	picture.setPosition(Vector2f(positionX, positionY));
+	picture.setRotation(rotation);
+	timeToShoot = _timeToShoot;
+	damage = _damage;
+	range = _range;
+	rate = _rate;
+	aimAtMonster = _aimAtMonster;
+	while (qDamage.size() > 1 && qDamage.front().getValue() <= damage)
+	{
+		qDamage.pop();
+	}
+	while (qRange.size() > 1 && qRange.front().getValue() <= range)
+	{
+		qRange.pop();
+	}
+	while (qRate.size() > 1 && qRate.front().getValue() >= rate)
+	{
+		qRate.pop();
 	}
 }
 
@@ -145,19 +170,69 @@ void Turret::upgradingTurret()				//wypelnianie kolejek wartosciami kolejnych ul
 	}
 }
 
+int Turret::getID()
+{
+	return id;
+}
+
+int Turret::getDamage()
+{
+	return damage;
+}
+
 int Turret::getPrice()				//pobieranie ceny wiezyczki
 {
 	return price;
 }
 
-void Turret::rotate(const vector<Monster> & monsters)			//obracanie wiezyczki w strone odpowiedniego potwora
+int Turret::getRange()
+{
+	return range;
+}
+
+int Turret::getRate()
+{
+	return rate;
+}
+
+void Turret::setPosition(const Vector2f & vectorTurret)
+{
+	picture.setPosition(vectorTurret);
+}
+
+Vector2f Turret::getPosition()
+{
+	return picture.getPosition();
+}
+
+int Turret::getWidth()
+{
+	return picture.getGlobalBounds().width;
+}
+
+int Turret::getHeight()
+{
+	return picture.getGlobalBounds().height;
+}
+
+bool Turret::contains(const sf::Vector2f & point)
+{
+	return picture.getGlobalBounds().contains(point);
+}
+
+float Turret::getRotation()
+{
+	return picture.getRotation();
+}
+
+void Turret::rotate(vector<Monster> & monsters)			//obracanie wiezyczki w strone odpowiedniego potwora
 {
 	for (unsigned i = 0; i < monsters.size(); i++)				//szukanie potwora znajdujacego sie w zasiegu wiezyczki
 	{
 		if (isInRange(monsters[i]))					//sprawdzanie, czy potwor znajduje sie w zasiegu wiezyczki
 		{
-			picture.setRotation(atan2(monsters[i].picture.getPosition().y - picture.getPosition().y,
-				monsters[i].picture.getPosition().x - picture.getPosition().x) * (180 / (atan(1) * 4)) + 90);			//obracanie wiezyczki w kierunku potwora
+			picture.setRotation(atan2(monsters[i].getPosition().y - picture.getPosition().y,
+				monsters[i].getPosition().x - picture.getPosition().x) * (180 / (atan(1) * 4)) + 90);			//obracanie wiezyczki w kierunku potwora
 			aimAtMonster = i;			//zapisanie numeru potwora, w ktory wycelowala wiezyczka
 			return;
 		}
@@ -183,7 +258,7 @@ void Turret::rotate(const vector<Monster> & monsters)			//obracanie wiezyczki w 
 	}*/
 }
 
-int Turret::shoot(vector<Monster> & monsters)				//strzelanie do odpowiedniego potwora
+int Turret::shoot(const vector<Monster> & monsters)				//strzelanie do odpowiedniego potwora
 {
 	if (timeToShoot > 0)		//czekanie na mozliwosc wystrzalu
 	{
@@ -200,9 +275,9 @@ int Turret::shoot(vector<Monster> & monsters)				//strzelanie do odpowiedniego p
 	}
 }
 
-bool Turret::isInRange(const Monster & m)			//sprawdzanie czy dany potwor jest w zasiegu wiezyczki
+bool Turret::isInRange(Monster & m)			//sprawdzanie czy dany potwor jest w zasiegu wiezyczki
 {
-	if (sqrt(pow(m.picture.getPosition().x - picture.getPosition().x, 2) + pow(m.picture.getPosition().y - picture.getPosition().y, 2)) < range)	
+	if (sqrt(pow(m.getPosition().x - picture.getPosition().x, 2) + pow(m.getPosition().y - picture.getPosition().y, 2)) < range)	
 																							//sprawdanie, czy odleglosc miedzy wiezyczka a potworem jest mniejsza od zasiegu wiezyczki
 	{
 		return true;
@@ -210,12 +285,12 @@ bool Turret::isInRange(const Monster & m)			//sprawdzanie czy dany potwor jest w
 	return false;
 }
 
-void Turret::upgrade(int upgrading, int & cash)			//ulepszanie danej cechy wiezyczki
+void Turret::upgrade(const int upgrading, int & cash)			//ulepszanie danej cechy wiezyczki
 {
 	switch (upgrading)			//sprawdzanie, ktora cecha jest ulepszana
 	{
 	case 1:
-		if (cash - qDamage.front().getPrice() >= 0 && qDamage.size() > 1)	//sprawdzanie czy gracz ma wystarczajaca ilosc pieniedzy i czy jest mozliwosc dalszego ulepszania zadawanych obrazen
+		if (qDamage.size() > 1 && cash - qDamage.front().getPrice() >= 0)	//sprawdzanie czy gracz ma wystarczajaca ilosc pieniedzy i czy jest mozliwosc dalszego ulepszania zadawanych obrazen
 		{
 			cash -= qDamage.front().getPrice();			//zmniejszanie ilosci pieniedzy
 			damage = qDamage.front().getValue();		//aktualizacja wartosci zadawanych obrazen
@@ -223,7 +298,7 @@ void Turret::upgrade(int upgrading, int & cash)			//ulepszanie danej cechy wiezy
 		}
 		break;
 	case 2:
-		if (cash - qRange.front().getPrice() >= 0 && qRange.size() > 1)		//sprawdzanie czy gracz ma wystarczajaca ilosc pieniedzy i czy jest mozliwosc dalszego ulepszania zasiegu
+		if (qRange.size() > 1 && cash - qRange.front().getPrice() >= 0)		//sprawdzanie czy gracz ma wystarczajaca ilosc pieniedzy i czy jest mozliwosc dalszego ulepszania zasiegu
 		{
 			cash -= qRange.front().getPrice();			//zmniejszanie ilosci pieniedzy
 			range = qRange.front().getValue();		//aktualizacja wartosci zasiegu
@@ -231,7 +306,7 @@ void Turret::upgrade(int upgrading, int & cash)			//ulepszanie danej cechy wiezy
 		}
 		break;
 	case 3:
-		if (cash - qRate.front().getPrice() >= 0 && qRate.size() > 1)		//sprawdzanie czy gracz ma wystarczajaca ilosc pieniedzy i czy jest mozliwosc dalszego ulepszania czestotliwosci ulepszania
+		if (qRate.size() > 1 && cash - qRate.front().getPrice() >= 0)		//sprawdzanie czy gracz ma wystarczajaca ilosc pieniedzy i czy jest mozliwosc dalszego ulepszania czestotliwosci ulepszania
 		{
 			cash -= qRate.front().getPrice();			//zmniejszanie ilosci pieniedzy
 			rate = qRate.front().getValue();		//aktualizacja wartosci czestotliwosci strzelania
@@ -241,7 +316,18 @@ void Turret::upgrade(int upgrading, int & cash)			//ulepszanie danej cechy wiezy
 	}
 }
 
-Upgrading::Upgrading(int _price, int _value) : price(_price), value(_value)				//konstruktor przypisujacy wartosci zmiennym
+void Turret::display(sf::RenderWindow & window)
+{
+	window.draw(picture);
+}
+
+void Turret::save(fstream & file)
+{
+	file << id << " " << picture.getPosition().x << " " << picture.getPosition().y << " " << timeToShoot << " " << damage << " " << range << " " << rate << " ";
+	file << aimAtMonster << " " <<  picture.getRotation() << endl;
+}
+
+Upgrading::Upgrading(const int _price, const int _value) : price(_price), value(_value)				//konstruktor przypisujacy wartosci zmiennym
 {
 
 }

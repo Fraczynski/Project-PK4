@@ -6,7 +6,7 @@
 using namespace std;
 using namespace sf;
 
-Monster::Monster(int _level, Font & font, Texture & _picture, Vector2f _position, int & _monsterPictureX, int & _monsterPictureY, int & _monsterSize) : HP(_level), level(_level)		//konstruktor tworzacy potwora
+Monster::Monster(const int _level, const Font & font, const Texture & _picture, const Vector2f _position, const int & _monsterPictureX, const int & _monsterPictureY, const int & _monsterSize) : HP(_level), level(_level)		//konstruktor tworzacy potwora
 {
 	picture.setTexture(_picture);
 	picture.setTextureRect(IntRect(_monsterPictureX, _monsterPictureY, _monsterSize, _monsterSize));
@@ -54,7 +54,7 @@ int Monster::move(const Map map[])			//przemieszczanie potwora
 	return 0;
 }
 
-bool Monster::hurt(int damage)		//odejmowanie zycia
+bool Monster::hurt(const int damage)		//odejmowanie zycia
 {
 	HP -= damage;
 	hp.setString(to_string(HP));
@@ -72,4 +72,21 @@ void Monster::display(RenderWindow & window)			//wyswietlanie potwora
 int Monster::getLevel()		//pobieranie poczatkowej ilosci zycia
 {
 	return level;
+}
+
+Vector2f Monster::getPosition()
+{
+	return picture.getPosition();
+}
+
+void Monster::save(fstream & file)						//zapis stanu obiektu do pliku
+{
+	file << level << " " << picture.getPosition().x << " " << picture.getPosition().y << " " << picture.getTextureRect().left << " " << picture.getTextureRect().top << " ";
+	file << picture.getTextureRect().width << " " << direction << " " << HP << endl;
+}
+
+void Monster::loadParameters(const int & _direction, const int & _HP)				//ladowanie parametrow obiektu, podczas odczytu z pliku, ktorych nie obejmuje konstruktor
+{
+	direction = _direction;
+	HP = _HP;
 }
