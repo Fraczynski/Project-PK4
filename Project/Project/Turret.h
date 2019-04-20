@@ -25,12 +25,19 @@ class Turret			//klasa reprezentujaca wiezyczke
 	int range;			//zasieg
 	int rate;			//czestotliwosc strzelania
 	int aimAtMonster = -1;			//numer potwora, na ktory wycelowala wiezyczka
-	sf::Sprite picture;			//obrazek wiezyczki
 
 public:
 	std::queue<Upgrading> qDamage;		//kolejka z zawartoscia kolejnych ulepszen zadawanych obrazen
 	std::queue<Upgrading> qRange;		//kolejka z zawartoscia kolejnych ulepszen zasiegu
 	std::queue<Upgrading> qRate;		//kolejka z zawartoscia kolejnych ulepszen czestotliwosci strzelania
+
+
+
+	sf::Sprite picture;			//obrazek wiezyczki
+
+
+
+
 
 	Turret(const int _id, const sf::Texture & _picture, const sf::Vector2f _position);			//konstruktor tworzacy wiezyczke (uzywany dla wiezyczek w menu)
 	Turret(const Turret & _turret);					//konstruktor tworzacy kopie wiezyczki (uzywany przy budowaniu wiezyczki na mapie - kopia danej wiezyczki z menu)

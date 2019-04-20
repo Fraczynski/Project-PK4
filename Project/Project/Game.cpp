@@ -14,12 +14,10 @@ void Game::gameLoop()
 {
 	loadGraphics();
 	resetGame();
-	display();
+	display(monsters, turrets, rockets, lines, clicked, cash, kills, level, timeToNextRound);
 
-	/*for (int i = 0; i < 10; i++)
-	{
-		monsters.push_back(Monster(level, font, T_monster1, Vector2f(709, 300 - i * 30), monsterPictureX, monsterPictureY, monsterSize));
-	}*/
+	//for (int i = 0; i < 10; i++){monsters.push_back(Monster(level, font, T_monster1, Vector2f(709, 300 - i * 30), monsterPictureX, monsterPictureY, monsterSize));}
+
 	while (window.isOpen())				//petla wykonujaca sie dopoki nie zostanie zakonczona gra
 	{
 		events();
@@ -30,106 +28,9 @@ void Game::gameLoop()
 		move_missiles();
 		moveTurret();
 		updateClock();
-		display();
+		display(monsters, turrets, rockets, lines, clicked, cash, kills, level, timeToNextRound);
 		end();
 	}
-}
-
-void Game::loadGraphics()
-{
-	window.create(VideoMode(width, height, 32), "Onslaught");
-	window.clear(Color(255, 0, 0));
-	window.setActive(true);
-	window.setFramerateLimit(60);
-	window.setIcon(icon.width, icon.height, icon.pixel_data);
-	window.setMouseCursorVisible(false);
-	//window.setMouseCursorGrabbed(true);
-
-	try
-	{
-		if (!T_background.loadFromFile("background.png") || !I_map1.loadFromFile("map1.png") || !T_map1.loadFromFile("map1.png") || !T_bar.loadFromFile("bar.png") || 
-			!T_turret1.loadFromFile("turret1.png") || !T_turret2.loadFromFile("turret2.png") ||	!T_turret3.loadFromFile("turret3.png") || !I_monster1.loadFromFile("monster1.png") || 
-			!T_cursor1.loadFromFile("cursor1.png") || !T_cursor2.loadFromFile("cursor2.png") || !T_missile1.loadFromFile("missile1.png") || 
-			!T_missile2.loadFromFile("missile2.png") || !T_missile3.loadFromFile("missile3.png") || !T_arrow.loadFromFile("arrow.png") || !font.loadFromFile("calibri.ttf") || 
-			!T_line.loadFromFile("line.png") || !T_gameOver.loadFromFile("end.png") || !T_buttonResume.loadFromFile("resume.png") || !T_buttonRestart.loadFromFile("restart.png") ||
-			!T_buttonSave.loadFromFile("save.png") || !T_buttonLoad.loadFromFile("load.png") || !T_buttonExit.loadFromFile("exit.png"))
-		{
-			throw - 1;
-		}
-	}
-	catch (int)
-	{
-		cout << "Blad wczytywania plikow!";
-		Sleep(5000);
-		window.close();
-	}
-	T_background.setSmooth(true);
-	background.setTexture(T_background);
-	T_map1.setSmooth(true);
-	map1.setTexture(T_map1);
-
-	T_bar.setSmooth(true);
-	bar.setTexture(T_bar);
-	bar.setPosition(0, 625);
-
-	T_arrow.setSmooth(true);
-	arrow.setTexture(T_arrow);
-	arrow.setPosition(957, 657);
-	arrow.setOrigin(arrow.getGlobalBounds().width / 2, arrow.getGlobalBounds().height - 3);
-
-	T_line.setSmooth(true);
-
-	T_screenShot.create(width, height);
-	T_gameOver.setSmooth(true);
-	gameOver.setTexture(T_gameOver);
-	gameOver.setOrigin(gameOver.getGlobalBounds().width / 2, gameOver.getGlobalBounds().height / 2);
-	gameOver.setPosition(width / 2, map1.getGlobalBounds().height / 2);
-	gameOver.setScale(5, 5);
-
-	circle.setFillColor(Color(0, 0, 0, 130));
-	circle.setPointCount(50);
-	circle.setPosition(0, 0);
-
-	T_buttonResume.setSmooth(true);
-	T_buttonRestart.setSmooth(true);
-	T_buttonSave.setSmooth(true);
-	T_buttonLoad.setSmooth(true);
-	T_buttonExit.setSmooth(true);
-	buttonResume.setTexture(T_buttonResume);
-	buttonRestart.setTexture(T_buttonRestart);
-	buttonSave.setTexture(T_buttonSave);
-	buttonLoad.setTexture(T_buttonLoad);
-	buttonExit.setTexture(T_buttonExit);
-	buttonResume.setOrigin(buttonResume.getGlobalBounds().width / 2, buttonResume.getGlobalBounds().height / 2);
-	buttonRestart.setOrigin(buttonRestart.getGlobalBounds().width / 2, buttonRestart.getGlobalBounds().height / 2);
-	buttonSave.setOrigin(buttonSave.getGlobalBounds().width / 2, buttonSave.getGlobalBounds().height / 2);
-	buttonLoad.setOrigin(buttonSave.getGlobalBounds().width / 2, buttonSave.getGlobalBounds().height / 2);
-	buttonExit.setOrigin(buttonExit.getGlobalBounds().width / 2, buttonExit.getGlobalBounds().height / 2);
-	buttonResume.setPosition(width / 2, 2 * height / 8);
-	buttonRestart.setPosition(width / 2, 3 * height / 8);
-	buttonSave.setPosition(width / 2, 4 * height / 8);
-	buttonLoad.setPosition(width / 2, 5 * height / 8);
-	buttonExit.setPosition(width / 2, 6 * height / 8);
-
-	T_turret1.setSmooth(true);
-	T_turret2.setSmooth(true);
-	T_turret3.setSmooth(true);
-	turret1 = new Turret(1, T_turret1, vectorTurret1);
-	turret2 = new Turret(2, T_turret2, vectorTurret2);
-	turret3 = new Turret(3, T_turret3, vectorTurret3);
-
-	//T_monster1.setSmooth(true);
-	T_missile1.setSmooth(true);
-	T_missile2.setSmooth(true);
-	T_missile3.setSmooth(true);
-
-	T_cursor1.setSmooth(true);
-	T_cursor2.setSmooth(true);
-	cursor.setTexture(T_cursor2);
-	cursor.setTexture(T_cursor1);
-
-	texts = new Texts(font, Vector2f(vectorTurret1.x, vectorTurret1.y - 5), Vector2f(vectorTurret2.x, vectorTurret2.y - 5), Vector2f(vectorTurret3.x, vectorTurret3.y - 5), turret1, turret2, turret3);
-	texts->updateInfo();
 }
 
 void Game::resetGame()
@@ -169,47 +70,6 @@ void Game::resetTurrets()
 	texts->updateInfo();
 }
 
-void Game::display()
-{
-	window.clear(Color(255, 0, 0));
-	window.draw(background);
-	window.draw(map1);
-		
-	for (vector<Sprite>::iterator it = lines.begin(); it < lines.end(); it++)
-	{
-		window.draw(*it);
-	}
-	for (vector<Monster>::iterator it = monsters.begin(); it < monsters.end(); it++)
-	{
-		it->display(window);
-	}
-	for (vector<Turret>::iterator it = turrets.begin(); it < turrets.end(); it++)
-	{
-		it->display(window);
-	}
-	if (clicked >= 0)
-	{
-		turrets[clicked].display(window);
-	}
-	window.draw(circle);
-	for (vector<Rocket *>::iterator it = rockets.begin(); it < rockets.end(); it++)
-	{
-		(*it)->display(window);
-	}
-	window.draw(bar);
-	window.draw(arrow);
-	texts->display(cash, kills, level, window);
-
-	turret1->display(window);
-	turret2->display(window);
-	turret3->display(window);
-	cursor.setPosition(Vector2f(Mouse::getPosition(window)));
-	window.draw(cursor);
-
-	window.display();
-	timeToNextRound--;
-}
-
 void Game::events()
 {
 	Event e;
@@ -238,23 +98,19 @@ void Game::pause()
 {
 	mousePosition = Mouse::getPosition(window);
 	Mouse::setPosition(Vector2i(0, -32), window);
-	display(); display(); display();
+	display(monsters, turrets, rockets, lines, clicked, cash, kills, level, timeToNextRound); 
+	display(monsters, turrets, rockets, lines, clicked, cash, kills, level, timeToNextRound); 
+	display(monsters, turrets, rockets, lines, clicked, cash, kills, level, timeToNextRound);
 	T_screenShot.update(window);
 	screenShot.setTexture(T_screenShot);
 	screenShot.setColor(Color(110, 110, 110));
 	Mouse::setPosition(mousePosition, window);
 	Sprite cursorTmp(T_cursor1);
+
 	while (1)
 	{
-		window.draw(screenShot);
-		window.draw(buttonResume);
-		window.draw(buttonRestart);
-		window.draw(buttonSave);
-		window.draw(buttonLoad);
-		window.draw(buttonExit);
 		cursorTmp.setPosition(Vector2f(Mouse::getPosition(window)));
-		window.draw(cursorTmp);
-		window.display();
+		pauseMenu(cursorTmp);
 		if (buttonEvents())
 		{
 			return;
@@ -316,7 +172,7 @@ void Game::leftButtonReleased()
 		{
 			return;
 		}
-		else if (clicked >= 0 && clicked < turrets.size())
+		else if (clicked >= 0 && clicked < turrets.size() && !ifMovingTurret)
 		{
 			upgradeTurrets();
 		}
@@ -485,17 +341,16 @@ void Game::add_monsters(int)
 	{
 		timeToNextRound = roundTime;
 		level++;
-		T_monster1.loadFromImage(I_monster1);//, IntRect(monsterPictureX, monsterPictureY, monsterSize, monsterSize));
 		for (int i = 0; i < 10; i++)
 		{
 			monsters.push_back(Monster(level, font, T_monster1, Vector2f(920, -60 * i), monsterPictureX, monsterPictureY, monsterSize));
 		}
 		monsterPictureX += monsterSize;
-		if (monsterPictureX >= I_monster1.getSize().x)
+		if (monsterPictureX >= T_monster1.getSize().x)
 		{
 			monsterPictureX = 0;
 			monsterPictureY += monsterSize;
-			if (monsterPictureY >= I_monster1.getSize().y)
+			if (monsterPictureY >= T_monster1.getSize().y)
 			{
 				monsterPictureY = 0;
 			}
@@ -636,7 +491,6 @@ void Game::load()
 			float rotation;
 			int direction, HP;
 
-			T_monster1.loadFromImage(I_monster1);
 			file >> level >> positionX >> positionY >> rectLeft >> rectTop;
 			file >> rectSize >> direction >> HP;
 			monsters.push_back(Monster(level, font, T_monster1, Vector2f(positionX, positionY), rectLeft, rectTop, rectSize));
@@ -649,7 +503,6 @@ void Game::load()
 			float positionX, positionY;
 			float rotation;
 
-			T_monster1.loadFromImage(I_monster1);
 			file >> id >> positionX >> positionY >> timeToShoot >> damage >> range >> rate >> aimAtMonster >> rotation;
 			switch (id)
 			{
@@ -718,33 +571,23 @@ void Game::shoot()
 	}
 }
 
-void Game::end()
+inline void Game::end()
 {
-	if (lines.size() == 10)
+	if (endAnimation(lines))
 	{
-		T_screenShot.update(window);
-		screenShot.setTexture(T_screenShot);
-		for (int i = 0; i < 60; i++)
-		{
-			gameOver.scale(0.98 + i / 1000, 0.98 + i / 1000);
-			window.draw(screenShot);
-			window.draw(gameOver);
-			window.display();
-			Sleep(15);
-		}
-		Sleep(3000);
 		exit();
 	}
 }
 
 void Game::exit()
 {
-	for (int i = 0; i < rockets.size(); i++)
+	for (int i = 0; i < rockets.size(); i++)//vector<Rocket *>::iterator it = rockets.begin(); it < rockets.end(); it++)
 	{
 		delete rockets[i];
 		rockets.erase(rockets.begin() + i);
 		i--;
 	}
+	delete texts;
 	delete turret1;
 	delete turret2;
 	delete turret3;

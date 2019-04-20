@@ -1,5 +1,4 @@
 #include "Turret.h"
-#include <iostream>
 
 using namespace std;
 using namespace sf;

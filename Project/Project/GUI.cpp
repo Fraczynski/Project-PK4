@@ -1,10 +1,14 @@
-#include "GUI.h"
 #include <string.h>
 #include <SFML/Graphics.hpp>
+#include <Windows.h>
+#include "GUI.h"
+#include "Icon.h"
+
 #include <iostream>
 
 using namespace std;
 using namespace sf;
+
 
 void GUI::loadGraphics()
 {
@@ -18,12 +22,12 @@ void GUI::loadGraphics()
 
 	try
 	{
-		if (!I_map.loadFromFile("map1.png") || !T_map.loadFromFile("map1.png") || !T_bar.loadFromFile("bar.png") || !T_turret1.loadFromFile("turret1.png") || !T_turret2.loadFromFile("turret2.png") ||
-			!T_turret3.loadFromFile("turret3.png") || !T_monster1.loadFromFile("monster1.png") || !T_monster2.loadFromFile("monster2.png") ||
-			!T_cursor1.loadFromFile("cursor1.png") || !T_cursor2.loadFromFile("cursor2.png") ||
-			!T_cursor3.loadFromFile("cursor3.png") || !T_cursor4.loadFromFile("cursor4.png") || !T_missile1.loadFromFile("missile1.png") || !T_missile2.loadFromFile("missile2.png") ||
-			!T_missile3.loadFromFile("missile3.png") || !T_arrow.loadFromFile("arrow.png") || !font.loadFromFile("calibri.ttf") || !T_line.loadFromFile("line.png") ||
-			!T_gameOver.loadFromFile("end.png"))
+		if (!T_background.loadFromFile("background.png") || !I_map1.loadFromFile("map1.png") || !T_map1.loadFromFile("map1.png") || !T_bar.loadFromFile("bar.png") ||
+			!T_turret1.loadFromFile("turret1.png") || !T_turret2.loadFromFile("turret2.png") || !T_turret3.loadFromFile("turret3.png") || !T_monster1.loadFromFile("monster1.png") ||
+			!T_cursor1.loadFromFile("cursor1.png") || !T_cursor2.loadFromFile("cursor2.png") || !T_missile1.loadFromFile("missile1.png") ||
+			!T_missile2.loadFromFile("missile2.png") || !T_missile3.loadFromFile("missile3.png") || !T_arrow.loadFromFile("arrow.png") || !font.loadFromFile("calibri.ttf") ||
+			!T_line.loadFromFile("line.png") || !T_gameOver.loadFromFile("end.png") || !T_buttonResume.loadFromFile("resume.png") || !T_buttonRestart.loadFromFile("restart.png") ||
+			!T_buttonSave.loadFromFile("save.png") || !T_buttonLoad.loadFromFile("load.png") || !T_buttonExit.loadFromFile("exit.png"))
 		{
 			throw - 1;
 		}
@@ -34,8 +38,10 @@ void GUI::loadGraphics()
 		Sleep(5000);
 		window.close();
 	}
-	T_map.setSmooth(true);
-	map.setTexture(T_map);
+	T_background.setSmooth(true);
+	background.setTexture(T_background);
+	T_map1.setSmooth(true);
+	map1.setTexture(T_map1);
 
 	T_bar.setSmooth(true);
 	bar.setTexture(T_bar);
@@ -52,116 +58,89 @@ void GUI::loadGraphics()
 	T_gameOver.setSmooth(true);
 	gameOver.setTexture(T_gameOver);
 	gameOver.setOrigin(gameOver.getGlobalBounds().width / 2, gameOver.getGlobalBounds().height / 2);
-	gameOver.setPosition(width / 2, map.getGlobalBounds().height / 2);
+	gameOver.setPosition(width / 2, map1.getGlobalBounds().height / 2);
 	gameOver.setScale(5, 5);
 
-	//circle.setFillColor(Color(255, 127, 39, 150));		//pomaranczowy
 	circle.setFillColor(Color(0, 0, 0, 130));
 	circle.setPointCount(50);
-	circle.setRadius(0);				//skasowac po dodaniu sprawdzania zasiegu wiezyczki
 	circle.setPosition(0, 0);
+
+	T_buttonResume.setSmooth(true);
+	T_buttonRestart.setSmooth(true);
+	T_buttonSave.setSmooth(true);
+	T_buttonLoad.setSmooth(true);
+	T_buttonExit.setSmooth(true);
+	buttonResume.setTexture(T_buttonResume);
+	buttonRestart.setTexture(T_buttonRestart);
+	buttonSave.setTexture(T_buttonSave);
+	buttonLoad.setTexture(T_buttonLoad);
+	buttonExit.setTexture(T_buttonExit);
+	buttonResume.setOrigin(buttonResume.getGlobalBounds().width / 2, buttonResume.getGlobalBounds().height / 2);
+	buttonRestart.setOrigin(buttonRestart.getGlobalBounds().width / 2, buttonRestart.getGlobalBounds().height / 2);
+	buttonSave.setOrigin(buttonSave.getGlobalBounds().width / 2, buttonSave.getGlobalBounds().height / 2);
+	buttonLoad.setOrigin(buttonSave.getGlobalBounds().width / 2, buttonSave.getGlobalBounds().height / 2);
+	buttonExit.setOrigin(buttonExit.getGlobalBounds().width / 2, buttonExit.getGlobalBounds().height / 2);
+	buttonResume.setPosition(width / 2, 2 * height / 8);
+	buttonRestart.setPosition(width / 2, 3 * height / 8);
+	buttonSave.setPosition(width / 2, 4 * height / 8);
+	buttonLoad.setPosition(width / 2, 5 * height / 8);
+	buttonExit.setPosition(width / 2, 6 * height / 8);
 
 	T_turret1.setSmooth(true);
 	T_turret2.setSmooth(true);
 	T_turret3.setSmooth(true);
-	turret1 = new Turret(1, 20, 3, 120, 300, T_turret1, vectorTurret1);
-	turret2 = new Turret(2, 10, 1, 30, 200, T_turret2, vectorTurret2);
-	turret3 = new Turret(3, 50, 1, 30, 100, T_turret3, vectorTurret3);
+	turret1 = new Turret(1, T_turret1, vectorTurret1);
+	turret2 = new Turret(2, T_turret2, vectorTurret2);
+	turret3 = new Turret(3, T_turret3, vectorTurret3);
 
 	T_monster1.setSmooth(true);
-	T_monster2.setSmooth(true);
 	T_missile1.setSmooth(true);
 	T_missile2.setSmooth(true);
 	T_missile3.setSmooth(true);
 
 	T_cursor1.setSmooth(true);
 	T_cursor2.setSmooth(true);
-	T_cursor3.setSmooth(true);
-	T_cursor4.setSmooth(true);
-	cursor.setTexture(T_cursor4);
+	cursor.setTexture(T_cursor2);
 	cursor.setTexture(T_cursor1);
 
-	texts[0].setPosition(552, 627);
-	texts[1].setPosition(567, 649);
-	texts[2].setPosition(580, 671);
-	texts[3].setPosition(vectorTurret1.x - 33, vectorTurret1.y - 40);
-	texts[4].setPosition(vectorTurret2.x - 33, vectorTurret2.y - 40);
-	texts[5].setPosition(vectorTurret3.x - 33, vectorTurret3.y - 40);
-	texts[3].setString(to_string((*turret1).price) + "$");
-	texts[4].setString(to_string((*turret2).price) + "$");
-	texts[5].setString(to_string((*turret3).price) + "$");
-	texts[6].setPosition(756, 628);
-	texts[7].setPosition(764, 650);
-	texts[8].setPosition(752, 672);
-	for (int i = 0; i < 9; i++)
-	{
-		texts[i].setFont(font);
-		texts[i].setCharacterSize(18);
-		texts[i].setOrigin(0, texts[i].getGlobalBounds().height / 2);
-	}
-	updateInfo();
-
-	/*text.setFont(font);
-	text.setCharacterSize(24);
-	text.setFillColor(Color(255, 255, 255));
-	text.setPosition(20, 20);*/
+	texts = new Texts(font, Vector2f(vectorTurret1.x, vectorTurret1.y - 5), Vector2f(vectorTurret2.x, vectorTurret2.y - 5), Vector2f(vectorTurret3.x, vectorTurret3.y - 5), turret1, turret2, turret3);
+	texts->updateInfo();
 }
 
-void GUI::display()
+void GUI::display(vector<Monster> & monsters, vector<Turret> & turrets, vector<Rocket *> & rockets, vector<Sprite> & lines, int & clicked, int & cash, int & kills, int & level, int & timeToNextRound)
 {
 	window.clear(Color(255, 0, 0));
-	window.draw(map);
-	window.draw(bar);
-	window.draw(arrow);
-	texts[6].setString("Cash  " + to_string(cash) + "$");
-	texts[7].setString("Kills  " + to_string(kills));
-	texts[8].setString("Wave  " + to_string(level));
-	for (int i = 0; i < 9; i++)
+	window.draw(background);
+	window.draw(map1);
+
+	for (vector<Sprite>::iterator it = lines.begin(); it < lines.end(); it++)
 	{
-		window.draw(texts[i]);
+		window.draw(*it);
+	}
+	for (vector<Monster>::iterator it = monsters.begin(); it < monsters.end(); it++)
+	{
+		it->display(window);
+	}
+	for (vector<Turret>::iterator it = turrets.begin(); it < turrets.end(); it++)
+	{
+		it->display(window);
+	}
+	if (clicked >= 0)
+	{
+		turrets[clicked].display(window);
 	}
 	window.draw(circle);
+	for (vector<Rocket *>::iterator it = rockets.begin(); it < rockets.end(); it++)
+	{
+		(*it)->display(window);
+	}
+	window.draw(bar);
+	window.draw(arrow);
+	texts->display(cash, kills, level, window);
 
-
-	for (unsigned i = 0; i < lines.size(); i++)
-	{
-		window.draw(lines[i]);
-	}
-	for (unsigned i = 0; i < monsters.size(); i++)
-	{
-		monsters[i].display(window);
-	}
-	for (unsigned i = 0; i < turrets.size(); i++)
-	{
-		window.draw(turrets[i].picture);
-	}
-	for (auto r : rockets)
-	{
-		(*r).display(window);
-	}
-
-	switch (ifMovingTurret)
-	{
-	case 1:
-		(*turret1).picture.setPosition((Vector2f)Mouse::getPosition(window));
-		updateCircle((Vector2f)Mouse::getPosition(window), (*turret1).range);
-		break;
-	case 2:
-		(*turret2).picture.setPosition((Vector2f)Mouse::getPosition(window));
-		circle.setPosition((Vector2f)Mouse::getPosition(window));
-		circle.setRadius((*turret2).range);
-		circle.setOrigin(circle.getGlobalBounds().width / 2, circle.getGlobalBounds().height / 2);
-		break;
-	case 3:
-		(*turret3).picture.setPosition((Vector2f)Mouse::getPosition(window));
-		circle.setPosition((Vector2f)Mouse::getPosition(window));
-		circle.setRadius((*turret3).range);
-		circle.setOrigin(circle.getGlobalBounds().width / 2, circle.getGlobalBounds().height / 2);
-		break;
-	}
-	window.draw((*turret1).picture);
-	window.draw((*turret2).picture);
-	window.draw((*turret3).picture);
+	turret1->display(window);
+	turret2->display(window);
+	turret3->display(window);
 	cursor.setPosition(Vector2f(Mouse::getPosition(window)));
 	window.draw(cursor);
 
@@ -169,7 +148,19 @@ void GUI::display()
 	timeToNextRound--;
 }
 
-void GUI::end()
+void GUI::pauseMenu(const Sprite & cursorTmp)
+{
+	window.draw(screenShot);
+	window.draw(buttonResume);
+	window.draw(buttonRestart);
+	window.draw(buttonSave);
+	window.draw(buttonLoad);
+	window.draw(buttonExit);
+	window.draw(cursorTmp);
+	window.display();
+}
+
+bool GUI::endAnimation(vector<Sprite> & lines)
 {
 	if (lines.size() == 10)
 	{
@@ -184,9 +175,8 @@ void GUI::end()
 			Sleep(15);
 		}
 		Sleep(3000);
-		T_screenShot.update(window);
-		screenShot.setTexture(T_screenShot);
-		cleaner();
-		exit(0);
+		return true;
 	}
+	return false;
 }
+
