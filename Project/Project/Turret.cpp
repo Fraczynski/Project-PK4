@@ -1,5 +1,14 @@
 #include "Turret.h"
 
+
+
+
+#include <iostream>
+
+
+
+
+
 using namespace std;
 using namespace sf;
 
@@ -157,15 +166,15 @@ void Turret::upgradingTurret()				//wypelnianie kolejek wartosciami kolejnych ul
 		qRange.push(Upgrading(1200, 200));
 		qRange.push(Upgrading(1500, 220));
 		qRange.push(Upgrading(0, 0));
-		qRate.push(Upgrading(30, 90));
-		qRate.push(Upgrading(60, 80));
-		qRate.push(Upgrading(150, 70));
-		qRate.push(Upgrading(340, 55));
-		qRate.push(Upgrading(600, 40));
-		qRate.push(Upgrading(1100, 30));
-		qRate.push(Upgrading(1500, 20));
-		qRate.push(Upgrading(0, 0));
-		break;
+qRate.push(Upgrading(30, 90));
+qRate.push(Upgrading(60, 80));
+qRate.push(Upgrading(150, 70));
+qRate.push(Upgrading(340, 55));
+qRate.push(Upgrading(600, 40));
+qRate.push(Upgrading(1100, 30));
+qRate.push(Upgrading(1500, 20));
+qRate.push(Upgrading(0, 0));
+break;
 	}
 }
 
@@ -256,18 +265,30 @@ void Turret::rotate(vector<Monster> & monsters)			//obracanie wiezyczki w strone
 	{
 		if (isInRange(monsters[i]))					//sprawdzanie, czy potwor znajduje sie w zasiegu wiezyczki
 		{
-			picture.setRotation(atan2(monsters[i].getPosition().y - picture.getPosition().y,
-				monsters[i].getPosition().x - picture.getPosition().x) * (180 / (atan(1) * 4)) + 90);			//obracanie wiezyczki w kierunku potwora
+			double angle = (atan2(monsters[i].getPosition().y - picture.getPosition().y, monsters[i].getPosition().x - picture.getPosition().x) * (180 / (atan(1) * 4)) + 90) - picture.getRotation();
+			if (angle > 3 && angle < 357)
+			{
+				picture.rotate(rotationSpeed);
+			}
+			else if (angle < -3 && angle > -357)
+			{
+				picture.rotate(-rotationSpeed);
+			}
+			else
+			{
+				picture.setRotation(atan2(monsters[i].getPosition().y - picture.getPosition().y,
+					monsters[i].getPosition().x - picture.getPosition().x) * (180 / (atan(1) * 4)) + 90);			//obracanie wiezyczki w kierunku potwora
+			}
 			aimAtMonster = i;			//zapisanie numeru potwora, w ktory wycelowala wiezyczka
 			return;
 		}
 	}
 	aimAtMonster = -1;			//brak potwora w zasiegu wiezyczki
-	/*
-	//double angle = (360 - (double)((int)(270 - ((atan2(monsters.begin()->picture.getPosition().y - i->picture.getPosition().y, 
-						monsters.begin()->picture.getPosition().x - i->picture.getPosition().x)) * (180 / (atan(1) * 4)))) % 360) - i->picture.getRotation());
-	//i->picture.rotate(360 - (270 - (atan2(monsters.begin()->picture.getPosition().y - i->picture.getPosition().y, 
-						monsters.begin()->picture.getPosition().x - i->picture.getPosition().x)) * (180 / (atan(1) * 4))) - i->picture.getRotation());
+	
+	/*double angle = (360 - (double)((int)(270 - ((atan2(monsters.begin()->getPosition().y - i->getPosition().y, 
+						monsters.begin()->getPosition().x - i->getPosition().x)) * (180 / (atan(1) * 4)))) % 360) - i->picture.getRotation());
+	i->picture.rotate(360 - (270 - (atan2(monsters.begin()->getPosition().y - i->picture.getPosition().y, 
+						monsters.begin()->getPosition().x - i->getPosition().x)) * (180 / (atan(1) * 4))) - i->picture.getRotation());
 
 	if (angle > 1 && angle <= 180)
 	{
