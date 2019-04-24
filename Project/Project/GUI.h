@@ -3,6 +3,7 @@
 #include "Map.h"
 #include "Texts.h"
 #include "Rocket.h"
+#include "Button.h"
 
 using namespace sf;
 using namespace std;
@@ -28,21 +29,16 @@ public:
 	Sprite arrow;					//wskazówka zegara
 	Sprite gameOver;				//grafika konca gry
 	CircleShape circle;				//kolo pokazujace zasieg wiezyczki po jej zaznaczeniu
-	Texture T_buttonResume;			//przycisk resume
-	Texture T_buttonRestart;		//przycisk restart
-	Texture T_buttonSave;			//przycisk save
-	Texture T_buttonLoad;			//przycisk save
-	Texture T_buttonExit;			//przycisk exit
-	Sprite buttonResume;			//przycisk resume
-	Sprite buttonRestart;			//przycisk restart
-	Sprite buttonSave;				//przycisk save
-	Sprite buttonLoad;				//przycisk save
-	Sprite buttonExit;				//przycisk exit
+	Texture T_button;
+	unique_ptr < Button > buttonResume;			//przycisk resume
+	unique_ptr < Button > buttonRestart;			//przycisk restart
+	unique_ptr < Button > buttonSave;				//przycisk save
+	unique_ptr < Button > buttonLoad;				//przycisk save
+	unique_ptr < Button > buttonExit;				//przycisk exit
 	Texture T_turret1;				//tekstury wie¿yczek
 	Texture T_turret2;
 	Texture T_turret3;
-	Texture T_monster1;				//tekstura potwora
-	Texture T_monster2;				//tekstura potwora
+	Texture T_monster;				//tekstura potwora
 	Texture T_missile1;				//tekstury pociskow
 	Texture T_missile2;
 	Texture T_missile3;
@@ -50,21 +46,26 @@ public:
 	Texture T_cursor2;				//tekstura wskaznika podczas przenoszenia wiezyczki
 	Sprite cursor;					//obrazek aktualnego kursora
 	Sprite map1;					//mapa
-	Font font;						//czcionka
+	Font fontCalibri;				//czcionka calibri
+	Font fontTimesNewRoman;			//czcionka times new roman
 
 
 	Vector2f vectorTurret1 = Vector2f(38, 670);			//pozycja wiezyczek w sklepie
 	Vector2f vectorTurret2 = Vector2f(200, 670);
 	Vector2f vectorTurret3 = Vector2f(360, 670);
-	Turret *turret1;				//wiezyczki w sklepie bedace wzorcami dla budowanych wiezyczek
-	Turret *turret2;
-	Turret *turret3;
-	Texts *texts;
+	unique_ptr <Turret> turret1;		//wiezyczki w sklepie bedace wzorcami dla budowanych wiezyczek
+	unique_ptr <Turret> turret2;
+	unique_ptr <Turret> turret3;
+	unique_ptr <Texts> texts;			//obiekt zawierajacy wszystkie wypisywane teksty
+	//Turret *turret1;				//wiezyczki w sklepie bedace wzorcami dla budowanych wiezyczek
+	//Turret *turret2;
+	//Turret *turret3;
+	//Texts *texts;
 public:
 	
 	void loadGraphics();
 
-	void display(vector<Monster> & monsters, vector<Turret> & turrets, vector<Rocket *> & rockets, vector<Sprite> & lines, int & clicked, int & cash, int & kills, int & level, int & timeToNextRound);
+	void display(vector<Monster> & monsters, vector<Turret> & turrets, vector<unique_ptr<Rocket>> & rockets, vector<Sprite> & lines, int & clicked, int & cash, int & kills, int & level, int & timeToNextRound);
 
 	void pauseMenu(const Sprite & cursorTmp);
 

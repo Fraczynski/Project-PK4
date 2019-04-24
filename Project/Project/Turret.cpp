@@ -179,7 +179,7 @@ int Turret::getDamage()
 	return damage;
 }
 
-int Turret::getPrice()				//pobieranie ceny wiezyczki
+int Turret::getPrice()
 {
 	return price;
 }
@@ -192,6 +192,32 @@ int Turret::getRange()
 int Turret::getRate()
 {
 	return rate;
+}
+
+int Turret::getSize(int queue)
+{
+	switch (queue)
+	{
+	case 0:
+		return qDamage.size();
+	case 1:
+		return qRange.size();
+	case 2:
+		return qRate.size();
+	}
+}
+
+int Turret::getFrontPrice(int queue)
+{
+	switch (queue)
+	{
+	case 0:
+		return qDamage.front().getPrice();
+	case 1:
+		return qRange.front().getPrice();
+	case 2:
+		return qRate.front().getPrice();
+	}
 }
 
 void Turret::setPosition(const Vector2f & vectorTurret)

@@ -134,6 +134,7 @@
     <ClCompile Include="Rocket2.cpp" />
     <ClCompile Include="Rocket3.cpp" />
     <ClCompile Include="Texts.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Turret.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +148,7 @@
     <ClInclude Include="Rocket2.h" />
     <ClInclude Include="Rocket3.h" />
     <ClInclude Include="Texts.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Turret.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

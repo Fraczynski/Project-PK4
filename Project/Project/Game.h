@@ -11,6 +11,7 @@
 #include "Icon.h"
 #include "GUI.h"
 
+
 using namespace sf;
 using namespace std;
 
@@ -30,10 +31,9 @@ class Game : public GUI
 	const Map cornersMap1[11] = { {Vector2f(920, 539), 1}, {Vector2f(83, 539), 2}, {Vector2f(83, 83), 3}, {Vector2f(815, 83), 0}, {Vector2f(815, 431), 1}, {Vector2f(190, 431), 2 }, 
 					 {Vector2f(190, 188), 3}, {Vector2f(709, 188), 0}, {Vector2f(709, 323), 1}, {Vector2f(450, 323), 2}, { Vector2f(450, 295), 5 } };		//wspolrzedne (w ktorych potwory musza zmienic kierunek) i kierunki
 	
-	
 	vector<Monster> monsters;		//wektor potworow
 	vector<Turret> turrets;			//wektor wiezyczek
-	vector<Rocket *> rockets;		//wektor wskaznikow na rakiety
+	vector<unique_ptr<Rocket>> rockets;		//wektor wskaznikow na rakiety
 	vector<Sprite> lines;			//wektor lini skreslajacych stickman'ow
 
 public:

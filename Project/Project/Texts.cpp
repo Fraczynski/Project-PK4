@@ -3,7 +3,8 @@
 using namespace std;
 using namespace sf;
 
-Texts::Texts(const Font & font, const Vector2f & vectorTurret1, const Vector2f & vectorTurret2, const Vector2f & vectorTurret3, Turret *turret1, Turret *turret2, Turret *turret3)	//konstruktor tworzacy teksty
+Texts::Texts(const Font & font, const Vector2f & vectorTurret1, const Vector2f & vectorTurret2, const Vector2f & vectorTurret3, unique_ptr <Turret> & turret1,
+	unique_ptr <Turret> & turret2, unique_ptr <Turret> & turret3)	//konstruktor tworzacy teksty
 {
 	for (int i = 0; i < 21; i++)			//ustawienia graficzne wszystkich tekstow
 	{
@@ -54,9 +55,9 @@ void Texts::updateInfo(Turret & turret)					//wyswietlanie informacji o wiezyczc
 	text[0].setFillColor(bright);			//podswietlenie informacji
 	text[1].setFillColor(bright);
 	text[2].setFillColor(bright);
-	if (turret.qDamage.size() > 1)			//sprawdzanie, czy istnieje mozliwosc ulepszenia
+	if (turret.getSize(0) > 1)			//sprawdzanie, czy istnieje mozliwosc ulepszenia
 	{
-		text[3].setString("Upgrading  " + to_string(turret.qDamage.front().getPrice()) + "$");
+		text[3].setString("Upgrading  " + to_string(turret.getFrontPrice(0)) + "$");
 		text[3].setFillColor(bright);
 	}
 	else				//brak mozliwosci dalszego ulepszania zadawanych obrazen
@@ -64,9 +65,9 @@ void Texts::updateInfo(Turret & turret)					//wyswietlanie informacji o wiezyczc
 		text[3].setString("Upgrading  ---");
 		text[3].setFillColor(dark);
 	}
-	if (turret.qRange.size() > 1)			//koszt ulepszenia zasiegu
+	if (turret.getSize(1) > 1)			//koszt ulepszenia zasiegu
 	{
-		text[4].setString("Upgrading  " + to_string(turret.qRange.front().getPrice()) + "$");
+		text[4].setString("Upgrading  " + to_string(turret.getFrontPrice(1)) + "$");
 		text[4].setFillColor(bright);
 	}
 	else				//brak mozliwosci dalszego ulepszania zasiegu
@@ -74,9 +75,9 @@ void Texts::updateInfo(Turret & turret)					//wyswietlanie informacji o wiezyczc
 		text[4].setString("Upgrading  ---");
 		text[4].setFillColor(dark);
 	}
-	if (turret.qRate.size() > 1)			//koszt ulepszenia czestotliwosci strzalow
+	if (turret.getSize(2) > 1)			//koszt ulepszenia czestotliwosci strzalow
 	{
-		text[5].setString("Upgrading  " + to_string(turret.qRate.front().getPrice()) + "$");
+		text[5].setString("Upgrading  " + to_string(turret.getFrontPrice(2)) + "$");
 		text[5].setFillColor(bright);
 	}
 	else				//brak mozliwosci dalszego ulepszania czestotliwosci strzalow

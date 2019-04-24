@@ -5,7 +5,6 @@
 #include <fstream>
 #include "Game.h"
 #include "Monster.h"
-//#include <fstream>
 
 using namespace std;
 using namespace sf;
@@ -16,7 +15,7 @@ void Game::gameLoop()
 	resetGame();
 	display(monsters, turrets, rockets, lines, clicked, cash, kills, level, timeToNextRound);
 
-	//for (int i = 0; i < 10; i++){monsters.push_back(Monster(level, font, T_monster1, Vector2f(709, 300 - i * 30), monsterPictureX, monsterPictureY, monsterSize));}
+	//for (int i = 0; i < 10; i++){monsters.push_back(Monster(level, font, T_monster1, Vector2f(709, 300 - i * 30), monsterPictureX, monsterPictureY, monsterSize));
 
 	while (window.isOpen())				//petla wykonujaca sie dopoki nie zostanie zakonczona gra
 	{
@@ -49,7 +48,6 @@ void Game::resetGame()
 	turrets.clear();
 	for (int i = 0; i < rockets.size(); i++)
 	{
-		delete rockets[i];
 		rockets.erase(rockets.begin() + i);
 		i--;
 	}
@@ -131,26 +129,26 @@ bool Game::buttonEvents()
 		}
 		if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Left || e.type == Event::KeyReleased)
 		{
-			if (buttonResume.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)) || e.type == Event::KeyReleased && e.key.code == Keyboard::Escape)
+			if (buttonResume->contains((Vector2f)Mouse::getPosition(window)) || e.type == Event::KeyReleased && e.key.code == Keyboard::Escape)
 			{
 				return true;
 			}
-			else if (buttonRestart.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+			else if (buttonRestart->contains((Vector2f)Mouse::getPosition(window)))
 			{
 				resetGame();
 				return true;
 			}
-			else if (buttonSave.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+			else if (buttonSave->contains((Vector2f)Mouse::getPosition(window)))
 			{
 				save();
 				return true;
 			}
-			else if (buttonLoad.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+			else if (buttonLoad->contains((Vector2f)Mouse::getPosition(window)))
 			{
 				load();
 				return true;
 			}
-			else if (buttonExit.getGlobalBounds().contains((Vector2f)Mouse::getPosition(window)))
+			else if (buttonExit->contains((Vector2f)Mouse::getPosition(window)))
 			{
 				exit();
 			}
@@ -343,14 +341,14 @@ void Game::add_monsters(int)
 		level++;
 		for (int i = 0; i < 10; i++)
 		{
-			monsters.push_back(Monster(level, font, T_monster1, Vector2f(920, -60 * i), monsterPictureX, monsterPictureY, monsterSize));
+			monsters.push_back(Monster(level, fontCalibri, T_monster, Vector2f(920, -60 * i), monsterPictureX, monsterPictureY, monsterSize));
 		}
 		monsterPictureX += monsterSize;
-		if (monsterPictureX >= T_monster1.getSize().x)
+		if (monsterPictureX >= T_monster.getSize().x)
 		{
 			monsterPictureX = 0;
 			monsterPictureY += monsterSize;
-			if (monsterPictureY >= T_monster1.getSize().y)
+			if (monsterPictureY >= T_monster.getSize().y)
 			{
 				monsterPictureY = 0;
 			}
@@ -375,7 +373,6 @@ void Game::move_missiles()
 	{
 		if (rockets[i]->specialAbilities(monsters, cash, kills))
 		{
-			delete rockets[i];
 			rockets.erase(rockets.begin() + i);
 			i--;
 		}
@@ -421,7 +418,7 @@ void Game::save()
 			it->save(file);
 		}
 		file << endl << rockets.size() << endl;
-		for (vector<Rocket *>::iterator it = rockets.begin(); it < rockets.end(); it++)
+		for (vector<unique_ptr<Rocket>>::iterator it = rockets.begin(); it < rockets.end(); it++)
 		{
 			(*it)->save(file);
 		}
@@ -493,7 +490,7 @@ void Game::load()
 
 			file >> level >> positionX >> positionY >> rectLeft >> rectTop;
 			file >> rectSize >> direction >> HP;
-			monsters.push_back(Monster(level, font, T_monster1, Vector2f(positionX, positionY), rectLeft, rectTop, rectSize));
+			monsters.push_back(Monster(level, fontCalibri, T_monster, Vector2f(positionX, positionY), rectLeft, rectTop, rectSize));
 			monsters.back().loadParameters(direction, HP);
 		}
 		file >> vectorSize;					//rozmiar wektora wiezyczek
@@ -530,13 +527,13 @@ void Game::load()
 			switch (id)
 			{
 			case 1:
-				rockets.push_back(new Rocket1(1, 2, damage, rotation, tmp, T_missile1, Vector2f(positionX, positionY)));
+				rockets.emplace_back(new Rocket1(1, 2, damage, rotation, tmp, T_missile1, Vector2f(positionX, positionY)));
 				break;
 			case 2:
-				rockets.push_back(new Rocket2(2, 20, damage, rotation, tmp, T_missile1, Vector2f(positionX, positionY)));
+				rockets.emplace_back(new Rocket2(2, 20, damage, rotation, tmp, T_missile1, Vector2f(positionX, positionY)));
 				break;
 			case 3:
-				rockets.push_back(new Rocket3(3, 1, damage, rotation, tmp, T_missile1, Vector2f(positionX, positionY)));
+				rockets.emplace_back(new Rocket3(3, 1, damage, rotation, tmp, T_missile1, Vector2f(positionX, positionY)));
 				break;
 			}
 		}
@@ -558,13 +555,13 @@ void Game::shoot()
 			switch (t.getID())
 			{
 			case 1:
-				rockets.push_back(new Rocket1(1, 2, t.getDamage(), t.getRotation(), numberOfMonster, T_missile1, t.getPosition()));
+				rockets.emplace_back(new Rocket1(1, 2, t.getDamage(), t.getRotation(), numberOfMonster, T_missile1, t.getPosition()));
 				break;
 			case 2:
-				rockets.push_back(new Rocket2(2, 20, t.getDamage(), t.getRotation(), numberOfMonster, T_missile2, t.getPosition()));
+				rockets.emplace_back(new Rocket2(2, 20, t.getDamage(), t.getRotation(), numberOfMonster, T_missile2, t.getPosition()));
 				break;
 			case 3:
-				rockets.push_back(new Rocket3(3, 1, t.getDamage(), t.getRotation(), numberOfMonster, T_missile3, t.getPosition()));
+				rockets.emplace_back(new Rocket3(3, 1, t.getDamage(), t.getRotation(), numberOfMonster, T_missile3, t.getPosition()));
 				break;
 			}
 		}
@@ -581,16 +578,5 @@ inline void Game::end()
 
 void Game::exit()
 {
-	for (int i = 0; i < rockets.size(); i++)//vector<Rocket *>::iterator it = rockets.begin(); it < rockets.end(); it++)
-	{
-		delete rockets[i];
-		rockets.erase(rockets.begin() + i);
-		i--;
-	}
-	delete texts;
-	delete turret1;
-	delete turret2;
-	delete turret3;
 	window.close();
-	std::exit(0);
 }

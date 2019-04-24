@@ -2,6 +2,8 @@
 //kolory przezroczystych pikseli
 //osobne klasy w wiezyczek w menu i grze
 //sprzedawanie wiezyczek
+//pokasowac sf i std
+//include w main
 --------------------------------------------
 mapy bez t³a
 poprawic kod obs³uguj¹cy klikniêcie
@@ -20,11 +22,10 @@ zapis stanu gry do pliku
 zmienic image monster na texture
 #include <iostream> w Turret.h
 ulepszanie gdy nie przenosi sie wiezyczki
+wyjatek przy wczytywaniu plikow - zmienic cout
+przyciski jako 1 obrazek i pisac po nim tekst
+kolejki w Turret.h jako prywatne
 --------------------------------------------
 poprawiæ animacje pocisków
 poprawiæ animacje wiezyczek
 dodaæ mapy
-wyjatek przy wczytywaniu plikow - zmienic cout
-kolejki w Turret.h jako prywatne
-przyciski jako 1 obrazek i pisac po nim tekst
-pokasowac sf i std

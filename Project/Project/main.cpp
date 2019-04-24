@@ -5,7 +5,7 @@ using namespace std;
 
 int main()
 {
-	Game game;			//utworzenie obiektu gry
+	Game game;				//utworzenie obiektu gry
 	game.gameLoop();		//wywolanie glownej funkcji gry
 	return 0;
 }

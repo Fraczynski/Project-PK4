@@ -12,7 +12,8 @@ class Texts
 	sf::Color dark = sf::Color(90, 90, 90);				//kolor przygaszonych informacji
 
 public:
-	Texts(const sf::Font & font, const sf::Vector2f & vectorTurret1, const sf::Vector2f & vectorTurret2, const sf::Vector2f & vectorTurret3, Turret *turret1, Turret *turret2, Turret *turret3);	//konstruktor tworzacy teksty
+	Texts(const sf::Font & font, const sf::Vector2f & vectorTurret1, const sf::Vector2f & vectorTurret2, const sf::Vector2f & vectorTurret3, std::unique_ptr <Turret> & turret1,
+			std::unique_ptr <Turret> & turret2, std::unique_ptr <Turret> & turret3);	//konstruktor tworzacy teksty
 	
 	void updateInfo(Turret & turret);		//wyswietlanie informacji o wiezyczce (przenoszonej lub klikniêtej)
 

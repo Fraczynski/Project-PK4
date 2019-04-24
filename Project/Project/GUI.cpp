@@ -4,8 +4,6 @@
 #include "GUI.h"
 #include "Icon.h"
 
-#include <iostream>
-
 using namespace std;
 using namespace sf;
 
@@ -22,20 +20,25 @@ void GUI::loadGraphics()
 
 	try
 	{
-		if (!T_background.loadFromFile("background.png") || !I_map1.loadFromFile("map1.png") || !T_map1.loadFromFile("map1.png") || !T_bar.loadFromFile("bar.png") ||
-			!T_turret1.loadFromFile("turret1.png") || !T_turret2.loadFromFile("turret2.png") || !T_turret3.loadFromFile("turret3.png") || !T_monster1.loadFromFile("monster1.png") ||
-			!T_cursor1.loadFromFile("cursor1.png") || !T_cursor2.loadFromFile("cursor2.png") || !T_missile1.loadFromFile("missile1.png") ||
-			!T_missile2.loadFromFile("missile2.png") || !T_missile3.loadFromFile("missile3.png") || !T_arrow.loadFromFile("arrow.png") || !font.loadFromFile("calibri.ttf") ||
-			!T_line.loadFromFile("line.png") || !T_gameOver.loadFromFile("end.png") || !T_buttonResume.loadFromFile("resume.png") || !T_buttonRestart.loadFromFile("restart.png") ||
-			!T_buttonSave.loadFromFile("save.png") || !T_buttonLoad.loadFromFile("load.png") || !T_buttonExit.loadFromFile("exit.png"))
+		if (!fontCalibri.loadFromFile("calibri.ttf") || !fontTimesNewRoman.loadFromFile("times.ttf") || !T_background.loadFromFile("background.png") || !I_map1.loadFromFile("map1.png") || 
+			!T_map1.loadFromFile("map1.png") || !T_bar.loadFromFile("bar.png") || !T_turret1.loadFromFile("turret1.png") || !T_turret2.loadFromFile("turret2.png") || 
+			!T_turret3.loadFromFile("turret3.png") || !T_monster.loadFromFile("monster.png") || !T_cursor1.loadFromFile("cursor1.png") || !T_cursor2.loadFromFile("cursor2.png") || 
+			!T_missile1.loadFromFile("missile1.png") || !T_missile2.loadFromFile("missile2.png") || !T_missile3.loadFromFile("missile3.png") || !T_arrow.loadFromFile("arrow.png") || 
+			!T_line.loadFromFile("line.png") || !T_gameOver.loadFromFile("end.png") || !T_button.loadFromFile("button.png"))
 		{
-			throw - 1;
+			throw -1;
 		}
 	}
 	catch (int)
 	{
-		cout << "Blad wczytywania plikow!";
-		Sleep(5000);
+		window.clear(Color::Red);
+		Text error("Blad wczytywania plikow!", fontCalibri, 48);
+		error.setFillColor(Color::White);
+		error.setOrigin(error.getGlobalBounds().width / 2, error.getGlobalBounds().height / 2);
+		error.setPosition(width / 2, height / 2);
+		window.draw(error);
+		window.display();
+		Sleep(3000);
 		window.close();
 	}
 	T_background.setSmooth(true);
@@ -65,35 +68,21 @@ void GUI::loadGraphics()
 	circle.setPointCount(50);
 	circle.setPosition(0, 0);
 
-	T_buttonResume.setSmooth(true);
-	T_buttonRestart.setSmooth(true);
-	T_buttonSave.setSmooth(true);
-	T_buttonLoad.setSmooth(true);
-	T_buttonExit.setSmooth(true);
-	buttonResume.setTexture(T_buttonResume);
-	buttonRestart.setTexture(T_buttonRestart);
-	buttonSave.setTexture(T_buttonSave);
-	buttonLoad.setTexture(T_buttonLoad);
-	buttonExit.setTexture(T_buttonExit);
-	buttonResume.setOrigin(buttonResume.getGlobalBounds().width / 2, buttonResume.getGlobalBounds().height / 2);
-	buttonRestart.setOrigin(buttonRestart.getGlobalBounds().width / 2, buttonRestart.getGlobalBounds().height / 2);
-	buttonSave.setOrigin(buttonSave.getGlobalBounds().width / 2, buttonSave.getGlobalBounds().height / 2);
-	buttonLoad.setOrigin(buttonSave.getGlobalBounds().width / 2, buttonSave.getGlobalBounds().height / 2);
-	buttonExit.setOrigin(buttonExit.getGlobalBounds().width / 2, buttonExit.getGlobalBounds().height / 2);
-	buttonResume.setPosition(width / 2, 2 * height / 8);
-	buttonRestart.setPosition(width / 2, 3 * height / 8);
-	buttonSave.setPosition(width / 2, 4 * height / 8);
-	buttonLoad.setPosition(width / 2, 5 * height / 8);
-	buttonExit.setPosition(width / 2, 6 * height / 8);
+	T_button.setSmooth(true);
+	buttonResume.reset(new Button(T_button, fontTimesNewRoman, Vector2f(width / 2, 2 * height / 8), "RESUME"));
+	buttonRestart.reset(new Button(T_button, fontTimesNewRoman, Vector2f(width / 2, 3 * height / 8), "RESTART"));
+	buttonSave.reset(new Button(T_button, fontTimesNewRoman, Vector2f(width / 2, 4 * height / 8), "SAVE"));
+	buttonLoad.reset(new Button(T_button, fontTimesNewRoman, Vector2f(width / 2, 5 * height / 8), "LOAD"));
+	buttonExit.reset(new Button(T_button, fontTimesNewRoman, Vector2f(width / 2, 6 * height / 8), "EXIT"));
 
 	T_turret1.setSmooth(true);
 	T_turret2.setSmooth(true);
 	T_turret3.setSmooth(true);
-	turret1 = new Turret(1, T_turret1, vectorTurret1);
-	turret2 = new Turret(2, T_turret2, vectorTurret2);
-	turret3 = new Turret(3, T_turret3, vectorTurret3);
+	turret1.reset(new Turret(1, T_turret1, vectorTurret1));
+	turret2.reset(new Turret(2, T_turret2, vectorTurret2));
+	turret3.reset(new Turret(3, T_turret3, vectorTurret3));
 
-	T_monster1.setSmooth(true);
+	T_monster.setSmooth(true);
 	T_missile1.setSmooth(true);
 	T_missile2.setSmooth(true);
 	T_missile3.setSmooth(true);
@@ -102,12 +91,11 @@ void GUI::loadGraphics()
 	T_cursor2.setSmooth(true);
 	cursor.setTexture(T_cursor2);
 	cursor.setTexture(T_cursor1);
-
-	texts = new Texts(font, Vector2f(vectorTurret1.x, vectorTurret1.y - 5), Vector2f(vectorTurret2.x, vectorTurret2.y - 5), Vector2f(vectorTurret3.x, vectorTurret3.y - 5), turret1, turret2, turret3);
+	texts.reset(new Texts(fontCalibri, Vector2f(vectorTurret1.x, vectorTurret1.y - 5), Vector2f(vectorTurret2.x, vectorTurret2.y - 5), Vector2f(vectorTurret3.x, vectorTurret3.y - 5), turret1, turret2, turret3));
 	texts->updateInfo();
 }
 
-void GUI::display(vector<Monster> & monsters, vector<Turret> & turrets, vector<Rocket *> & rockets, vector<Sprite> & lines, int & clicked, int & cash, int & kills, int & level, int & timeToNextRound)
+void GUI::display(vector<Monster> & monsters, vector<Turret> & turrets, vector<unique_ptr<Rocket>> & rockets, vector<Sprite> & lines, int & clicked, int & cash, int & kills, int & level, int & timeToNextRound)
 {
 	window.clear(Color(255, 0, 0));
 	window.draw(background);
@@ -130,7 +118,7 @@ void GUI::display(vector<Monster> & monsters, vector<Turret> & turrets, vector<R
 		turrets[clicked].display(window);
 	}
 	window.draw(circle);
-	for (vector<Rocket *>::iterator it = rockets.begin(); it < rockets.end(); it++)
+	for (vector<unique_ptr<Rocket>>::iterator it = rockets.begin(); it < rockets.end(); it++)
 	{
 		(*it)->display(window);
 	}
@@ -151,11 +139,11 @@ void GUI::display(vector<Monster> & monsters, vector<Turret> & turrets, vector<R
 void GUI::pauseMenu(const Sprite & cursorTmp)
 {
 	window.draw(screenShot);
-	window.draw(buttonResume);
-	window.draw(buttonRestart);
-	window.draw(buttonSave);
-	window.draw(buttonLoad);
-	window.draw(buttonExit);
+	buttonResume->display(window);
+	buttonRestart->display(window);
+	buttonSave->display(window);
+	buttonLoad->display(window);
+	buttonExit->display(window);
 	window.draw(cursorTmp);
 	window.display();
 }
