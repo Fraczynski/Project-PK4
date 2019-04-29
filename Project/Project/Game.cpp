@@ -15,7 +15,7 @@ void Game::gameLoop()
 	resetGame();
 	display(monsters, turrets, rockets, lines, clicked, cash, kills, level, timeToNextRound);
 
-	//for (int i = 0; i < 10; i++){monsters.push_back(Monster(level, font, T_monster1, Vector2f(709, 300 - i * 30), monsterPictureX, monsterPictureY, monsterSize));
+	//for (int i = 0; i < 10; i++) {monsters.push_back(Monster(level, fontCalibri, T_monster, Vector2f(709, 300 - i * 30), monsterPictureX, monsterPictureY, monsterSize));	}
 
 	while (window.isOpen())				//petla wykonujaca sie dopoki nie zostanie zakonczona gra
 	{
@@ -37,8 +37,8 @@ void Game::resetGame()
 	timeToNextRound = 30;		//pozostaly czas do kolejnej rundy
 	ifMovingTurret = 0;			//czy przenoszona aktualnie jest wiezyczka: 0 - nie; 1 - tak
 	clicked = -1;				//numer zaznaczonej wiezyczki: -1 - brak zaznaczonej
-	level = 10;					//numer aktualnego poziomu
-	cash = 100000;					//poczatkowa ilosc pieniedzy
+	level = 0;					//numer aktualnego poziomu
+	cash = 2000000;					//poczatkowa ilosc pieniedzy
 	kills = 0;					//licznik zabitych potworow
 	monsterPictureX = 0;		//wspolrzedna x aktualnego sprite'a potwora
 	monsterPictureY = 0;		//wspolrzedna y aktualnego sprite'a potwora
@@ -46,11 +46,7 @@ void Game::resetGame()
 
 	monsters.clear();
 	turrets.clear();
-	for (int i = 0; i < rockets.size(); i++)
-	{
-		rockets.erase(rockets.begin() + i);
-		i--;
-	}
+	rockets.clear();
 	lines.clear();
 	resetTurrets();
 }
@@ -75,7 +71,7 @@ void Game::events()
 	{
 		if (e.type == Event::Closed)
 		{
-			exit();
+			window.close();
 		}
 		if (e.type == Event::KeyReleased && e.key.code == Keyboard::Escape)
 		{
@@ -125,7 +121,7 @@ bool Game::buttonEvents()
 	{
 		if (e.type == Event::Closed)
 		{
-			exit();
+			window.close();
 		}
 		if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Left || e.type == Event::KeyReleased)
 		{
@@ -150,7 +146,7 @@ bool Game::buttonEvents()
 			}
 			else if (buttonExit->contains((Vector2f)Mouse::getPosition(window)))
 			{
-				exit();
+				window.close();
 			}
 		}
 	}
@@ -159,7 +155,7 @@ bool Game::buttonEvents()
 void Game::leftButtonReleased()
 {
 	Vector2i position = Mouse::getPosition(window);
-	if (position.y >= 625)			//tu wstawic ulepszanie wiezyczek
+	if (position.y >= 625)
 	{
 		if (position.x >= 921)
 		{
@@ -572,11 +568,6 @@ inline void Game::end()
 {
 	if (endAnimation(lines))
 	{
-		exit();
+		window.close();
 	}
-}
-
-void Game::exit()
-{
-	window.close();
 }

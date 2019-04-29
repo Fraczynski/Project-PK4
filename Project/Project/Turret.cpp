@@ -1,17 +1,7 @@
 #include "Turret.h"
 
-
-
-
-#include <iostream>
-
-
-
-
-
 using namespace std;
 using namespace sf;
-
 
 Turret::Turret(const int _id,  const Texture & _picture, const Vector2f _position) : id(_id)				//konstruktor tworzacy wiezyczke (uzywany dla wiezyczek w menu)
 {
@@ -265,43 +255,30 @@ void Turret::rotate(vector<Monster> & monsters)			//obracanie wiezyczki w strone
 	{
 		if (isInRange(monsters[i]))					//sprawdzanie, czy potwor znajduje sie w zasiegu wiezyczki
 		{
-			double angle = (atan2(monsters[i].getPosition().y - picture.getPosition().y, monsters[i].getPosition().x - picture.getPosition().x) * (180 / (atan(1) * 4)) + 90) - picture.getRotation();
-			if (angle > 3 && angle < 357)
-			{
-				picture.rotate(rotationSpeed);
-			}
-			else if (angle < -3 && angle > -357)
-			{
-				picture.rotate(-rotationSpeed);
-			}
+			double angle = (atan2(monsters[i].getPosition().y - picture.getPosition().y,
+				monsters[i].getPosition().x - picture.getPosition().x) * (180 / (atan(1) * 4)) + 90);		//kat miedzy wiezyczka a potworem
+			double rotation = picture.getRotation();				//aktualny kat obrocenia wiezyczki
+
+			if (angle < 0)
+				angle += 360;		//zakres kata miedzy wiezyczka o potworem: 0 : 360
+			rotation -= angle;		//kat o jaki nalezy obrocic wiezyczke w strone potwora
+
+			//operacje na kacie by zakres wynosil miedzy -180 a +180
+			if (rotation < 0)
+				rotation += 360;
+			if (rotation > 180)
+				rotation -= 360;
+
+			if (rotation >= 0)
+				picture.rotate(-sqrt(rotation) / 2);		//obracanie w lewo
 			else
-			{
-				picture.setRotation(atan2(monsters[i].getPosition().y - picture.getPosition().y,
-					monsters[i].getPosition().x - picture.getPosition().x) * (180 / (atan(1) * 4)) + 90);			//obracanie wiezyczki w kierunku potwora
-			}
+				picture.rotate(sqrt(-rotation) / 2);		//obracanie w prawo
+			
 			aimAtMonster = i;			//zapisanie numeru potwora, w ktory wycelowala wiezyczka
 			return;
 		}
 	}
 	aimAtMonster = -1;			//brak potwora w zasiegu wiezyczki
-	
-	/*double angle = (360 - (double)((int)(270 - ((atan2(monsters.begin()->getPosition().y - i->getPosition().y, 
-						monsters.begin()->getPosition().x - i->getPosition().x)) * (180 / (atan(1) * 4)))) % 360) - i->picture.getRotation());
-	i->picture.rotate(360 - (270 - (atan2(monsters.begin()->getPosition().y - i->picture.getPosition().y, 
-						monsters.begin()->getPosition().x - i->getPosition().x)) * (180 / (atan(1) * 4))) - i->picture.getRotation());
-
-	if (angle > 1 && angle <= 180)
-	{
-		i->picture.rotate(angle / 20);
-	}
-	else if (angle > 180 || angle < -1)
-	{
-		i->picture.rotate(-(360 - angle) % 180 / 20);
-	}
-	else
-	{
-		i->picture.rotate(angle);
-	}*/
 }
 
 int Turret::shoot(const vector<Monster> & monsters)				//strzelanie do odpowiedniego potwora
@@ -371,19 +348,4 @@ void Turret::save(fstream & file)
 {
 	file << id << " " << picture.getPosition().x << " " << picture.getPosition().y << " " << timeToShoot << " " << damage << " " << range << " " << rate << " ";
 	file << aimAtMonster << " " <<  picture.getRotation() << endl;
-}
-
-Upgrading::Upgrading(const int _price, const int _value) : price(_price), value(_value)				//konstruktor przypisujacy wartosci zmiennym
-{
-
-}
-
-int Upgrading::getPrice()			//pobieranie ceny ulepszenia
-{
-	return price;
-}
-
-int Upgrading::getValue()			//pobieranie wartosci ulepszenia
-{
-	return value;
 }

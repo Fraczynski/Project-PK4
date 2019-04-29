@@ -25,7 +25,7 @@ bool Rocket::checkCollision(vector<Monster> & monsters, int & cash, int & kills)
 				cash += monsters[j].getLevel();
 				monsters.erase(monsters.begin() + j);
 				j--;
-				numberOfMonster = -1;
+				numberOfMonster = 0;
 			}
 			return true;		//wystapienie kolizji
 		}

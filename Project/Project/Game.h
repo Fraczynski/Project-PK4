@@ -63,6 +63,5 @@ private:
 	void save();		//zapis do pliku
 	void load();		//odczyt z pliku
 	void shoot();		//wystrzeliwanie pociskow
-	void end();
-	void exit();		//zwalnianie zasobow
+	void end();			//koniec gry jesli potworki dotarly do bazy
 };

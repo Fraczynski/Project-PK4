@@ -11,42 +11,35 @@ Rocket1::Rocket1(const int & _id, const int & _speed, const int & _damage, const
 
 bool Rocket1::specialAbilities(vector<Monster> & monsters, int & cash, int & kills)			//specjalne zdolnosci tego typu pocisku (rakieta)
 {
-	if (monsters.empty() || monsters.begin()->getPosition().y < 0)		//sprawdzanie, czy sa potwory na mapie
-	{
-		picture.rotate(3);					//jesli nie to poruszanie sie po okregu pocisku
-		picture.move(sin((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed, -cos((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed);
-	}
-	else if(numberOfMonster < monsters.size() && numberOfMonster >= 0)			//sprawdzanie, czy pocisk wycelowany jest w istniejacego potwora
+	if(numberOfMonster >= 0 && numberOfMonster < (int)monsters.size())			//sprawdzanie, czy pocisk wycelowany jest w istniejacego potwora
 	{
 		double angle = (atan2(monsters[numberOfMonster].getPosition().y - picture.getPosition().y, 
-						monsters[numberOfMonster].getPosition().x - picture.getPosition().x) * (180 / (atan(1) * 4)) + 90) - picture.getRotation();
-		if (angle > 3 && angle < 357)
-		{
-			picture.rotate(rotationSpeed);
-		}
-		else if (angle < -3 && angle > -357)
-		{
-			picture.rotate(-rotationSpeed);
-		}
-		else
-		{
-			picture.setRotation(atan2(monsters[numberOfMonster].getPosition().y - picture.getPosition().y,
-								monsters[numberOfMonster].getPosition().x - picture.getPosition().x) * (180 / (atan(1) * 4)) + 90);			//obracanie wiezyczki w kierunku potwora
-		}
-		//picture.setRotation(atan2(monsters[numberOfMonster].getPosition().y - picture.getPosition().y,
-		//	monsters[numberOfMonster].getPosition().x - picture.getPosition().x) * (180 / (atan(1) * 4)) + 90);		//obracanie pocisku w kierunku potwora
-		picture.move(sin((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed, -cos((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed);		//przesuwanie pocisku
+						monsters[numberOfMonster].getPosition().x - picture.getPosition().x) * (180 / (atan(1) * 4)) + 90);		//kat miedzy rakieta a potworem
+		double rotation = picture.getRotation();				//aktualny kat obrocenia rakiety
 
+		if (angle < 0)
+			angle += 360;		//zakres kata miedzy rakieta o potworem: 0 : 360
+		rotation -= angle;		//kat o jaki nalezy obrocic rakiete w strone potwora
+
+		//operacje na kacie by zakres wynosil miedzy -180 a +180
+		if (rotation < 0)
+			rotation += 360;
+		if (rotation > 180)
+			rotation -= 360;
+
+		if (rotation >= 0)
+			picture.rotate(-(float)sqrt(rotation) / 2);		//obracanie w lewo
+		else
+			picture.rotate((float)sqrt(-rotation) / 2);		//obracanie w prawo
+		
+		picture.move((float)sin((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed, -(float)cos((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed);		//przesuwanie pocisku
+				
 		return checkCollision(monsters, cash, kills);		//zwracanie informacji, czy wystapila kolizja
 	}
-	else				//potwor, na ktory zostal wycelowany pocisk, zostal zabity
+	else					//jesli nie to poruszanie sie pocisku po okregu
 	{
-		numberOfMonster = -1;		//celowanie w potwora, ktory jest najblizej bazy
-		picture.setRotation(atan2(monsters.begin()->getPosition().y - picture.getPosition().y,
-			monsters.begin()->getPosition().x - picture.getPosition().x) * (180 / (atan(1) * 4)) + 90);			//obracanie w kierunku potwora znajdujacego sie najblizej mapy
-		picture.move(sin((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed, -cos((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed);		//przesuwanie w jego kierunku
-
-		return checkCollision(monsters, cash, kills);		//zwracanie informacji czy wystapila kolizja
+		picture.rotate(3);
+		picture.move((float)sin((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed, -(float)cos((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed);
 	}
 	return false;
 }

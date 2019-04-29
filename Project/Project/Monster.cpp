@@ -54,7 +54,7 @@ int Monster::move(const Map map[])			//przemieszczanie potwora
 	return 0;
 }
 
-bool Monster::hurt(const int damage)		//odejmowanie zycia
+bool Monster::hurt(const int & damage)		//odejmowanie zycia
 {
 	HP -= damage;
 	hp.setString(to_string(HP));

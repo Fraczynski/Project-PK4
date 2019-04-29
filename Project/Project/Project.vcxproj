@@ -136,6 +136,7 @@
     <ClCompile Include="Texts.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Turret.cpp" />
+    <ClCompile Include="Upgrading.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
@@ -150,6 +151,7 @@
     <ClInclude Include="Texts.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Turret.h" />
+    <ClInclude Include="Upgrading.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

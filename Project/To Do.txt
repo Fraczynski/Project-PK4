@@ -4,6 +4,7 @@
 //sprzedawanie wiezyczek
 //pokasowac sf i std
 //include w main
+//erase_if zamiast pêtli i if'ów
 --------------------------------------------
 mapy bez t³a
 poprawic kod obs³uguj¹cy klikniêcie
@@ -25,7 +26,10 @@ ulepszanie gdy nie przenosi sie wiezyczki
 wyjatek przy wczytywaniu plikow - zmienic cout
 przyciski jako 1 obrazek i pisac po nim tekst
 kolejki w Turret.h jako prywatne
---------------------------------------------
 poprawiæ animacje pocisków
 poprawiæ animacje wiezyczek
+zlikwidowac exit() - destruktor
+--------------------------------------------
 dodaæ mapy
+¿le w lewo sie obracaja 
+rakieta czasem nie zabija tylko lata w kó³ko
