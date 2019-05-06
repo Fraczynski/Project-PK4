@@ -29,7 +29,13 @@ kolejki w Turret.h jako prywatne
 poprawiæ animacje pocisków
 poprawiæ animacje wiezyczek
 zlikwidowac exit() - destruktor
+malo w main
+wywolywanie metody z klasy wyzej
+zrobic cos z tablica punktow kierunkow mapy (przy uruchomieniu automatyczne tworzenie tablicy)
 --------------------------------------------
 dodaæ mapy
-¿le w lewo sie obracaja 
-rakieta czasem nie zabija tylko lata w kó³ko
+poprawic kolizje rakiet z potworami
+save osobno dla osobnych map
+przyciski do ulepszania wiezyczek
+sprawdzic wycieki pamieci
+

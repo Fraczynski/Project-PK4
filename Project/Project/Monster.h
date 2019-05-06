@@ -14,7 +14,7 @@ class Monster			//klasa przechowujaca informacjê o potworze
 
 public:
 	Monster(const int _level, const sf::Font & font, const sf::Texture & _picture, const sf::Vector2f _position, const int & _monsterPictureX, const int & _monsterPictureY, const int & _monsterSize);		//konstruktor tworzacy potwora
-	int move(const Map map[]);					//przemieszczanie potwora
+	int move(const std::vector<Map> & mapCorners);					//przemieszczanie potwora
 	bool hurt(const int & damage);				//odejmowanie zycia
 	void display(sf::RenderWindow & window);	//wyswietlanie potwora
 	int getLevel();								//pobieranie poczatkowej ilosci zycia
