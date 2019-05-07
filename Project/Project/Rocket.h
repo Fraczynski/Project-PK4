@@ -19,5 +19,5 @@ public:
 	bool checkCollision(std::vector<Monster> & monsters, int & cash, int & kills);			//sprawdzanie wyst¹pienia kolizji z potworem
 	int getDamage();					//pobieranie ilosci zadawanych obrazen
 	void display(sf::RenderWindow & window);		//wyswietlanie pocisku
-	void save(std::fstream & file);
+	void save(std::fstream & file);			//zapis informacji do pliku
 };

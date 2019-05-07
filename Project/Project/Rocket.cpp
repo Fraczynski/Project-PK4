@@ -45,5 +45,5 @@ void Rocket::display(RenderWindow & window)			//wyswietlanie pocisku
 
 void Rocket::save(fstream & file)
 {
-	file << id << " " << speed << " " << damage << " " << picture.getRotation() << " " << numberOfMonster << " " << picture.getPosition().x << " " << picture.getPosition().y << endl;
+	file << id << " " << speed << " " << damage << " " << (int)picture.getRotation() << " " << numberOfMonster << " " << (int)picture.getPosition().x << " " << (int)picture.getPosition().y << endl;
 }

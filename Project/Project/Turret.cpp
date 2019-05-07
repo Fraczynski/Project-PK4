@@ -346,6 +346,6 @@ void Turret::display(sf::RenderWindow & window)
 
 void Turret::save(fstream & file)
 {
-	file << id << " " << picture.getPosition().x << " " << picture.getPosition().y << " " << timeToShoot << " " << damage << " " << range << " " << rate << " ";
-	file << aimAtMonster << " " <<  picture.getRotation() << endl;
+	file << id << " " << (int)picture.getPosition().x << " " << (int)picture.getPosition().y << " " << timeToShoot << " " << damage << " " << range << " " << rate << " ";
+	file << aimAtMonster << " " << (int)picture.getRotation() << endl;
 }

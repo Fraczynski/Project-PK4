@@ -36,10 +36,14 @@ bool Rocket1::specialAbilities(vector<Monster> & monsters, int & cash, int & kil
 				
 		return checkCollision(monsters, cash, kills);		//zwracanie informacji, czy wystapila kolizja
 	}
+	else if((numberOfMonster >= (int)monsters.size() && numberOfMonster != 0) || numberOfMonster < 0)		//sprawdzanie, czy pocisk wycelowany jest w nieistniejacego
+	{
+		numberOfMonster = 0;
+	}
 	else					//jesli nie to poruszanie sie pocisku po okregu
 	{
-		picture.rotate(3);
-		picture.move((float)sin((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed, -(float)cos((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed);
+	picture.rotate(3);
+	picture.move((float)sin((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed, -(float)cos((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed);
 	}
 	return false;
 }

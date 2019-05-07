@@ -9,6 +9,7 @@
 using namespace std;
 using namespace sf;
 
+//menu
 void Game::menu()
 {
 	//ustawianie tel
@@ -46,19 +47,22 @@ void Game::menu()
 	}
 
 	//resetowanie ustawien grafik map i tel
-	checkCorners();
-	map1.setScale(Vector2f(1, 1));
-	map1.setPosition(Vector2f(0, 0));
-	map1.setOrigin(Vector2f(0, 0));
-	map2.setScale(Vector2f(1, 1));
-	map2.setPosition(Vector2f(0, 0));
-	map2.setOrigin(Vector2f(0, 0));
-	background1.setScale(Vector2f(1, 1));
-	background1.setPosition(Vector2f(0, 0));
-	background1.setOrigin(Vector2f(0, 0));
-	background2.setScale(Vector2f(1, 1));
-	background2.setPosition(Vector2f(0, 0));
-	background2.setOrigin(Vector2f(0, 0));
+	if (window.isOpen())
+	{
+		checkCorners();
+		map1.setScale(Vector2f(1, 1));
+		map1.setPosition(Vector2f(0, 0));
+		map1.setOrigin(Vector2f(0, 0));
+		map2.setScale(Vector2f(1, 1));
+		map2.setPosition(Vector2f(0, 0));
+		map2.setOrigin(Vector2f(0, 0));
+		background1.setScale(Vector2f(1, 1));
+		background1.setPosition(Vector2f(0, 0));
+		background1.setOrigin(Vector2f(0, 0));
+		background2.setScale(Vector2f(1, 1));
+		background2.setPosition(Vector2f(0, 0));
+		background2.setOrigin(Vector2f(0, 0));
+	}
 }
 
 bool Game::menuEvents()
@@ -69,8 +73,9 @@ bool Game::menuEvents()
 		if (e.type == Event::Closed)
 		{
 			window.close();
+			return true;
 		}
-		if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Left || e.type == Event::KeyReleased)
+		if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Left)
 		{
 			if (buttonMap1->contains((Vector2f)Mouse::getPosition(window)))
 			{
@@ -105,7 +110,7 @@ void Game::resetGame()
 	ifMovingTurret = 0;			//czy przenoszona aktualnie jest wiezyczka: 0 - nie; 1 - tak
 	clicked = -1;				//numer zaznaczonej wiezyczki: -1 - brak zaznaczonej
 	level = 0;					//numer aktualnego poziomu
-	cash = 2000000;					//poczatkowa ilosc pieniedzy
+	cash = 2000000;				//poczatkowa ilosc pieniedzy
 	kills = 0;					//licznik zabitych potworow
 	monsterPictureX = 0;		//wspolrzedna x aktualnego sprite'a potwora
 	monsterPictureY = 0;		//wspolrzedna y aktualnego sprite'a potwora
@@ -117,11 +122,9 @@ void Game::resetGame()
 	rockets.clear();
 	lines.clear();
 	mapCorners.clear();
+
 	//resetowanie sklepu
 	resetTurrets();
-
-	//wywolanie menu
-	menu();
 
 	//for (int i = 0; i < 10; i++) { monsters.push_back(Monster(level, fontCalibri, T_monster, Vector2f(709, 300 - i * 30), monsterPictureX, monsterPictureY, monsterSize)); monsters.push_back(Monster(level, fontCalibri, T_monster, Vector2f(132, 400 - i * 30), monsterPictureX, monsterPictureY, monsterSize));}
 }
@@ -147,16 +150,19 @@ void Game::events()
 		if (e.type == Event::Closed)
 		{
 			window.close();
+			return;
 		}
-		if (e.type == Event::KeyReleased && e.key.code == Keyboard::Escape)
+		else if (e.type == Event::KeyReleased && e.key.code == Keyboard::Escape)
 		{
 			pause();
+			if (!window.isOpen())
+				return;
 		}
-		if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Left)
+		else if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Left)
 		{
 			leftButtonReleased();
 		}
-		if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Right)
+		else if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Right)
 		{
 			resetTurrets();
 		}
@@ -174,20 +180,15 @@ void Game::pause()
 	Mouse::setPosition(mousePosition, window);
 	Sprite cursorTmp(T_cursor1);
 
-	while (1)
+	while (!pauseEvents())
 	{
 		cursorTmp.setPosition(Vector2f(Mouse::getPosition(window)));
-		pauseMenu(cursorTmp);
-		if (buttonEvents())
-		{
-			return;
-		}
+		pauseDisplay(cursorTmp);
 	}
-	Mouse::setPosition(mousePosition, window);
 	cursor = cursorTmp;
 }
 
-bool Game::buttonEvents()
+bool Game::pauseEvents()
 {
 	Event e;
 	while (window.pollEvent(e))
@@ -195,6 +196,7 @@ bool Game::buttonEvents()
 		if (e.type == Event::Closed)
 		{
 			window.close();
+			return true;
 		}
 		if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Left || e.type == Event::KeyReleased)
 		{
@@ -205,6 +207,7 @@ bool Game::buttonEvents()
 			else if (buttonRestart->contains((Vector2f)Mouse::getPosition(window)))
 			{
 				resetGame();
+				menu();
 				return true;
 			}
 			else if (buttonSave->contains((Vector2f)Mouse::getPosition(window)))
@@ -220,6 +223,7 @@ bool Game::buttonEvents()
 			else if (buttonExit->contains((Vector2f)Mouse::getPosition(window)))
 			{
 				window.close();
+				return true;
 			}
 		}
 	}
@@ -470,7 +474,10 @@ void Game::addLines()
 void Game::save()
 {
 	fstream file;
-	file.open("save.txt", ios::out);
+	if(map == &map1)
+		file.open("save1.txt", ios::out);
+	else if(map == &map2)
+		file.open("save2.txt", ios::out);
 	if (file.good())
 	{
 		file.clear();
@@ -492,10 +499,6 @@ void Game::save()
 		{
 			(*it)->save(file);
 		}
-	}
-	else
-	{
-		Sleep(3000);
 	}
 }
 
@@ -538,12 +541,14 @@ bool Game::checkPlace(const Vector2f & position, const int & w, const int & h)
 void Game::load()
 {
 	fstream file;
-	file.open("save.txt", ios::in);
+	if (map == &map1)
+		file.open("save1.txt", ios::in);
+	else if (map == &map2)
+		file.open("save2.txt", ios::in);
 	if (file.good())
 	{
 		resetGame();
 		int vectorSize;
-		int tmp;
 		file >> timeToNextRound >> ifMovingTurret >> clicked >> level >> cash >> kills >> monsterPictureX >> monsterPictureY;
 		file >> vectorSize;				//rozmiar wektora linii
 		for (int i = 0; i < vectorSize; i++)
@@ -553,10 +558,9 @@ void Game::load()
 		file >> vectorSize;				//rozmiar wektora potworow
 		for (int i = 0; i < vectorSize; i++)
 		{
-			int level;
-			float positionX, positionY;
+			int level, direction, HP;
+			int positionX, positionY;
 			int rectLeft, rectTop, rectSize;
-			int direction, HP;
 
 			file >> level >> positionX >> positionY >> rectLeft >> rectTop;
 			file >> rectSize >> direction >> HP;
@@ -567,8 +571,7 @@ void Game::load()
 		for (int i = 0; i < vectorSize; i++)
 		{
 			int id, timeToShoot, damage, range, rate, aimAtMonster;
-			float positionX, positionY;
-			float rotation;
+			int positionX, positionY, rotation;
 
 			file >> id >> positionX >> positionY >> timeToShoot >> damage >> range >> rate >> aimAtMonster >> rotation;
 			switch (id)
@@ -591,27 +594,23 @@ void Game::load()
 		for (int i = 0; i < vectorSize; i++)
 		{
 			int id, speed, damage, numberOfMonster;
-			float positionX, positionY;
-			float rotation;
+			int positionX, positionY, rotation;
 			file >> id >> speed >> damage >> rotation >> numberOfMonster >> positionX >> positionY;
 			switch (id)
 			{
 			case 1:
-				rockets.emplace_back(new Rocket1(1, 2, damage, (int)rotation, tmp, T_missile1, Vector2f(positionX, positionY)));
+				rockets.emplace_back(new Rocket1(id, 2, damage, rotation, numberOfMonster, T_missile1, Vector2f(positionX, positionY)));
 				break;
 			case 2:
-				rockets.emplace_back(new Rocket2(2, 20, damage, (int)rotation, tmp, T_missile1, Vector2f(positionX, positionY)));
+				rockets.emplace_back(new Rocket2(id, 20, damage, rotation, numberOfMonster, T_missile1, Vector2f(positionX, positionY)));
 				break;
 			case 3:
-				rockets.emplace_back(new Rocket3(3, 1, damage, (int)rotation, tmp, T_missile1, Vector2f(positionX, positionY)));
+				rockets.emplace_back(new Rocket3(id, 1, damage, rotation, numberOfMonster, T_missile1, Vector2f(positionX, positionY)));
 				break;
 			}
 		}
 	}
-	else
-	{
-		Sleep(3000);
-	}
+	checkCorners();
 }
 
 void Game::shoot()
@@ -646,6 +645,9 @@ void Game::end()
 	}
 }
 
+//pause
+
+
 //GUI
 void Game::loadGraphics()
 {
@@ -666,7 +668,8 @@ void Game::loadGraphics()
 			!T_turret2.loadFromFile("turret2.png") ||
 			!T_turret3.loadFromFile("turret3.png") || !T_monster.loadFromFile("monster.png") || !T_cursor1.loadFromFile("cursor1.png") || !T_cursor2.loadFromFile("cursor2.png") ||
 			!T_missile1.loadFromFile("missile1.png") || !T_missile2.loadFromFile("missile2.png") || !T_missile3.loadFromFile("missile3.png") || !T_arrow.loadFromFile("arrow.png") ||
-			!T_line.loadFromFile("line.png") || !T_gameOver.loadFromFile("end.png") || !T_button.loadFromFile("button.png") || !T_background.loadFromFile("background.png") || 
+			!T_line.loadFromFile("line.png") || !T_gameOver.loadFromFile("end.png") || !T_button.loadFromFile("button.png") || !T_buttonSmall.loadFromFile("buttonSmall.png") || 
+			!T_background.loadFromFile("background.png") ||
 			!T_background1.loadFromFile("background1.png") || !T_background2.loadFromFile("background2.png") ||
 			!T_map1.loadFromFile("map1.png") || !T_map2.loadFromFile("map2.png"))
 		{
@@ -685,6 +688,7 @@ void Game::loadGraphics()
 		window.display();
 		Sleep(3000);
 		window.close();
+		return;
 	}
 
 	//wygladzenie wszystkich tekstur
@@ -698,6 +702,7 @@ void Game::loadGraphics()
 	T_line.setSmooth(true);
 	T_gameOver.setSmooth(true);
 	T_button.setSmooth(true);
+	T_buttonSmall.setSmooth(true);
 	T_turret1.setSmooth(true);
 	T_turret2.setSmooth(true);
 	T_turret3.setSmooth(true);
@@ -743,6 +748,10 @@ void Game::loadGraphics()
 	buttonLoad.reset(new Button(T_button, fontTimesNewRoman, Vector2f(width / 2, 5 * height / 8), "LOAD"));
 	buttonExit.reset(new Button(T_button, fontTimesNewRoman, Vector2f(width / 2, 6 * height / 8), "EXIT"));
 
+	buttonUpgradingDamage.reset(new Button(T_buttonSmall, fontTimesNewRoman, Vector2f(670, 640), ""));
+	buttonUpgradingRange.reset(new Button(T_buttonSmall, fontTimesNewRoman, Vector2f(670, 662), ""));
+	buttonUpgradingRate.reset(new Button(T_buttonSmall, fontTimesNewRoman, Vector2f(670, 684), ""));
+
 	//ustawienie wiezyczek w menu
 	turret1.reset(new Turret(1, T_turret1, vectorTurret1));
 	turret2.reset(new Turret(2, T_turret2, vectorTurret2));
@@ -759,6 +768,9 @@ void Game::loadGraphics()
 
 void Game::display()
 {
+	if (!window.isOpen())
+		return;
+
 	window.clear(Color(255, 0, 0));
 	window.draw(*background);
 	window.draw(*map);
@@ -786,6 +798,9 @@ void Game::display()
 	}
 	window.draw(bar);
 	window.draw(arrow);
+	buttonUpgradingDamage->display(window);
+	buttonUpgradingRange->display(window);
+	buttonUpgradingRate->display(window);
 	texts->display(cash, kills, level, window);
 
 	turret1->display(window);
@@ -798,7 +813,7 @@ void Game::display()
 	timeToNextRound--;
 }
 
-void Game::pauseMenu(const Sprite & cursorTmp)
+void Game::pauseDisplay(const Sprite & cursorTmp)
 {
 	window.draw(screenShot);
 	buttonResume->display(window);

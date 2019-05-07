@@ -46,6 +46,7 @@ class Game : public GUI
 	Sprite map1;				//mapa 1
 	Sprite map2;				//mapa 2
 	Texture T_button;			//tekstura przycisku
+	Texture T_buttonSmall;			//tekstura malego przycisku
 	unique_ptr<Button> buttonResume;	//przycisk resume
 	unique_ptr<Button> buttonRestart;	//przycisk restart
 	unique_ptr<Button> buttonSave;		//przycisk save
@@ -53,6 +54,9 @@ class Game : public GUI
 	unique_ptr<Button> buttonExit;		//przycisk exit
 	unique_ptr<Button> buttonMap1;		//przycisk wybierania mapy 1
 	unique_ptr<Button> buttonMap2;		//przycisk wybierania mapy 2
+	unique_ptr<Button> buttonUpgradingDamage;
+	unique_ptr<Button> buttonUpgradingRange;
+	unique_ptr<Button> buttonUpgradingRate;
 
 	Texture T_turret1;				//tekstury wie¿yczek
 	Texture T_turret2;
@@ -89,10 +93,10 @@ class Game : public GUI
 	int monsterSize = 40;		//rozmiar obrazka potwora
 	int monsterPictureX;		//wspolrzedna x aktualnego sprite'a potwora
 	int monsterPictureY;		//wspolrzedna y aktualnego sprite'a potwora
-	vector<Monster> monsters;		//wektor potworow
-	vector<Turret> turrets;			//wektor wiezyczek
+	vector<Monster> monsters;	//wektor potworow
+	vector<Turret> turrets;		//wektor wiezyczek
 	vector<unique_ptr<Rocket>> rockets;		//wektor wskaznikow na rakiety
-	vector<Sprite> lines;			//wektor lini skreslajacych stickman'ow
+	vector<Sprite> lines;		//wektor lini skreslajacych stickman'ow
 
 public:
 	//logika gry
@@ -101,17 +105,17 @@ public:
 	bool isPlayed();
 	void resetGame();			//restartowanie gry
 	void resetTurrets();		//przywracanie wzorcowych wiezyczek do sklepu
-	void events();			//obsluga zdarzen
-	void pause();			//wstrzymanie gry
-	bool buttonEvents();
-	void leftButtonReleased();		//sprawdzanie polozenia wskaznika myszy podczas puszczenia lewego przycisku
+	void events();				//obsluga zdarzen
+	void pause();				//wstrzymanie gry
+	bool pauseEvents();			//obsluga zdarzen w menu
+	void leftButtonReleased();	//sprawdzanie polozenia wskaznika myszy podczas puszczenia lewego przycisku
 	void movingTurret();		//upuszczanie wiezyczki w celu jej wybudowania
-	void moveTurret();
+	void moveTurret();			//przenoszenie wiezyczek
 	bool notMovingTurret();		//sprawdzanie, czy rozpoczeto przenoszenie wiezyczki w celu jej wybudowania
 	bool turretClicked();		//wyswietlanie informacji o zaznaczonej wiezyczce
 	void upgradeTurrets();		//ulepszanie wiezyczek
 	void updateCircle(const Vector2f & position, const int & range);		//aktualizacja kola okreslajacego zasieg danej wiezyczki
-	void updateClock();		//aktualizacja zegara informujacego o czasie rundy
+	void updateClock();			//aktualizacja zegara informujacego o czasie rundy
 	void move_monsters();		//przemieszczanie wszystkich potworow
 	void add_monsters();		//dodawanie potworow
 	void rotate_turrets();		//obracanie wiezyczek
@@ -122,12 +126,13 @@ public:
 	void save();		//zapis do pliku
 	void load();		//odczyt z pliku
 	void shoot();		//wystrzeliwanie pociskow
-	void end();			//koniec gry jesli potworki dotarly do bazy
+	void end();	//koniec gry jesli potworki dotarly do bazy
+	//bool end();			//koniec gry
 
 	//GUI
 	void loadGraphics();
 	void display();
-	void pauseMenu(const Sprite & cursorTmp);
+	void pauseDisplay(const Sprite & cursorTmp);
 	bool endAnimation();
 	void checkCorners();
 };

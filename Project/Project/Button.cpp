@@ -6,11 +6,12 @@
 using namespace std;
 using namespace sf;
 
-Button::Button(const Texture & _picture, const Font & font, const Vector2f _position, const string & _text)
+Button::Button(const Texture & _picture, const Font & font, const Vector2f _position, const string & _text, Vector2f scale)
 {
 	picture.setTexture(_picture);
 	picture.setOrigin(picture.getGlobalBounds().width / 2, picture.getGlobalBounds().height / 2);
 	picture.setPosition(_position);
+	picture.setScale(scale);
 
 	text.setFont(font);
 	text.setCharacterSize(36);

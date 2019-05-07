@@ -1,10 +1,7 @@
 //GUI.h
-//kolory przezroczystych pikseli
-//osobne klasy w wiezyczek w menu i grze
 //sprzedawanie wiezyczek
 //pokasowac sf i std
 //include w main
-//erase_if zamiast pêtli i if'ów
 --------------------------------------------
 mapy bez t³a
 poprawic kod obs³uguj¹cy klikniêcie
@@ -32,10 +29,11 @@ zlikwidowac exit() - destruktor
 malo w main
 wywolywanie metody z klasy wyzej
 zrobic cos z tablica punktow kierunkow mapy (przy uruchomieniu automatyczne tworzenie tablicy)
---------------------------------------------
 dodaæ mapy
-poprawic kolizje rakiet z potworami
 save osobno dla osobnych map
-przyciski do ulepszania wiezyczek
+pause zmienic while 
 sprawdzic wycieki pamieci
-
+--------------------------------------------
+przyciski do ulepszania wiezyczek
+poprawic kolizje rakiet z potworami
+refaktoryzacja kodu (GUI i logika osobno)

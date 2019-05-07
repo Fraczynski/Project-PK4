@@ -81,7 +81,7 @@ Vector2f Monster::getPosition()
 
 void Monster::save(fstream & file)						//zapis stanu obiektu do pliku
 {
-	file << level << " " << picture.getPosition().x << " " << picture.getPosition().y << " " << picture.getTextureRect().left << " " << picture.getTextureRect().top << " ";
+	file << level << " " << (int)picture.getPosition().x << " " << (int)picture.getPosition().y << " " << picture.getTextureRect().left << " " << picture.getTextureRect().top << " ";
 	file << picture.getTextureRect().width << " " << direction << " " << HP << endl;
 }
 

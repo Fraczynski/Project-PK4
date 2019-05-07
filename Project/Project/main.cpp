@@ -1,18 +1,22 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "Game.h"
 
+#include <Windows.h>
+
 using namespace std;
 
 int main()
 {
 	Game game;				//utworzenie obiektu gry
 	game.loadGraphics();
+	/*if (!game.isPlayed())
+		return 0;*/
 	game.resetGame();
+	game.menu();
 	game.display();
 
 	while (game.isPlayed())				//petla wykonujaca sie dopoki nie zostanie zakonczona gra
 	{
-		game.events();
 		game.add_monsters();
 		game.rotate_turrets();
 		game.shoot();
@@ -22,6 +26,7 @@ int main()
 		game.updateClock();
 		game.display();
 		game.end();
+		game.events();
 	}
 	return 0;
 }
