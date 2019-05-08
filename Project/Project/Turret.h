@@ -33,11 +33,11 @@ public:
 	int getRate();					//pobieranie wartosci czestotliwosci strzalow
 	int getSize(int queue);			//pobieranie ilosci elementow danej kolejki
 	int getFrontPrice(int queue);	//pobieranie ceny z pierwszego elementu danej kolejki
-	void setPosition(const sf::Vector2f & vectorTurret);		//ustawianie sprite'a na podanej pozycji
+	void setPosition(const sf::Vector2i & vectorTurret);		//ustawianie sprite'a na podanej pozycji
 	sf::Vector2f getPosition();				//pobieranie pozycji sprite'a
 	int getWidth();					//pobieranie szerokosci sprite'a
 	int getHeight();				//pobieranie wysokosci sprite'a
-	bool contains(const sf::Vector2f & point);		//sprawdzenie, czy sprite wiezyczki zawiera podany punkt
+	bool contains(const sf::Vector2i & point);		//sprawdzenie, czy sprite wiezyczki zawiera podany punkt
 	float getRotation();
 	void rotate(std::vector<Monster> &);		//obracanie wiezyczki w strone odpowiedniego potwora
 	int shoot(const std::vector<Monster> &);				//strzelanie do odpowiedniego potwora

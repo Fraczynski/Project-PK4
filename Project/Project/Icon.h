@@ -1,3 +1,4 @@
+#pragma once
 static const struct Icon			//ikona na pasku tytulu
 {
 	unsigned int 	 width;

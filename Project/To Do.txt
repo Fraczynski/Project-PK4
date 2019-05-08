@@ -26,8 +26,6 @@ kolejki w Turret.h jako prywatne
 poprawiæ animacje pocisków
 poprawiæ animacje wiezyczek
 zlikwidowac exit() - destruktor
-malo w main
-wywolywanie metody z klasy wyzej
 zrobic cos z tablica punktow kierunkow mapy (przy uruchomieniu automatyczne tworzenie tablicy)
 dodaæ mapy
 save osobno dla osobnych map

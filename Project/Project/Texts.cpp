@@ -3,8 +3,7 @@
 using namespace std;
 using namespace sf;
 
-Texts::Texts(const Font & font, const Vector2f & vectorTurret1, const Vector2f & vectorTurret2, const Vector2f & vectorTurret3, unique_ptr <Turret> & turret1,
-	unique_ptr <Turret> & turret2, unique_ptr <Turret> & turret3)	//konstruktor tworzacy teksty
+Texts::Texts(const Font & font, const Vector2f & vectorTurret1, const Vector2f & vectorTurret2, const Vector2f & vectorTurret3, Turret * turret1, Turret * turret2, Turret * turret3)	//konstruktor tworzacy teksty
 {
 	for (int i = 0; i < 21; i++)			//ustawienia graficzne wszystkich tekstow
 	{

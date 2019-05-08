@@ -219,9 +219,9 @@ int Turret::getFrontPrice(int queue)
 	}
 }
 
-void Turret::setPosition(const Vector2f & vectorTurret)
+void Turret::setPosition(const Vector2i & vectorTurret)
 {
-	picture.setPosition(vectorTurret);
+	picture.setPosition(Vector2f(vectorTurret));
 }
 
 Vector2f Turret::getPosition()
@@ -239,9 +239,9 @@ int Turret::getHeight()
 	return picture.getGlobalBounds().height;
 }
 
-bool Turret::contains(const sf::Vector2f & point)
+bool Turret::contains(const sf::Vector2i & point)
 {
-	return picture.getGlobalBounds().contains(point);
+	return picture.getGlobalBounds().contains(Vector2f(point));
 }
 
 float Turret::getRotation()
