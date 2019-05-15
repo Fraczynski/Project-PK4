@@ -6,17 +6,12 @@
 using namespace std;
 using namespace sf;
 
-Monster::Monster(const int _level, const Font & font, const Texture & _picture, const Vector2f _position, const int & _monsterPictureX, const int & _monsterPictureY, const int & _monsterSize) : HP(_level), level(_level)		//konstruktor tworzacy potwora
+Monster::Monster(const int _level, const Font & font, const Texture & _picture, const Vector2f _position, const int & _monsterPictureX, const int & _monsterPictureY, 
+				 const int & _monsterSize) : Picture(_picture, _position, _monsterPictureX, _monsterPictureY, _monsterSize), HP(_level), level(_level)		//konstruktor tworzacy potwora
 {
-	picture.setTexture(_picture);
-	picture.setTextureRect(IntRect(_monsterPictureX, _monsterPictureY, _monsterSize, _monsterSize));
-	picture.setOrigin(picture.getGlobalBounds().width / 2, picture.getGlobalBounds().height / 2);
-	picture.setPosition(_position);
-
 	hp.setFont(font);
 	hp.setCharacterSize(16);
 	hp.setFillColor(Color::White);
-	//hp.setStyle(Text::Bold);
 	hp.setString(to_string(HP));
 	hp.setOrigin(hp.getGlobalBounds().width / 2, hp.getGlobalBounds().height / 2);
 }

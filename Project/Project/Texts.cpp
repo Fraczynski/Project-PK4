@@ -57,32 +57,32 @@ void Texts::updateInfo(Turret & turret)					//wyswietlanie informacji o wiezyczc
 	if (turret.getSize(0) > 1)			//sprawdzanie, czy istnieje mozliwosc ulepszenia
 	{
 		text[3].setString("Upgrading  " + to_string(turret.getFrontPrice(0)) + "$");
-		text[3].setFillColor(bright);
+		text[3].setFillColor(dark);
 	}
 	else				//brak mozliwosci dalszego ulepszania zadawanych obrazen
 	{
 		text[3].setString("Upgrading  ---");
-		text[3].setFillColor(dark);
+		text[3].setFillColor(mediumDark);
 	}
 	if (turret.getSize(1) > 1)			//koszt ulepszenia zasiegu
 	{
 		text[4].setString("Upgrading  " + to_string(turret.getFrontPrice(1)) + "$");
-		text[4].setFillColor(bright);
+		text[4].setFillColor(dark);
 	}
 	else				//brak mozliwosci dalszego ulepszania zasiegu
 	{
 		text[4].setString("Upgrading  ---");
-		text[4].setFillColor(dark);
+		text[4].setFillColor(mediumDark);
 	}
 	if (turret.getSize(2) > 1)			//koszt ulepszenia czestotliwosci strzalow
 	{
 		text[5].setString("Upgrading  " + to_string(turret.getFrontPrice(2)) + "$");
-		text[5].setFillColor(bright);
+		text[5].setFillColor(dark);
 	}
 	else				//brak mozliwosci dalszego ulepszania czestotliwosci strzalow
 	{
 		text[5].setString("Upgrading  ---");
-		text[5].setFillColor(dark);
+		text[5].setFillColor(mediumDark);
 	}
 }
 
@@ -91,15 +91,15 @@ void Texts::updateInfo()			//przyciemnianie informacji o wiezyczce (zadna nie je
 	text[0].setString("Damage");
 	text[1].setString("Range");
 	text[2].setString("Rate");
-	text[0].setFillColor(dark);
-	text[1].setFillColor(dark);
-	text[2].setFillColor(dark);
+	text[0].setFillColor(mediumDark);
+	text[1].setFillColor(mediumDark);
+	text[2].setFillColor(mediumDark);
 	text[3].setString("Upgrading");
 	text[4].setString("Upgrading");
 	text[5].setString("Upgrading");
-	text[3].setFillColor(dark);
-	text[4].setFillColor(dark);
-	text[5].setFillColor(dark);
+	text[3].setFillColor(mediumDark);
+	text[4].setFillColor(mediumDark);
+	text[5].setFillColor(mediumDark);
 }
 
 void Texts::updateStats(const int & cash, const int & kills, const int & level)			//aktualizowanie tekstu zawierajacego statystyki gry

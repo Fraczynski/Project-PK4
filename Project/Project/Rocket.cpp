@@ -4,12 +4,8 @@ using namespace std;
 using namespace sf;
 
 Rocket::Rocket(const int & _id, const int & _speed, const int & _damage, const int & _rotation, const int & _numberOfMonster, const Texture & _picture, const Vector2f _position) :
-			   id(_id), speed(_speed), damage(_damage), numberOfMonster(_numberOfMonster)					//konstruktor tworzacy pocisk
+			   id(_id), speed(_speed), damage(_damage), numberOfMonster(_numberOfMonster), Picture(_picture, _position, _rotation)					//konstruktor tworzacy pocisk
 {
-	picture.setTexture(_picture);
-	picture.setOrigin(picture.getGlobalBounds().width / 2, picture.getGlobalBounds().height / 3);
-	picture.setPosition(_position);
-	picture.setRotation(_rotation);
 }
 
 bool Rocket::checkCollision(vector<Monster> & monsters, int & cash, int & kills)			//sprawdzanie wyst¹pienia kolizji z potworem

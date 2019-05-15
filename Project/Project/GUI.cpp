@@ -103,9 +103,10 @@ void GUI::loadGraphics()
 	buttonLoad.reset(new Button(T_button, fontTimesNewRoman, Vector2f(float(width / 2), float(5 * height / 8)), "LOAD"));
 	buttonExit.reset(new Button(T_button, fontTimesNewRoman, Vector2f(float(width / 2), float(6 * height / 8)), "EXIT"));
 
-	buttonUpgradingDamage.reset(new Button(T_buttonSmall, fontTimesNewRoman, Vector2f(670, 640), ""));
-	buttonUpgradingRange.reset(new Button(T_buttonSmall, fontTimesNewRoman, Vector2f(670, 662), ""));
-	buttonUpgradingRate.reset(new Button(T_buttonSmall, fontTimesNewRoman, Vector2f(670, 684), ""));
+	//ustawianie przyciskow ulepszen
+	buttonUpgradingDamage.reset(new Button(T_buttonSmall, fontTimesNewRoman, Vector2f(677, 640), ""));
+	buttonUpgradingRange.reset(new Button(T_buttonSmall, fontTimesNewRoman, Vector2f(677, 662), ""));
+	buttonUpgradingRate.reset(new Button(T_buttonSmall, fontTimesNewRoman, Vector2f(677, 684), ""));
 
 	//ustawienie kursora
 	cursor.setTexture(T_cursor2);

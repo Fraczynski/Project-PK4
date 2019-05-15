@@ -4,8 +4,9 @@
 #include <fstream>
 #include "Monster.h"
 #include "Upgrading.h"
+#include "Picture.h"
 
-class Turret			//klasa reprezentujaca wiezyczke
+class Turret : private Picture	//klasa reprezentujaca wiezyczke
 {
 	int id;				//unikalny numer
 	int price = 0;			//cena zakupu
@@ -18,7 +19,6 @@ class Turret			//klasa reprezentujaca wiezyczke
 	std::queue<Upgrading> qDamage;		//kolejka z zawartoscia kolejnych ulepszen zadawanych obrazen
 	std::queue<Upgrading> qRange;		//kolejka z zawartoscia kolejnych ulepszen zasiegu
 	std::queue<Upgrading> qRate;		//kolejka z zawartoscia kolejnych ulepszen czestotliwosci strzelania
-	sf::Sprite picture;			//obrazek wiezyczki
 
 public:
 	Turret(const int _id, const sf::Texture & _picture, const sf::Vector2f _position);			//konstruktor tworzacy wiezyczke (uzywany dla wiezyczek w menu)

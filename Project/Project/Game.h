@@ -1,39 +1,31 @@
 #pragma once
-//#include <SFML/Graphics.hpp>
 #include "Monster.h"
-#include "Turret.h"
-#include "Rocket.h"
 #include "Rocket1.h"
 #include "Rocket2.h"
 #include "Rocket3.h"
 #include "Map.h"
-#include "Texts.h"
-#include "Icon.h"
 #include "GUI.h"
 
-
-//using namespace sf;
 using namespace std;
 
 class Game
 {
-	GUI gui;
-	//logika gry
-	int roundTime = 1200;		//czas pojedynczej rundy
-	int timeToNextRound;		//pozostaly czas do kolejnej rundy
-	int ifMovingTurret;			//czy przenoszona aktualnie jest wiezyczka: 0 - nie; 1 - tak
-	int clicked;				//numer zaznaczonej wiezyczki: -1 - brak zaznaczonej
-	int level;					//numer aktualnego poziomu
-	int cash;					//poczatkowa ilosc pieniedzy
-	int kills;					//licznik zabitych potworow
-	int monsterSize = 40;		//rozmiar obrazka potwora
-	int monsterPictureX;		//wspolrzedna x aktualnego sprite'a potwora
-	int monsterPictureY;		//wspolrzedna y aktualnego sprite'a potwora
-	Vector2i mousePosition;		//zmienna do przechowywania wspolrzednych pozycji myszy
-	Vector2i vectorTurret1 = Vector2i(38, 670);			//pozycja wiezyczek w sklepie
+	GUI gui;				//obiekt wyswietlajacy gre
+	int roundTime = 1200;	//czas pojedynczej rundy
+	int timeToNextRound;	//pozostaly czas do kolejnej rundy
+	int ifMovingTurret;		//czy przenoszona aktualnie jest wiezyczka: 0 - nie; 1 - tak
+	int clicked;			//numer zaznaczonej wiezyczki: -1 - brak zaznaczonej
+	int level;				//numer aktualnego poziomu
+	int cash;				//poczatkowa ilosc pieniedzy
+	int kills;				//licznik zabitych potworow
+	int monsterSize = 40;	//rozmiar obrazka potwora
+	int monsterPictureX;	//wspolrzedna x aktualnego sprite'a potwora
+	int monsterPictureY;	//wspolrzedna y aktualnego sprite'a potwora
+	Vector2i mousePosition;	//zmienna do przechowywania wspolrzednych pozycji myszy
+	Vector2i vectorTurret1 = Vector2i(38, 670);		//pozycja wiezyczek w sklepie
 	Vector2i vectorTurret2 = Vector2i(200, 670);
 	Vector2i vectorTurret3 = Vector2i(360, 670);
-	unique_ptr <Turret> turret1;		//wiezyczki w sklepie bedace wzorcami dla budowanych wiezyczek
+	unique_ptr <Turret> turret1;	//wiezyczki w sklepie bedace wzorcami dla budowanych wiezyczek
 	unique_ptr <Turret> turret2;
 	unique_ptr <Turret> turret3;
 	vector<Map> mapCorners;		//wspolrzedne (w ktorych potwory musza zmienic kierunek) i kierunki

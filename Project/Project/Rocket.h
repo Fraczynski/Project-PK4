@@ -3,15 +3,15 @@
 #include <vector>
 #include <fstream>
 #include "Monster.h"
+#include "Picture.h"
 
-class Rocket		//klasa abstrakcyjna reprezentuj¹ca pocisk
+class Rocket : public Picture		//klasa abstrakcyjna reprezentuj¹ca pocisk
 {
 protected:
 	int id;			//numer rodzaju pocisku
 	int speed;		//predkosc pocisku
 	int damage;		//ilosc zadawanych obrazen
 	int numberOfMonster;	//numer potwora, na ktory zostal wycelowany pocisk
-	sf::Sprite picture;		//obrazek pocisku
 
 public:
 	Rocket(const int & _id, const int & _speed, const int & _damage, const int & _rotation, const int & _numberOfMonster, const sf::Texture & _picture, const sf::Vector2f _position);		//konstruktor tworzacy pocisk

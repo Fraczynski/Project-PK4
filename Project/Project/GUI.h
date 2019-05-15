@@ -11,34 +11,34 @@ using namespace sf;
 
 class GUI
 {
-	int width = 1000;			//szerokosc okna
-	int height = 703;			//wysokosc okna
-	RenderWindow window;		//okno aplikacji
-	Image I_map;				//obraz do sprawdzania kolorow pikseli mapy
-	Texture T_background;		//tlo
-	Texture T_background1;		//tlo mapy 1
-	Texture T_background2;		//tlo mapy 2
-	Texture T_map1;				//mapa 1
-	Texture T_map2;				//mapa 2
-	Texture T_bar;				//dolny pasek menu
-	Texture T_arrow;			//wskazówka zegara
-	Texture T_line;				//linie skreslajace stickman'ow, gry potwory dotra do bazy
-	Texture T_gameOver;			//grafika konca gry
-	Texture T_screenShot;		//zrzut ekranu podczas wyswietlania konca gry
-	Sprite* background;			//wskaznik na tlo do wybranej przez uzytkownika mapy
-	Sprite menuBackground;		//tlo menu
-	Sprite background1;			//tlo mapy 1
-	Sprite background2;			//tlo mapy 2
-	Sprite screenShot;			//zrzut ekranu podczas wyswietlania konca gry
-	Sprite bar;					//dolny pasek menu
-	Sprite arrow;				//wskazówka zegara
-	Sprite gameOver;			//grafika konca gry
-	CircleShape circle;			//kolo pokazujace zasieg wiezyczki po jej zaznaczeniu
-	Sprite* map;				//wskaznik na wybrana przez uzytkownika mape
-	Sprite map1;				//mapa 1
-	Sprite map2;				//mapa 2
-	Texture T_button;			//tekstura przycisku
-	Texture T_buttonSmall;			//tekstura malego przycisku
+	int width = 1000;		//szerokosc okna
+	int height = 703;		//wysokosc okna
+	RenderWindow window;	//okno aplikacji
+	Image I_map;			//obraz do sprawdzania kolorow pikseli mapy
+	Texture T_background;	//tlo
+	Texture T_background1;	//tlo mapy 1
+	Texture T_background2;	//tlo mapy 2
+	Texture T_map1;			//mapa 1
+	Texture T_map2;			//mapa 2
+	Texture T_bar;			//dolny pasek menu
+	Texture T_arrow;		//wskazówka zegara
+	Texture T_line;			//linie skreslajace stickman'ow, gry potwory dotra do bazy
+	Texture T_gameOver;		//grafika konca gry
+	Texture T_screenShot;	//zrzut ekranu podczas wyswietlania konca gry
+	Sprite* background;		//wskaznik na tlo do wybranej przez uzytkownika mapy
+	Sprite menuBackground;	//tlo menu
+	Sprite background1;		//tlo mapy 1
+	Sprite background2;		//tlo mapy 2
+	Sprite screenShot;		//zrzut ekranu podczas wyswietlania konca gry
+	Sprite bar;				//dolny pasek menu
+	Sprite arrow;			//wskazówka zegara
+	Sprite gameOver;		//grafika konca gry
+	CircleShape circle;		//kolo pokazujace zasieg wiezyczki po jej zaznaczeniu
+	Sprite* map;			//wskaznik na wybrana przez uzytkownika mape
+	Sprite map1;			//mapa 1
+	Sprite map2;			//mapa 2
+	Texture T_button;		//tekstura przycisku
+	Texture T_buttonSmall;	//tekstura malego przycisku
 	unique_ptr<Button> buttonResume;	//przycisk resume
 	unique_ptr<Button> buttonRestart;	//przycisk restart
 	unique_ptr<Button> buttonSave;		//przycisk save

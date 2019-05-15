@@ -9,7 +9,8 @@ class Texts
 											//6 - price1, 7 - price2, 8 - price3, 9 - cash, 10 - kills, 11 - waves, 12 - damage turret1, 13 - range turret1, 14 - rate turret1,
 											//15 - damage turret2, 16 - range turret2, 17 - rate turret2, 18 - damage turret3, 19 - range turret3, 20 - rate turret3
 	sf::Color bright = sf::Color(255, 255, 255);		//kolor podswietlonych informacji
-	sf::Color dark = sf::Color(90, 90, 90);				//kolor przygaszonych informacji
+	sf::Color mediumDark = sf::Color(90, 90, 90);		//kolor przygaszonych informacji
+	sf::Color dark = sf::Color(0, 0, 0);				//kolor podswietlonych informacji na przyciskach
 
 public:
 	Texts(const sf::Font & font, const sf::Vector2f & vectorTurret1, const sf::Vector2f & vectorTurret2, const sf::Vector2f & vectorTurret3, Turret * turret1, Turret * turret2, Turret * turret3);	//konstruktor tworzacy teksty
