@@ -75,8 +75,6 @@ public:
 	Texture T_turret2;
 	Texture T_turret3;
 
-	GUI();
-	~GUI();
 	void loadGraphics();
 	void display(vector<Turret> & turrets, vector<Monster> & monsters, vector<unique_ptr<Rocket>> & rockets, const int & clicked, const int & cash, const int & kills,
 		const int & level, int & timeToNextRound, Turret * turret1, Turret * turret2, Turret * turret3);

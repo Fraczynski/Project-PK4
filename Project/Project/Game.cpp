@@ -23,45 +23,6 @@ void Game::guiMethods()
 	gui.endAnimation();
 }
 
-//menu
-void Game::menu()
-{
-	//ustawianie tel i map do menu
-	gui.setMenuGraphics();
-	
-	//wyswietlanie calego menu
-	while (!menuEvents())
-	{
-		gui.displayMenu();
-	}
-
-	//resetowanie ustawien grafik map i tel
-	if (gui.isOpen())
-	{
-		gui.checkCorners(mapCorners);
-		gui.resetMenuGraphics();
-	}
-}
-
-bool Game::menuEvents()
-{
-	Event e;
-	while (gui.pollEvent(e))
-	{
-		if (e.type == Event::Closed)
-		{
-			gui.close();
-			return true;
-		}
-		if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Left)
-		{
-			if (gui.isButtonMapClicked())
-				return true;
-		}
-	}
-	return false;
-}
-
 void Game::events()
 {
 	Event e;
@@ -555,3 +516,41 @@ void Game::load()
 	gui.checkCorners(mapCorners);
 }
 
+//menu
+void Game::menu()
+{
+	//ustawianie tel i map do menu
+	gui.setMenuGraphics();
+
+	//wyswietlanie calego menu
+	while (!menuEvents())
+	{
+		gui.displayMenu();
+	}
+
+	//resetowanie ustawien grafik map i tel
+	if (gui.isOpen())
+	{
+		gui.checkCorners(mapCorners);
+		gui.resetMenuGraphics();
+	}
+}
+
+bool Game::menuEvents()
+{
+	Event e;
+	while (gui.pollEvent(e))
+	{
+		if (e.type == Event::Closed)
+		{
+			gui.close();
+			return true;
+		}
+		if (e.type == Event::MouseButtonReleased && e.mouseButton.button == Mouse::Left)
+		{
+			if (gui.isButtonMapClicked())
+				return true;
+		}
+	}
+	return false;
+}

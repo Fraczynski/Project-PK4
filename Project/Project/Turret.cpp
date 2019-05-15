@@ -168,85 +168,9 @@ break;
 	}
 }
 
-int Turret::getID()
-{
-	return id;
-}
-
-int Turret::getDamage()
-{
-	return damage;
-}
-
-int Turret::getPrice()
-{
-	return price;
-}
-
-int Turret::getRange()
-{
-	return range;
-}
-
-int Turret::getRate()
-{
-	return rate;
-}
-
-int Turret::getSize(int queue)
-{
-	switch (queue)
-	{
-	case 0:
-		return qDamage.size();
-	case 1:
-		return qRange.size();
-	case 2:
-		return qRate.size();
-	}
-}
-
-int Turret::getFrontPrice(int queue)
-{
-	switch (queue)
-	{
-	case 0:
-		return qDamage.front().getPrice();
-	case 1:
-		return qRange.front().getPrice();
-	case 2:
-		return qRate.front().getPrice();
-	}
-}
-
-void Turret::setPosition(const Vector2i & vectorTurret)
-{
-	picture.setPosition(Vector2f(vectorTurret));
-}
-
-Vector2f Turret::getPosition()
-{
-	return picture.getPosition();
-}
-
-int Turret::getWidth()
-{
-	return picture.getGlobalBounds().width;
-}
-
-int Turret::getHeight()
-{
-	return picture.getGlobalBounds().height;
-}
-
 bool Turret::contains(const sf::Vector2i & point)
 {
 	return picture.getGlobalBounds().contains(Vector2f(point));
-}
-
-float Turret::getRotation()
-{
-	return picture.getRotation();
 }
 
 void Turret::rotate(vector<Monster> & monsters)			//obracanie wiezyczki w strone odpowiedniego potwora
@@ -348,4 +272,81 @@ void Turret::save(fstream & file)
 {
 	file << id << " " << (int)picture.getPosition().x << " " << (int)picture.getPosition().y << " " << timeToShoot << " " << damage << " " << range << " " << rate << " ";
 	file << aimAtMonster << " " << (int)picture.getRotation() << endl;
+}
+
+void Turret::setPosition(const Vector2i & vectorTurret)
+{
+	picture.setPosition(Vector2f(vectorTurret));
+}
+
+//getters
+int Turret::getID()
+{
+	return id;
+}
+
+int Turret::getDamage()
+{
+	return damage;
+}
+
+int Turret::getPrice()
+{
+	return price;
+}
+
+int Turret::getRange()
+{
+	return range;
+}
+
+int Turret::getRate()
+{
+	return rate;
+}
+
+int Turret::getSize(int queue)
+{
+	switch (queue)
+	{
+	case 0:
+		return qDamage.size();
+	case 1:
+		return qRange.size();
+	case 2:
+		return qRate.size();
+	}
+}
+
+int Turret::getFrontPrice(int queue)
+{
+	switch (queue)
+	{
+	case 0:
+		return qDamage.front().getPrice();
+	case 1:
+		return qRange.front().getPrice();
+	case 2:
+		return qRate.front().getPrice();
+	}
+}
+
+float Turret::getRotation()
+{
+	return picture.getRotation();
+}
+
+Vector2f Turret::getPosition()
+{
+	return picture.getPosition();
+}
+
+int Turret::getWidth()
+{
+	return picture.getGlobalBounds().width;
+}
+
+int Turret::getHeight()
+{
+	return picture.getGlobalBounds().height;
 }

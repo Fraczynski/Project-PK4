@@ -31,7 +31,8 @@ dodaæ mapy
 save osobno dla osobnych map
 pause zmienic while 
 sprawdzic wycieki pamieci
+refaktoryzacja kodu (GUI i logika osobno)
 --------------------------------------------
 przyciski do ulepszania wiezyczek
 poprawic kolizje rakiet z potworami
-refaktoryzacja kodu (GUI i logika osobno)
+poprawic kolejnosc metod

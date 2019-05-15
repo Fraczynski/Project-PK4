@@ -4,14 +4,6 @@
 
 using namespace std;
 
-GUI::GUI()
-{
-}
-
-GUI::~GUI()
-{
-}
-
 void GUI::loadGraphics()
 {
 	//tworzenie okna aplikacji
