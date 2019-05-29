@@ -6,7 +6,6 @@ using namespace std;
 int main()
 {
 	Game game;				//utworzenie obiektu gry
-	game.menu();
 	//petla wykonujaca sie dopoki nie zostanie zakonczona gra
 	while (game.isPlayed())
 	{

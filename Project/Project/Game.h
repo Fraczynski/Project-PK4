@@ -5,12 +5,14 @@
 #include "Rocket3.h"
 #include "Map.h"
 #include "GUI.h"
+#include "Menu.h"
 
 using namespace std;
 
 class Game
 {
 	GUI gui;				//obiekt wyswietlajacy gre
+	Menu menu;
 	int roundTime = 1200;	//czas pojedynczej rundy
 	int timeToNextRound;	//pozostaly czas do kolejnej rundy
 	int ifMovingTurret;		//czy przenoszona aktualnie jest wiezyczka: 0 - nie; 1 - tak
@@ -34,11 +36,9 @@ class Game
 	vector<unique_ptr<Rocket>> rockets;		//wektor wskaznikow na rakiety
 
 public:
-	//logika gry
 	Game();
 	void guiMethods();
-	void menu();
-	bool menuEvents();
+	void menuMethods();
 	void events();				//obsluga zdarzen
 	bool isPlayed();
 	void resetGame();			//restartowanie gry
@@ -56,7 +56,7 @@ public:
 	void rotate_turrets();		//obracanie wiezyczek
 	void move_missiles();		//przemieszczanie pociskow
 	bool checkPlace(const Vector2f & position, const int & w, const int & h);		//sprawdzanie miejsca podczas proby wybudowania wiezyczki
-	void save();		//zapis do pliku
-	void load();		//odczyt z pliku
-	void shoot();		//wystrzeliwanie pociskow
+	void save();			//zapis do pliku
+	void load();			//odczyt z pliku
+	void shoot();			//wystrzeliwanie pociskow
 };
