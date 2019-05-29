@@ -32,7 +32,9 @@ save osobno dla osobnych map
 pause zmienic while 
 sprawdzic wycieki pamieci
 refaktoryzacja kodu (GUI i logika osobno)
---------------------------------------------
 przyciski do ulepszania wiezyczek
+--------------------------------------------
 poprawic kolizje rakiet z potworami
 poprawic kolejnosc metod
+klasa Pause
+wiezyczka nr ma strzelaæ dopiero po wycelowaniu

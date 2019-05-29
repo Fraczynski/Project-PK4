@@ -11,7 +11,7 @@ Rocket1::Rocket1(const int & _id, const int & _speed, const int & _damage, const
 
 bool Rocket1::specialAbilities(vector<Monster> & monsters, int & cash, int & kills)			//specjalne zdolnosci tego typu pocisku (rakieta)
 {
-	if(numberOfMonster >= 0 && numberOfMonster < (int)monsters.size())			//sprawdzanie, czy pocisk wycelowany jest w istniejacego potwora
+	if(numberOfMonster >= 0 && numberOfMonster < (int)monsters.size() && monsters[numberOfMonster].getPosition().y > 0)			//sprawdzanie, czy pocisk wycelowany jest w istniejacego potwora
 	{
 		double angle = (atan2(monsters[numberOfMonster].getPosition().y - picture.getPosition().y, 
 						monsters[numberOfMonster].getPosition().x - picture.getPosition().x) * (180 / (atan(1) * 4)) + 90);		//kat miedzy rakieta a potworem
@@ -42,8 +42,8 @@ bool Rocket1::specialAbilities(vector<Monster> & monsters, int & cash, int & kil
 	}
 	else					//jesli nie to poruszanie sie pocisku po okregu
 	{
-	picture.rotate(3);
-	picture.move((float)sin((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed, -(float)cos((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed);
+		picture.rotate(3);
+		picture.move((float)sin((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed, -(float)cos((picture.getRotation()) * ((atan(1) * 4) / 180)) * speed);
 	}
 	return false;
 }

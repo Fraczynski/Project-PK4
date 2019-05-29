@@ -14,7 +14,6 @@ Game::Game()
 	turret3.reset(new Turret(3, gui.T_turret3, Vector2f(vectorTurret3)));
 	gui.setTexts(turret1.get(), turret2.get(), turret3.get());
 	resetGame();
-
 }
 
 void Game::guiMethods()
@@ -417,7 +416,7 @@ void Game::save()
 	fstream file;
 	string fileName = "save.txt";
 	fileName.insert(fileName.end() - 4, gui.selectedMap() + '0');
-	file.open(fileName, ios::in);
+	file.open(fileName, ios::out);
 	if (file.good())
 	{
 		file.clear();
