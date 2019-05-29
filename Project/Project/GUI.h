@@ -5,6 +5,7 @@
 #include "Texts.h"
 #include "Icon.h"
 #include "Rocket.h"
+#include <list>
 
 using namespace std;
 using namespace sf;
@@ -105,7 +106,7 @@ public:
 	int getWidth();
 	void pauseDisplay();
 	void endAnimation();
-	void checkCorners(vector<Map> & mapCorners);
+	void checkCorners(list<Map> & mapCorners);
 	bool checkPixel(const int & x, const int & y);						//sprawdzanie czy piksel o danych wspolrzednych jest koloru sciezki potworow
 	void addLines();				//przekreslanie stickman'ow
 	void updateCircle(const Vector2i & position, const int & range);	//aktualizacja kola okreslajacego zasieg danej wiezyczki

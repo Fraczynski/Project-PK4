@@ -391,7 +391,7 @@ void GUI::endAnimation()
 	}
 }
 
-void GUI::checkCorners(vector<Map> & mapCorners)
+void GUI::checkCorners(list<Map> & mapCorners)
 {
 	int direction = 0;
 	int positionX = 920;

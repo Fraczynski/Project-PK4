@@ -11,7 +11,7 @@ Menu::~Menu()
 {
 }
 
-void Menu::menu(GUI & gui, vector<Map> & mapCorners)
+void Menu::menu(GUI & gui, list<Map> & mapCorners)
 {
 	//ustawianie tel i map do menu
 	gui.setMenuGraphics();

@@ -30,7 +30,7 @@ class Game
 	unique_ptr <Turret> turret1;	//wiezyczki w sklepie bedace wzorcami dla budowanych wiezyczek
 	unique_ptr <Turret> turret2;
 	unique_ptr <Turret> turret3;
-	vector<Map> mapCorners;		//wspolrzedne (w ktorych potwory musza zmienic kierunek) i kierunki
+	list<Map> mapCorners;		//wspolrzedne (w ktorych potwory musza zmienic kierunek) i kierunki
 	vector<Monster> monsters;	//wektor potworow
 	vector<Turret> turrets;		//wektor wiezyczek
 	vector<unique_ptr<Rocket>> rockets;		//wektor wskaznikow na rakiety

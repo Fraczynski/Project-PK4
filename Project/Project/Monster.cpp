@@ -16,7 +16,7 @@ Monster::Monster(const int _level, const Font & font, const Texture & _picture, 
 	hp.setOrigin(hp.getGlobalBounds().width / 2, hp.getGlobalBounds().height / 2);
 }
 
-int Monster::move(const vector<Map> & mapCorners)			//przemieszczanie potwora
+int Monster::move(const list<Map> & mapCorners)			//przemieszczanie potwora
 {
 	switch (direction)			//sprawdzanie, w ktora strone przesunac potwora
 	{
@@ -32,12 +32,12 @@ int Monster::move(const vector<Map> & mapCorners)			//przemieszczanie potwora
 	case 3:
 		picture.move(speed, 0);
 		break;
-	}
-	for (int j = 0; j < mapCorners.size(); j++)		//sprawdzanie, czy nalezy zmienic kierunek poruszania sie
+	}	
+	for (auto it = mapCorners.begin(); it != mapCorners.end(); ++it)		//sprawdzanie, czy nalezy zmienic kierunek poruszania sie
 	{
-		if (picture.getPosition() == mapCorners[j].position)
+		if (picture.getPosition() == it->position)
 		{
-			direction = mapCorners[j].newDirection;
+			direction = it->newDirection;
 			break;
 		}
 	}

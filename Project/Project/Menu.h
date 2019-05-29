@@ -6,7 +6,7 @@ class Menu
 public:
 	Menu();
 	~Menu();
-	void menu(GUI & gui, vector<Map> & mapCorners);
+	void menu(GUI & gui, list<Map> & mapCorners);
 	bool menuEvents(GUI & gui);
 };
 
